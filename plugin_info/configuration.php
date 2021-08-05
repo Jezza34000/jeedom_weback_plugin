@@ -29,7 +29,7 @@ if (!isConnect()) {
         <sup><i class="fas fa-question-circle tooltips" title="{{Email ou numéro de téléphone avec lequel vous avez enregistrer votre compte WeBack}}"></i></sup>
       </label>
       <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="param1"/>
+        <input class="configKey form-control" data-l1key="wbuser"/>
       </div>
     </div>
     <div class="form-group">
@@ -37,7 +37,7 @@ if (!isConnect()) {
         <sup><i class="fas fa-question-circle tooltips" title="{{Mot de passe du compte WeBack}}"></i></sup>
       </label>
       <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="password" value="" type="password" />
+        <input class="configKey form-control" data-l1key="wbpassword" value="" type="password" />
       </div>
     </div>
     <div class="form-group">
@@ -45,7 +45,7 @@ if (!isConnect()) {
           <sup><i class="fas fa-question-circle tooltips" title="{{Code du pays (33 pour la France)}}"></i></sup>
         </label>
         <div class="col-md-4">
-            <input class="configKey form-control" data-l1key="country" value="33" />
+            <input class="configKey form-control" data-l1key="wbcountry" value="33" />
         </div>
     </div>
   </fieldset>
