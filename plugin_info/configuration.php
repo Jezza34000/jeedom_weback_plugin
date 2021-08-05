@@ -25,7 +25,7 @@ if (!isConnect()) {
 <form class="form-horizontal">
   <fieldset>
     <div class="form-group">
-      <label class="col-md-4 control-label">{{Global param 1}}
+      <label class="col-md-4 control-label">{{Utilisateur}}
         <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le paramètre 1 du plugin}}"></i></sup>
       </label>
       <div class="col-md-4">
@@ -33,7 +33,7 @@ if (!isConnect()) {
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-4 control-label">{{Global param 2}}
+      <label class="col-md-4 control-label">{{Mot de passe}}
         <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le paramètre 2 du plugin}}"></i></sup>
       </label>
       <div class="col-md-4">
