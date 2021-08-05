@@ -19,15 +19,15 @@
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
-class template extends eqLogic {
+class weback extends eqLogic {
     /*     * *************************Attributs****************************** */
-    
+
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
    * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
 	public static $_widgetPossibility = array();
    */
-    
+
     /*     * ***********************Methode static*************************** */
 
     /*
@@ -47,19 +47,19 @@ class template extends eqLogic {
       public static function cron10() {
       }
      */
-    
+
     /*
      * Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
       public static function cron15() {
       }
      */
-    
+
     /*
      * Fonction exécutée automatiquement toutes les 30 minutes par Jeedom
       public static function cron30() {
       }
      */
-    
+
     /*
      * Fonction exécutée automatiquement toutes les heures par Jeedom
       public static function cronHourly() {
@@ -75,45 +75,45 @@ class template extends eqLogic {
 
 
     /*     * *********************Méthodes d'instance************************* */
-    
- // Fonction exécutée automatiquement avant la création de l'équipement 
+
+ // Fonction exécutée automatiquement avant la création de l'équipement
     public function preInsert() {
-        
+
     }
 
- // Fonction exécutée automatiquement après la création de l'équipement 
+ // Fonction exécutée automatiquement après la création de l'équipement
     public function postInsert() {
-        
+
     }
 
- // Fonction exécutée automatiquement avant la mise à jour de l'équipement 
+ // Fonction exécutée automatiquement avant la mise à jour de l'équipement
     public function preUpdate() {
-        
+
     }
 
- // Fonction exécutée automatiquement après la mise à jour de l'équipement 
+ // Fonction exécutée automatiquement après la mise à jour de l'équipement
     public function postUpdate() {
-        
+
     }
 
- // Fonction exécutée automatiquement avant la sauvegarde (création ou mise à jour) de l'équipement 
+ // Fonction exécutée automatiquement avant la sauvegarde (création ou mise à jour) de l'équipement
     public function preSave() {
-        
+
     }
 
- // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement 
+ // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement
     public function postSave() {
-        
+
     }
 
- // Fonction exécutée automatiquement avant la suppression de l'équipement 
+ // Fonction exécutée automatiquement avant la suppression de l'équipement
     public function preRemove() {
-        
+
     }
 
- // Fonction exécutée automatiquement après la suppression de l'équipement 
+ // Fonction exécutée automatiquement après la suppression de l'équipement
     public function postRemove() {
-        
+
     }
 
     /*
@@ -138,13 +138,13 @@ class template extends eqLogic {
     /*     * **********************Getteur Setteur*************************** */
 }
 
-class templateCmd extends cmd {
+class webackCmd extends cmd {
     /*     * *************************Attributs****************************** */
-    
+
     /*
       public static $_widgetPossibility = array();
     */
-    
+
     /*     * ***********************Methode static*************************** */
 
 
@@ -157,12 +157,10 @@ class templateCmd extends cmd {
       }
      */
 
-  // Exécution d'une commande  
+  // Exécution d'une commande
      public function execute($_options = array()) {
-        
+
      }
 
     /*     * **********************Getteur Setteur*************************** */
 }
-
-
