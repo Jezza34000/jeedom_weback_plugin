@@ -14,7 +14,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<legend><i class="fas fa-cog"></i>  {{Gestion}}</legend>
 		<!-- Boutons de gestion du plugin -->
 		<div class="eqLogicThumbnailContainer">
-			<div class="cursor eqLogicAction logoPrimary" data-action="add">
+			<div class="cursor eqLogicAction logoPrimary discover" data-action="scanWeBack">
 				<i class="fas fa-plus-circle"></i>
 				<br>
 				<span>{{Découverte des robots}}</span>
@@ -28,7 +28,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<legend><i class="fas fa-table"></i> {{Mes robots}}</legend>
 		<?php
 		if (count($eqLogics) == 0) {
-			echo '<br/><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun équipement Template n\'est paramétré, cliquer sur "Ajouter" pour commencer}}</div>';
+			echo '<br/><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun robot n\'est paramétré, cliquer sur "Découverte des robots" pour commencer}}</div>';
 		} else {
 			// Champ de recherche
 			echo '<div class="input-group" style="margin:5px;">';
