@@ -25,8 +25,8 @@ if (!isConnect()) {
 <form class="form-horizontal">
   <fieldset>
     <div class="form-group">
-      <label class="col-md-4 control-label">{{Utilisateur}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le paramètre 1 du plugin}}"></i></sup>
+      <label class="col-md-4 control-label">{{Utilisateur/Téléphone}}
+        <sup><i class="fas fa-question-circle tooltips" title="{{Email ou numéro de téléphone avec lequel vous avez enregistrer votre compte WeBack}}"></i></sup>
       </label>
       <div class="col-md-4">
         <input class="configKey form-control" data-l1key="param1"/>
@@ -34,23 +34,19 @@ if (!isConnect()) {
     </div>
     <div class="form-group">
       <label class="col-md-4 control-label">{{Mot de passe}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le paramètre 2 du plugin}}"></i></sup>
+        <sup><i class="fas fa-question-circle tooltips" title="{{Mot de passe du compte WeBack}}"></i></sup>
       </label>
       <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="param2"/>
+        <input class="configKey form-control" data-l1key="password" value="" type="password" />
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-4 control-label">{{Global param 3}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Sélectionnez du paramètre 3 du plugin}}"></i></sup>
-      </label>
-      <div class="col-md-4">
-        <select class="configKey form-control" data-l1key="param3">
-          <option value=""></option>
-          <option value="value1">value1</option>
-          <option value="value2">value2</option>
-        </select>
-      </div>
+        <label class="col-md-4 control-label">{{Code pays}}
+          <sup><i class="fas fa-question-circle tooltips" title="{{Code du pays (33 pour la France)}}"></i></sup>
+        </label>
+        <div class="col-md-4">
+            <input class="configKey form-control" data-l1key="country" value="33" />
+        </div>
     </div>
   </fieldset>
 </form>
