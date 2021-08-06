@@ -23,6 +23,7 @@ class weback extends eqLogic {
     /*     * *************************Attributs****************************** */
 
     public static function dependancy_info() {
+        log::add("weback", 'debug', "Vérification des dépendances...", $_logicalId);
         $return = array();
         $return['log'] = log::getPathToLog(__CLASS__ . '_update');
         $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependency';
@@ -35,6 +36,7 @@ class weback extends eqLogic {
                 $return['state'] = 'nok';
             } else {
                 $return['state'] = 'ok';
+                log::add("weback", 'debug', "Dépendances OK", $_logicalId);
             }
         }
         return $return;
@@ -42,6 +44,7 @@ class weback extends eqLogic {
 
     public static function dependancy_install() {
         log::remove(__CLASS__ . '_update');
+        log::add("weback", 'debug', "Installation des dépendances...", $_logicalId);
         return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder(__CLASS__) . '/dependency', 'log' => log::getPathToLog(__CLASS__ . '_update'));
     }
 
