@@ -22,6 +22,29 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 class weback extends eqLogic {
     /*     * *************************Attributs****************************** */
 
+    public static function dependancy_info() {
+        $return = array();
+        $return['log'] = log::getPathToLog(__CLASS__ . '_update');
+        $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependency';
+        if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependency')) {
+            $return['state'] = 'in_progress';
+        } else {
+            if (exec(system::getCmdSudo() . system::get('cmd_check') . '-Ec "python3\-requests|python3\-boto3"') < 2) { // adaptez la liste des paquets et le total
+                $return['state'] = 'nok';
+            } elseif (exec(system::getCmdSudo() . 'pip3 list | grep -Ewc "weback-unofficial"') < 1) { // adaptez la liste des paquets et le total
+                $return['state'] = 'nok';
+            } else {
+                $return['state'] = 'ok';
+            }
+        }
+        return $return;
+    }
+
+    public static function dependancy_install() {
+        log::remove(__CLASS__ . '_update');
+        return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder(__CLASS__) . '/dependency', 'log' => log::getPathToLog(__CLASS__ . '_update'));
+    }
+
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
    * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
@@ -163,27 +186,4 @@ class webackCmd extends cmd {
      }
 
     /*     * **********************Getteur Setteur*************************** */
-}
-
-public static function dependancy_install() {
-    log::remove(__CLASS__ . '_update');
-    return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder(__CLASS__) . '/dependency', 'log' => log::getPathToLog(__CLASS__ . '_update'));
-}
-
-public static function dependancy_info() {
-    $return = array();
-    $return['log'] = log::getPathToLog(__CLASS__ . '_update');
-    $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependency';
-    if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependency')) {
-        $return['state'] = 'in_progress';
-    } else {
-        if (exec(system::getCmdSudo() . system::get('cmd_check') . '-Ec "python3\-requests|python3\-boto3"') < 2) { // adaptez la liste des paquets et le total
-            $return['state'] = 'nok';
-        } elseif (exec(system::getCmdSudo() . 'pip3 list | grep -Ewc "weback-unofficial"') < 1) { // adaptez la liste des paquets et le total
-            $return['state'] = 'nok';
-        } else {
-            $return['state'] = 'ok';
-        }
-    }
-    return $return;
 }
