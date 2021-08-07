@@ -116,6 +116,7 @@ class weback extends eqLogic {
          $server_output = curl_exec($ch);
          curl_close($ch);
          $json = json_decode($server_output, true);
+         log::add('weback', 'debug', 'CURL return = ' . $server_output);
          log::add('weback', 'debug', 'AWS Cognito answer = ' . print_r($json, true));
 
          if ($json['Credentials'] != NULL) {
