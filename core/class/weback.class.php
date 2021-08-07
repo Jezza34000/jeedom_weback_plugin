@@ -72,7 +72,7 @@ class weback extends eqLogic {
             $password = config::byKey('password', 'weback');
             $country = config::byKey('country', 'weback');
 
-            $command = escapeshellcmd('/usr/local/lib/python3.7/dist-packages/weback_unofficial/logon.py '.$country.' '.$user.' '.$password);
+            $command = escapeshellcmd('/weback/ressources/logon.py '.$country.' '.$user.' '.$password);
             $output = shell_exec($command);
 
             log::add('weback', 'debug', 'Shell return : '.$output);
