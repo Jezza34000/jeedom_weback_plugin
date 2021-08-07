@@ -1,5 +1,7 @@
 <?php
 
+
+
 /* This file is part of Jeedom.
  *
  * Jeedom is free software: you can redistribute it and/or modify
@@ -18,6 +20,9 @@
 
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
+require __DIR__ . '/../../ressources/node_module/aws-autoloader.php';
+
+use Aws\Lambda\LambdaClient;
 
 class weback extends eqLogic {
     /*     * *************************Attributs****************************** */
@@ -135,6 +140,24 @@ class weback extends eqLogic {
          }
          curl_close($ch);
      }
+
+     public static function getDeviceList() {
+       $client = LambdaClient::factory([
+           'version' => 'latest',
+           'region'  => config::byKey('Region_Info', 'weback'),
+           'credentials' => [
+               'key'    => config::byKey('AccessKeyId', 'weback'),
+               'secret' => config::byKey('SecretKey', 'weback'),
+            ]
+       ]);
+
+       $result = $client->invoke([
+           // The name your created Lamda function
+           'FunctionName' => 'Device_Manager_V2',
+       ]);
+       var_dump($result->get('Payload'));
+     }
+
 
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
