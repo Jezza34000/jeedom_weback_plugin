@@ -79,10 +79,57 @@ class weback extends eqLogic {
          if ($json['Request_Result'] == 'success') {
            //config::save("token", $json['LoginData']['ContextKey'], 'mitsubishi');
            log::add('weback', 'debug', 'Identifiant/mot de passe WeBack-Login OK');
+           // Enregistrement des informations de connexion
+           config::save("Identity_Pool_Id", $json['Identity_Pool_Id'], 'weback');
+           config::save("Developer_Provider_Name", $json['Developer_Provider_Name'], 'weback');
+           config::save("End_Point", $json['End_Point'], 'weback');
+           config::save("Identity_Id", $json['Identity_Id'], 'weback');
+           config::save("Token", $json['Token'], 'weback');
+           config::save("Token_Duration", $json['Token_Duration'], 'weback');
+           config::save("Region_Info", $json['Region_Info'], 'weback');
+           config::save("Configuration_Page_URL", $json['Configuration_Page_URL'], 'weback');
+           config::save("Discovery_Page_URL", $json['Discovery_Page_URL'], 'weback');
+           config::save("Customer_Service_Card_URL", $json['Customer_Service_Card_URL'], 'weback');
+           config::save("Thing_Register_URL", $json['Thing_Register_URL'], 'weback');
+           config::save("Thing_Register_URL_Signature", $json['Thing_Register_URL_Signature'], 'weback');
          } else {
            log::add('weback', 'debug', 'Echec de connexion à WeBack-Login :'.$json['Fail_Reason']);
          }
        }
+     }
+
+     public static function getAWScredential() {
+       log::add('weback', 'debug', 'Récupération des informations de connexion de AWS Cognito...');
+         $ch = curl_init();
+         $data = array("IdentityId" => config::byKey('Identity_Id', 'weback'), "Logins" => "{\"cognito-identity.amazonaws.com\" : ".config::byKey('Token', 'weback')."}");
+         $data_string = json_encode($data);
+
+         curl_setopt($ch, CURLOPT_URL, "https://cognito-identity.eu-central-1.amazonaws.com");
+         curl_setopt($ch, CURLOPT_POST, 1);
+         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/x-amz-json-1.1',
+            'X-Amz-Target : com.amazonaws.cognito.identity.model.AWSCognitoIdentityService.GetCredentialsForIdentity',
+            'Content-Length: ' . strlen($data_string))
+          );
+         $server_output = curl_exec($ch);
+         curl_close($ch);
+         $json = json_decode($server_output, true);
+         log::add('weback', 'debug', 'AWS Cognito answer = ' . print_r($json, true));
+
+         if ($json['Credentials'] != NULL) {
+           //config::save("token", $json['LoginData']['ContextKey'], 'mitsubishi');
+           log::add('weback', 'debug', 'Information de connexion AWS Cognito OK');
+           // Enregistrement des informations de connexion
+           config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
+           config::save("Expiration", $json['Credentials']['Expiration'], 'weback');
+           config::save("SecretKey", $json['Credentials']['SecretKey'], 'weback');
+           config::save("Identity_Id", $json['Credentials']['Identity_Id'], 'weback');
+           config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');
+         } else {
+           log::add('weback', 'debug', 'Echec d\'obtention des informations de connexion depuis AWS Cognito');
+         }
      }
 
   /*
