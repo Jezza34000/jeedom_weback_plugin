@@ -56,6 +56,7 @@ class weback extends eqLogic {
      */
     static public function discoverDevices()
     {
+        log::add('weback', 'debug', 'Recherche de robots...');
         //SmartLifeLog::begin('DISCOVERY');
         //$session = SmartLife::getSessionTuya();
         //$api = new TuyaCloudApi($session);
@@ -65,12 +66,16 @@ class weback extends eqLogic {
         try {
             //$result = $api->discoverDevices();
             //$devices = $api->getAllDevices();
+            log::add('weback', 'debug', 'Execution');
 
-            $command = escapeshellcmd('python_script.py');
+            $user = config::byKey('user', 'weback');
+            $password = config::byKey('password', 'weback');
+            $country = config::byKey('country', 'weback');
+
+            $command = escapeshellcmd('/usr/local/lib/python3.7/dist-packages/weback_unofficial/logon.py '.$country.' '.$user.' '.$password);
             $output = shell_exec($command);
-            echo $output;
 
-            log::add('weback', 'error', 'PythonRUN');
+            log::add('weback', 'debug', 'Shell return : '.$output);
         } catch (Throwable $th) {
             log::add('weback', 'error', 'PythonERR');
             event::add('jeedom::alert', array(
