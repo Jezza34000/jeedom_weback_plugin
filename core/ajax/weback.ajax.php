@@ -33,6 +33,7 @@ try {
     if (init('action') == 'postSave') {
       weback::getToken();
       weback::getAWScredential();
+      weback::getDeviceList()
       //mitsubishi::refreshAll();
       ajax::success();
     }
