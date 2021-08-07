@@ -53,7 +53,6 @@ if (!isConnect()) {
 
 <script>
     function weback_postSaveConfiguration(){
-      log::add('weback', 'debug', 'Enregistrement de la configuration');
       $.ajax({// fonction permettant de faire de l'ajax
       type: "POST", // methode de transmission des données au fichier php
       url: "plugins/weback/core/ajax/weback.ajax.php", // url du fichier php
