@@ -56,20 +56,23 @@ class weback extends eqLogic {
      */
     static public function discoverDevices()
     {
-        /*SmartLifeLog::begin('DISCOVERY');
-        $session = SmartLife::getSessionTuya();
-        $api = new TuyaCloudApi($session);
+        //SmartLifeLog::begin('DISCOVERY');
+        //$session = SmartLife::getSessionTuya();
+        //$api = new TuyaCloudApi($session);
 
         // Recherche des équipements depuis le Cloud
         $result = array();
         try {
-            $result = $api->discoverDevices();
-            $devices = $api->getAllDevices();
-            SmartLifeLog::debug('DISCOVERY', 'TuyaCloudApi::discoverDevices()', $result);
-            SmartLifeLog::info('DISCOVERY', 'Découverte de '.count($devices).' devices');
+            //$result = $api->discoverDevices();
+            //$devices = $api->getAllDevices();
+
+            $command = escapeshellcmd('python_script.py');
+            $output = shell_exec($command);
+            echo $output;
+
+            log::add('weback', 'error', 'PythonRUN');
         } catch (Throwable $th) {
-            SmartLifeLog::exception('DISCOVERY', $th);
-            SmartLifeLog::end('DISCOVERY');
+            log::add('weback', 'error', 'PythonERR');
             event::add('jeedom::alert', array(
 				'level' => 'danger',
 				'page' => 'SmartLife',
@@ -80,11 +83,11 @@ class weback extends eqLogic {
 
         // Pour chaque objets trouvés
         foreach ($devices as $device) {
-            $discover = new SmartLifeDiscovery($device);
-            $discover->execute();
+            //$discover = new SmartLifeDiscovery($device);
+            //$discover->execute();
         }
 
-        SmartLifeLog::end('DISCOVERY');*/
+        //SmartLifeLog::end('DISCOVERY');
         return $result;
     }
 
