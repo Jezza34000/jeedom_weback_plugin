@@ -20,7 +20,7 @@
 
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
-require __DIR__ . '/../../ressources/node_modules/aws-autoloader.php';
+//require __DIR__ . '/../../ressources/node_modules/aws-autoloader.php';
 
 use Aws\Lambda\LambdaClient;
 
@@ -28,6 +28,10 @@ class weback extends eqLogic {
     /*     * *************************Attributs****************************** */
 
     public static function dependancy_info() {
+        log::add("weback", 'debug', "DIR".__DIR__);
+        log::add("weback", 'debug', "FullPath=".__DIR__ . '/../../ressources/node_modules/aws-autoloader.php');
+
+
         log::add("weback", 'debug', "Vérification des dépendances...", $_logicalId);
         $return = array();
         $return['log'] = log::getPathToLog(__CLASS__ . '_update');
