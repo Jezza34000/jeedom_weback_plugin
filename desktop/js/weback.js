@@ -15,6 +15,33 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+ /**
+  * Bouton Découverte des objets
+  */
+ $('.discover').on('click', function () {
+     $('#div_alert').showAlert({message: '{{Recherche des robots en cours...}}', level: 'warning'});
+     $.ajax({
+         type: "POST",
+         url: "plugins/weback/core/ajax/weback.ajax.php",
+         data: {
+             action: "discover",
+             mode: $(this).attr('data-action'),
+         },
+         dataType: 'json',
+         global: false,
+         error: function (request, status, error) {
+             handleAjaxError(request, status, error);
+         },
+         success: function (data) {
+             if (data.state != 'ok') {
+                 $('#div_alert').showAlert({message: data.result, level: 'danger'});
+                 return;
+             }
+             $('#div_alert').showAlert({message: '{{Détection OK, veuillez rafraichir la page F5}}', level: 'success'});
+         }
+     });
+ });
+
 
 /* Permet la réorganisation des commandes dans l'équipement */
 $("#table_cmd").sortable({

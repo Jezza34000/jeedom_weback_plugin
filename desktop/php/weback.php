@@ -15,7 +15,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<!-- Boutons de gestion du plugin -->
 		<div class="eqLogicThumbnailContainer">
 			<div class="cursor eqLogicAction logoPrimary discover" data-action="scanWeBack">
-				<i class="fas fa-plus-circle"></i>
+				<i class="fas fa-bullseye"></i>
 				<br>
 				<span>{{Découverte des robots}}</span>
 			</div>

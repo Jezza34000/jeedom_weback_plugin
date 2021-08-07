@@ -48,6 +48,46 @@ class weback extends eqLogic {
         return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder(__CLASS__) . '/dependency', 'log' => log::getPathToLog(__CLASS__ . '_update'));
     }
 
+
+    /**
+     * Recherche les équipements sur clique du bouton
+     *
+     * return Array of Device
+     */
+    static public function discoverDevices()
+    {
+        /*SmartLifeLog::begin('DISCOVERY');
+        $session = SmartLife::getSessionTuya();
+        $api = new TuyaCloudApi($session);
+
+        // Recherche des équipements depuis le Cloud
+        $result = array();
+        try {
+            $result = $api->discoverDevices();
+            $devices = $api->getAllDevices();
+            SmartLifeLog::debug('DISCOVERY', 'TuyaCloudApi::discoverDevices()', $result);
+            SmartLifeLog::info('DISCOVERY', 'Découverte de '.count($devices).' devices');
+        } catch (Throwable $th) {
+            SmartLifeLog::exception('DISCOVERY', $th);
+            SmartLifeLog::end('DISCOVERY');
+            event::add('jeedom::alert', array(
+				'level' => 'danger',
+				'page' => 'SmartLife',
+				'message' => __('Erreur de connexion au cloud Tuya : '.$th->getMessage(), __FILE__),
+			));
+            return null;
+        }
+
+        // Pour chaque objets trouvés
+        foreach ($devices as $device) {
+            $discover = new SmartLifeDiscovery($device);
+            $discover->execute();
+        }
+
+        SmartLifeLog::end('DISCOVERY');*/
+        return $result;
+    }
+
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
    * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
