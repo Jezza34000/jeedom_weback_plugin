@@ -54,47 +54,36 @@ class weback extends eqLogic {
      *
      * return Array of Device
      */
-    static public function discoverDevices()
-    {
-        log::add('weback', 'debug', 'Recherche de robots...');
-        //SmartLifeLog::begin('DISCOVERY');
-        //$session = SmartLife::getSessionTuya();
-        //$api = new TuyaCloudApi($session);
 
-        // Recherche des équipements depuis le Cloud
-        $result = array();
-        try {
-            //$result = $api->discoverDevices();
-            //$devices = $api->getAllDevices();
-            log::add('weback', 'debug', 'Execution');
+     public static function getToken() {
+       log::add('weback', 'debug', 'Connexion à WeBack-login...');
+       if (config::byKey('password', 'weback') != '' && config::byKey('user', 'weback') != '' && config::byKey('country', 'weback') != '') {
+         $ch = curl_init();
 
-            $user = config::byKey('user', 'weback');
-            $password = config::byKey('password', 'weback');
-            $country = config::byKey('country', 'weback');
+         $data = array("App_Version" => "android_5.1.9", "Password" => md5(config::byKey('password', 'weback')), "User_Account" => "+".config::byKey('country', 'weback')."-".config::byKey('user', 'weback'));
+         $data_string = json_encode($data);
 
-            $command = escapeshellcmd('/weback/ressources/logon.py '.$country.' '.$user.' '.$password);
-            $output = shell_exec($command);
+         curl_setopt($ch, CURLOPT_URL, "https://www.weback-login.com/WeBack/WeBack_Login_Ats_V3");
+         curl_setopt($ch, CURLOPT_POST, 1);
+         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+          );
+         $server_output = curl_exec($ch);
+         curl_close($ch);
+         $json = json_decode($server_output, true);
+         log::add('weback', 'debug', 'WeBack answer = ' . print_r($json, true));
 
-            log::add('weback', 'debug', 'Shell return : '.$output);
-        } catch (Throwable $th) {
-            log::add('weback', 'error', 'PythonERR');
-            event::add('jeedom::alert', array(
-				'level' => 'danger',
-				'page' => 'SmartLife',
-				'message' => __('Erreur de connexion au cloud Tuya : '.$th->getMessage(), __FILE__),
-			));
-            return null;
-        }
-
-        // Pour chaque objets trouvés
-        foreach ($devices as $device) {
-            //$discover = new SmartLifeDiscovery($device);
-            //$discover->execute();
-        }
-
-        //SmartLifeLog::end('DISCOVERY');
-        return $result;
-    }
+         if ($json['Request_Result'] == 'success') {
+           //config::save("token", $json['LoginData']['ContextKey'], 'mitsubishi');
+           log::add('weback', 'debug', 'Identifiant/mot de passe WeBack-Login OK');
+         } else {
+           log::add('weback', 'debug', 'Echec de connexion à WeBack-Login :'.$json['Fail_Reason']);
+         }
+       }
+     }
 
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
