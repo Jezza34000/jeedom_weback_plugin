@@ -101,8 +101,10 @@ class weback extends eqLogic {
      public static function getAWScredential() {
        log::add('weback', 'debug', 'Récupération des informations de connexion de AWS Cognito...');
          $ch = curl_init();
-         $data = array("IdentityId" => config::byKey('Identity_Id', 'weback'), "Logins" => "{\"cognito-identity.amazonaws.com\" : \"".config::byKey('Token', 'weback')."\"}");
+         $data = array("IdentityId" => config::byKey('Identity_Id', 'weback'), "Logins" => array("cognito-identity.amazonaws.com", config::byKey('Token', 'weback')));
          $data_string = json_encode($data);
+
+         log::add('weback', 'debug', 'JSON AWS to send = ' . print_r($data_string, true));
 
          curl_setopt($ch, CURLOPT_URL, "https://cognito-identity.eu-central-1.amazonaws.com");
          curl_setopt($ch, CURLOPT_POST, 1);
