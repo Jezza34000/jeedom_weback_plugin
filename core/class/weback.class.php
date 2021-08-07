@@ -20,7 +20,7 @@
 
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
-//require __DIR__ . '/../../ressources/node_module/aws-autoloader.php';
+require __DIR__ . '/../../ressources/node_module/aws-autoloader.php';
 
 //use Aws\Lambda\LambdaClient;
 
@@ -147,8 +147,7 @@ class weback extends eqLogic {
            'region'  => config::byKey('Region_Info', 'weback'),
            'credentials' => [
                'key'    => config::byKey('AccessKeyId', 'weback'),
-               'secret' => config::byKey('SecretKey', 'weback'),
-            ]
+               'secret' => config::byKey('SecretKey', 'weback')]
        ]);
 
        $result = $client->invoke([
