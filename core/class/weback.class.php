@@ -110,13 +110,12 @@ class weback extends eqLogic {
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
          curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/x-amz-json-1.1',
-            'X-Amz-Target : com.amazonaws.cognito.identity.model.AWSCognitoIdentityService.GetCredentialsForIdentity',
+            'X-Amz-Target: com.amazonaws.cognito.identity.model.AWSCognitoIdentityService.GetCredentialsForIdentity',
             'Content-Length: ' . strlen($data_string))
           );
          $server_output = curl_exec($ch);
-         curl_close($ch);
+
          $json = json_decode($server_output, true);
-         log::add('weback', 'debug', 'CURL return = ' . $server_output);
          log::add('weback', 'debug', 'AWS Cognito answer = ' . print_r($json, true));
 
          if ($json['Credentials'] != NULL) {
@@ -129,8 +128,10 @@ class weback extends eqLogic {
            config::save("Identity_Id", $json['Credentials']['Identity_Id'], 'weback');
            config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');
          } else {
+           log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
            log::add('weback', 'debug', 'Echec d\'obtention des informations de connexion depuis AWS Cognito');
          }
+         curl_close($ch);
      }
 
   /*
