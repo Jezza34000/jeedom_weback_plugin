@@ -30,6 +30,12 @@ try {
   */
     ajax::init();
 
+    if (init('action') == 'checkConnection') {
+        $res = weback::getToken();
+        if ($res !== null)
+        ajax::success(); // TODO si erreur
+    }
+
     if (init('action') == 'discover') {
 		weback::getToken(); // TODO get error message
 		if ($res === null)

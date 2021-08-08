@@ -20,7 +20,6 @@
 
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
-//require_once __DIR__ . '/../../resources/moduletest.php';
 require_once __DIR__ . '/../../resources/vendor/aws-autoloader.php';
 
 use Aws\Lambda\LambdaClient;
