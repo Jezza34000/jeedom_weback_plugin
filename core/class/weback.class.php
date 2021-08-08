@@ -156,8 +156,6 @@ class weback extends eqLogic {
             'Identity_Id' => config::byKey('Identity_Id', 'weback'),
             'Region_Info' => config::byKey('Region_Info', 'weback'));
 
-      $payload =  'Device_Manager_Request';
-
       log::add('weback', 'debug', 'Payload='.$payload);
 
        $result = $client->invoke(array(
@@ -167,10 +165,10 @@ class weback extends eqLogic {
        ));
 
 
+       var_dump($result->get('Payload'));
 
-
-       log::add('weback', 'debug', print_r($result->get('Payload')));
-       /*log::add('weback', 'debug', 'Status = '.$result->get('StatusCode'));
+       log::add('weback', 'debug', '==== Amazon Lambda ====');
+       log::add('weback', 'debug', 'Status = '.$result->get('StatusCode'));
        log::add('weback', 'debug', 'FunctionError  = '.$result->get('FunctionError'));
        log::add('weback', 'debug', 'LogResult   = '.$result->get('LogResult'));
        log::add('weback', 'debug', 'Payload   = '.$result->get('Payload'));*/
