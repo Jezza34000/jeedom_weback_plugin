@@ -253,7 +253,7 @@ class weback extends eqLogic {
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpoint' => config::byKey('End_Point', 'weback'),
           'version' => 'latest',
-          'region'  => config::byKey('Region_Info', 'weback')
+          'region'  => config::byKey('Region_Info', 'weback'),
           'credentials' => [
                'key'    => config::byKey('AccessKeyId', 'weback'),
                'secret' => config::byKey('SecretKey', 'weback'),
