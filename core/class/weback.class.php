@@ -196,7 +196,7 @@ class weback extends eqLogic {
            config::save("Sub_type", $json['Request_Cotent'][0]['Sub_type'], 'weback');
            config::save("Image_Url", $json['Request_Cotent'][0]['Image_Url'], 'weback');
 
-           $robot=weback::byLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name'], $json['Request_Cotent'][0]['Sub_type']);
+           $robot=weback::byLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name'], 'weback');
            if (!is_object($robot)) {
              log::add('weback', 'debug', $json['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
              $robot = new weback();
@@ -204,7 +204,7 @@ class weback extends eqLogic {
              $robot->setLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name']);
              $robot->setIsEnable(1);
              $robot->setIsVisible(1);
-             $robot->setName($json['Request_Cotent'][0]['Thing_Name']." ".$json['Request_Cotent'][0]['Sub_type']);
+             $robot->setName($json['Request_Cotent'][0]['Thing_Nick_Name']." ".$json['Request_Cotent'][0]['Sub_type']);
              $robot->setConfiguration('Thing_Nick_Name', $json['Request_Cotent'][0]['Thing_Nick_Name']);
              $robot->setConfiguration('Sub_type', $json['Request_Cotent'][0]['Sub_type']);
              $robot->setConfiguration('Thing_Name', $json['Request_Cotent'][0]['Thing_Name']);
