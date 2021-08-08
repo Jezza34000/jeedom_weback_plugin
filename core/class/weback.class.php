@@ -133,7 +133,7 @@ class weback extends eqLogic {
            config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
            config::save("Expiration", $json['Credentials']['Expiration'], 'weback');
            config::save("SecretKey", $json['Credentials']['SecretKey'], 'weback');
-           config::save("Identity_Id", $json['Credentials']['Identity_Id'], 'weback');
+           config::save("IdentityId", $json['Credentials']['IdentityId'], 'weback');
            config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
@@ -153,7 +153,7 @@ class weback extends eqLogic {
        ]);
 
        $payload = array('Device_Manager_Request' => 'query',
-            'Identity_Id' => config::byKey('Identity_Id', 'weback'),
+            'Identity_Id' => config::byKey('IdentityId', 'weback'),
             'Region_Info' => config::byKey('Region_Info', 'weback'));
 
 
