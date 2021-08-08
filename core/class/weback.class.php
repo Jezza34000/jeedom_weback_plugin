@@ -196,6 +196,22 @@ class weback extends eqLogic {
            config::save("Sub_type", $json['Request_Cotent'][0]['Sub_type'], 'weback');
            config::save("Image_Url", $json['Request_Cotent'][0]['Image_Url'], 'weback');
 
+           $robot=robot::byLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name'], $json['Request_Cotent'][0]['Sub_type']);
+           if (!is_object($robot)) {
+             $robot = new robot();
+             $robot->setEqType_name($json['Request_Cotent'][0]['Sub_type']);
+             $robot->setLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name']);
+             $robot->setIsEnable(1);
+             $robot->setIsVisible(1);
+             $robot->setName('MonRobot '.$json['Request_Cotent'][0]['Sub_type']);
+             /*$robot->setConfiguration('DeviceID', $device['DeviceID']);
+             $robot->setConfiguration('BuildingID', $device['BuildingID']);
+             $robot->setConfiguration('DeviceType', $device['Device']['DeviceType']);//0 air/air, 1 air/water
+             $robot->setConfiguration('SubType', 'air');*/
+             $robot->save();
+           }
+
+
        } else {
          event::add('jeedom::alert', array(
            'level' => 'alert',
@@ -210,6 +226,26 @@ class weback extends eqLogic {
        log::add('weback', 'debug', 'LogResult   = '.$result->get('LogResult'));
        log::add('weback', 'debug', 'Payload   = '.$result->get('Payload'));*/
      }
+
+
+    public static function addNewRobot($device) {
+
+      $robot=robot::byLogicalId($device['BuildingID'] . $device['DeviceID'], 'mitsubishi');
+      if (!is_object($robot)) {
+        $robot = new robot();
+        $robot->setEqType_name('mitsubishi');
+        $robot->setLogicalId($device['BuildingID'] . $device['DeviceID']);
+        $robot->setIsEnable(1);
+        $robot->setIsVisible(1);
+        $robot->setName($device['DeviceName']);
+        $robot->setConfiguration('DeviceID', $device['DeviceID']);
+        $robot->setConfiguration('BuildingID', $device['BuildingID']);
+        $robot->setConfiguration('DeviceType', $device['Device']['DeviceType']);//0 air/air, 1 air/water
+        $robot->setConfiguration('SubType', 'air');
+        $robot->save();
+      }
+
+    }
 
 
   /*
