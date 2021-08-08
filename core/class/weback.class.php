@@ -62,7 +62,7 @@ class weback extends eqLogic {
 
      public static function discoverRobot()
      {
-         log::add('weback', 'debug', 'Démarrage de la recherche des robots...', true));
+         log::add('weback', 'debug', 'Démarrage de la recherche des robots...', true);
          weback::getToken();
          weback::getAWScredential();
          weback::getDeviceList();
