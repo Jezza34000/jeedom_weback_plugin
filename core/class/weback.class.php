@@ -20,9 +20,9 @@
 
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
-require_once __DIR__ . '/ressources/node_modules/aws-autoloader.php';
+//require_once __DIR__ . '/ressources/node_modules/aws-autoloader.php';
 
-use Aws\Lambda\LambdaClient;
+//use Aws\Lambda\LambdaClient;
 
 class weback extends eqLogic {
     /*     * *************************Attributs****************************** */
