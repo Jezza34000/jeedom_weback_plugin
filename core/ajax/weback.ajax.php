@@ -31,7 +31,7 @@ try {
     ajax::init();
 
     if (init('action') == 'checkConnection') {
-        $res = weback::getToken();
+        $res = weback::getDeviceShadow();
         if ($res !== null)
         ajax::success(); // TODO si erreur
     }

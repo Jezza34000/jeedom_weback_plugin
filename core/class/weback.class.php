@@ -247,7 +247,19 @@ class weback extends eqLogic {
         $robot->setConfiguration('SubType', 'air');
         $robot->save();
       }
+    }
 
+    public function getDeviceShadow($name){
+      $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
+          'version' => 'latest',
+          'region'  => config::byKey('Region_Info', 'weback')
+      ]);
+
+      $result = $IoT->getThingShadow([
+          'thingName' => config::byKey('Thing_Name', 'weback'), 
+      ]);
+
+      echo $result["payload"]->getContents();
     }
 
     public function loadCmdFromConf($_type) {
