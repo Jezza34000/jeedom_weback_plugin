@@ -177,7 +177,7 @@ class weback extends eqLogic {
       $json = json_decode($return, true);
       var_dump($json);
 
-       if ($json['Request_Result'] != 'success') {
+       if ($json['Request_Result'] == 'success') {
          event::add('jeedom::alert', array(
            'level' => 'success',
            'page' => 'weback',
