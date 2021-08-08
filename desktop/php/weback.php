@@ -123,21 +123,23 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 
-							<legend><i class="fas fa-cogs"></i> {{Paramètres spécifiques}}</legend>
+							<legend><i class="fas fa-cogs"></i> {{Informations}}</legend>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Nom du paramètre n°1}}
-									<sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le paramètre n°1 de l'équipement}}"></i></sup>
-								</label>
+								<label class="col-sm-3 control-label">{{Adresse MAC}}</label>
 								<div class="col-sm-7">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="param1" placeholder="{{Paramètre n°1}}"/>
-								</div>
+	                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="Thing_Name"></span>
+	              </div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label"> {{Mot de passe}}
-									<sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le mot de passe}}"></i></sup>
-								</label>
+								<label class="col-sm-3 control-label"> {{Modèle}}</label>
 								<div class="col-sm-7">
-									<input type="text" class="eqLogicAttr form-control inputPassword" data-l1key="configuration" data-l2key="password"/>
+	                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="Sub_type"></span>
+	              </div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> {{Nom du robot}}</label>
+								<div class="col-sm-7">
+									<span class="eqLogicAttr" data-l1key="configuration" data-l2key="Thing_Nick_Name"></span>
 								</div>
 							</div>
 							<!-- Champ de saisie du cron d'auto-actualisation + assistant cron -->
