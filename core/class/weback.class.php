@@ -198,17 +198,16 @@ class weback extends eqLogic {
 
            $robot=weback::byLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name'], $json['Request_Cotent'][0]['Sub_type']);
            if (!is_object($robot)) {
+             log::add('weback', 'debug', $json['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
              $robot = new weback();
              $robot->setEqType_name('weback');
              $robot->setLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name']);
              $robot->setIsEnable(1);
              $robot->setIsVisible(1);
              $robot->setName('MonRobot '.$json['Request_Cotent'][0]['Sub_type']);
-             /*$robot->setConfiguration('DeviceID', $device['DeviceID']);
-             $robot->setConfiguration('BuildingID', $device['BuildingID']);
-             $robot->setConfiguration('DeviceType', $device['Device']['DeviceType']);//0 air/air, 1 air/water
-             $robot->setConfiguration('SubType', 'air');*/
              $robot->save();
+           } else {
+             log::add('weback', 'debug', $json['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
            }
 
 
@@ -304,11 +303,42 @@ class weback extends eqLogic {
 
  // Fonction exécutée automatiquement avant la création de l'équipement
     public function preInsert() {
-
     }
 
  // Fonction exécutée automatiquement après la création de l'équipement
     public function postInsert() {
+
+      $domogeekCmd = new webackCmd();
+          $domogeekCmd->setName(__('Rafraichir', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+          $domogeekCmd->setType('action');
+      $domogeekCmd->setSubType('other');
+      $domogeekCmd->setLogicalId('refresh');
+          $domogeekCmd->save();
+
+          $domogeekCmd = new webackCmd();
+          $domogeekCmd->setName(__('Etat', __FILE__));
+          $domogeekCmd->setEqLogic_id($this->id);
+          $domogeekCmd->setConfiguration('data', 'etatrobot');
+          $domogeekCmd->setUnite('');
+          $domogeekCmd->setType('info');
+      $domogeekCmd->setEventOnly(1);
+          $domogeekCmd->setSubType('string');
+      $domogeekCmd->setIsHistorized(0);
+      $domogeekCmd->setLogicalId('etatrobot');
+          $domogeekCmd->save();
+
+          $domogeekCmd = new webackCmd();
+          $domogeekCmd->setName(__('Batterie', __FILE__));
+          $domogeekCmd->setEqLogic_id($this->id);
+          $domogeekCmd->setConfiguration('data', 'batterierobot');
+          $domogeekCmd->setUnite('');
+          $domogeekCmd->setType('info');
+      $domogeekCmd->setEventOnly(1);
+          $domogeekCmd->setSubType('string');
+      $domogeekCmd->setIsHistorized(0);
+      $domogeekCmd->setLogicalId('batterierobot');
+          $domogeekCmd->save();
 
     }
 
