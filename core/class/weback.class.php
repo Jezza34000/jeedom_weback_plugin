@@ -196,9 +196,9 @@ class weback extends eqLogic {
            config::save("Sub_type", $json['Request_Cotent'][0]['Sub_type'], 'weback');
            config::save("Image_Url", $json['Request_Cotent'][0]['Image_Url'], 'weback');
 
-           $robot=robot::byLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name'], $json['Request_Cotent'][0]['Sub_type']);
+           $robot=weback::byLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name'], $json['Request_Cotent'][0]['Sub_type']);
            if (!is_object($robot)) {
-             $robot = new robot();
+             $robot = new weback();
              $robot->setEqType_name($json['Request_Cotent'][0]['Sub_type']);
              $robot->setLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name']);
              $robot->setIsEnable(1);
@@ -230,9 +230,9 @@ class weback extends eqLogic {
 
     public static function addNewRobot($device) {
 
-      $robot=robot::byLogicalId($device['BuildingID'] . $device['DeviceID'], 'mitsubishi');
+      $robot=weback::byLogicalId($device['BuildingID'] . $device['DeviceID'], 'mitsubishi');
       if (!is_object($robot)) {
-        $robot = new robot();
+        $robot = new weback();
         $robot->setEqType_name('mitsubishi');
         $robot->setLogicalId($device['BuildingID'] . $device['DeviceID']);
         $robot->setIsEnable(1);
