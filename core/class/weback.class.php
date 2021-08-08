@@ -208,7 +208,7 @@ class weback extends eqLogic {
              $robot->setConfiguration('Thing_Nick_Name', $json['Request_Cotent'][0]['Thing_Nick_Name']);
              $robot->setConfiguration('Sub_type', $json['Request_Cotent'][0]['Sub_type']);
              $robot->setConfiguration('Thing_Name', $json['Request_Cotent'][0]['Thing_Name']);
-             $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($json['Request_Cotent'][0]['Thing_Nick_Name'],-17)));
+             $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($json['Request_Cotent'][0]['Thing_Name'],-17)));
              $robot->save();
            } else {
              log::add('weback', 'debug', $json['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
