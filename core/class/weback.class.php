@@ -171,9 +171,24 @@ class weback extends eqLogic {
       ), true));
 
       //var_dump((string)$result->get('Payload')); => OK!
-      //var_dump($result->get('Payload')); => NOK
 
-       log::add('weback', 'debug', 'AWS Lambda answer = ' . $result['Payload']->getContents());
+       if ($json['Request_Result'] != 'success') {
+         log::add('weback', 'debug', 'AWS Lambda answer = ' . $result['Payload']->getContents());
+         event::add('jeedom::alert', array(
+           'level' => 'success',
+           'page' => 'weback',
+           'message' => __('Robot trouvé : '.$json['Request_Cotent']['Thing_Name'], __FILE__)));
+
+         /*config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
+         config::save("Expiration", $json['Credentials']['Expiration'], 'weback');
+         config::save("SecretKey", $json['Credentials']['SecretKey'], 'weback');
+         config::save("IdentityId", $json['IdentityId'], 'weback');
+         config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');*/
+
+       } else {
+
+       }
+
 
        /*log::add('weback', 'debug', '==== Amazon Lambda ====');
        log::add('weback', 'debug', 'Status = '.$result->get('StatusCode'));
