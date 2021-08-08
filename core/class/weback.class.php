@@ -161,7 +161,7 @@ class weback extends eqLogic {
        $result = $client->invoke(array(
            'FunctionName' => 'Device_Manager_V2',
            'InvocationType' => 'RequestResponse',
-           'Payload' => $payload,
+           //'Payload' => $payload,
        ));
 
 
