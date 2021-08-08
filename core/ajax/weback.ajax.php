@@ -30,14 +30,13 @@ try {
   */
     ajax::init();
 
-
     if (init('action') == 'discover') {
-    weback::discoverDevices(); // TODO get error message
-    if ($res === null)
+		weback::discoverRobot(); // TODO get error message
+		if ($res === null)
             ajax::success();
         else
             throw new Exception(__('Une erreur est survenue lors de la recherche des équipements ', __FILE__));
-  }
+	}
 
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */

@@ -61,7 +61,7 @@ class weback extends eqLogic {
      * return Array of Device
      */
 
-     static public function discoverDevices()
+     static public function discoverRobot()
      {
          log::add('weback', 'debug', 'Démarrage de la recherche des robots...', true));
          weback::getToken();
