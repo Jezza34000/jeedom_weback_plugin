@@ -31,7 +31,7 @@ try {
     ajax::init();
 
     if (init('action') == 'discover') {
-		weback::discoverRobot(); // TODO get error message
+		weback::getToken(); // TODO get error message
 		if ($res === null)
             ajax::success();
         else
