@@ -170,8 +170,10 @@ class weback extends eqLogic {
           'Payload' => json_encode($payload),
       ), true));
 
+      var_dump((string)$result->get('Payload'));
+
        //var_dump($result->get('Payload'));
-       log::add('weback', 'debug', 'Lambda answer = ' . print_r($response['Payload']->__toString()));
+       //log::add('weback', 'debug', 'Lambda answer = ' . print_r($response['Payload']->__toString()));
 
        /*log::add('weback', 'debug', '==== Amazon Lambda ====');
        log::add('weback', 'debug', 'Status = '.$result->get('StatusCode'));
