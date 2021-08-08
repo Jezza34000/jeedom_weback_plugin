@@ -152,12 +152,16 @@ class weback extends eqLogic {
                 'token' => config::byKey('SessionToken', 'weback'),]
        ]);
 
+       $payload = array('Device_Manager_Request':'query',
+            'Identity_Id': config::byKey('Identity_Id', 'weback'),
+            'Region_Info': config::byKey('Region_Info', 'weback'));
+
+      log::add('weback', 'debug', 'Payload='.$payload);
+
        $result = $client->invoke(array(
            'FunctionName' => 'Device_Manager_V2',
            'InvocationType' => 'RequestResponse',
-           'Payload' => json_encode('Device_Manager_Request':'query',
-                "Identity_Id": config::byKey('Identity_Id', 'weback'),
-                "Region_Info": config::byKey('Region_Info', 'weback')),
+           'Payload' => $payload,
        ));
 
 
