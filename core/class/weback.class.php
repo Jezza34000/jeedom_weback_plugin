@@ -146,8 +146,9 @@ class weback extends eqLogic {
        $client = LambdaClient::factory([
            'version' => 'latest',
            'region'  => config::byKey('Region_Info', 'weback'),
-           'key'    => config::byKey('AccessKeyId', 'weback'),
-           'secret' => config::byKey('SecretKey', 'weback'),
+           'credentials' => [
+                'key'    => config::byKey('AccessKeyId', 'weback'),
+                'secret' => config::byKey('SecretKey', 'weback')]
        ]);
 
        $result = $client->invoke(array(
