@@ -156,8 +156,6 @@ class weback extends eqLogic {
             'Identity_Id' => config::byKey('Identity_Id', 'weback'),
             'Region_Info' => config::byKey('Region_Info', 'weback'));
 
-
-
        $result = $client->invoke(array(
            'FunctionName' => 'Device_Manager_V2',
            'InvocationType' => 'RequestResponse',
@@ -178,16 +176,16 @@ class weback extends eqLogic {
       //var_dump($json);
 
        if ($json['Request_Result'] == 'success') {
-         event::add('jeedom::alert', array(
+         /*event::add('jeedom::alert', array(
            'level' => 'success',
            'page' => 'weback',
-           'message' => __('Robot trouvé : '.$json['Request_Cotent'][0]['Thing_Name'], __FILE__)));
-           log::add('weback', 'debug', 'Robot trouvé :' .$json['Request_Cotent'][0]['Thing_Name']);
-         /*config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
-         config::save("Expiration", $json['Credentials']['Expiration'], 'weback');
-         config::save("SecretKey", $json['Credentials']['SecretKey'], 'weback');
-         config::save("IdentityId", $json['IdentityId'], 'weback');
-         config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');*/
+           'message' => __('Robot trouvé : '.$json['Request_Cotent'][0]['Thing_Name'], __FILE__)));*/
+           log::add('weback', 'debug', 'Robot trouvé : ' .$json['Request_Cotent'][0]['Thing_Name']);
+           // sauvegarde des informations
+           config::save("Thing_Name", $json['Request_Cotent'][0]['Thing_Name'], 'weback');
+           config::save("Thing_Nick_Name", $json['Request_Cotent'][0]['Thing_Nick_Name'], 'weback');
+           config::save("Sub_type", $json['Request_Cotent'][0]['Sub_type'], 'weback');
+           config::save("Image_Url", $json['Request_Cotent'][0]['Image_Url'], 'weback');
 
        } else {
          event::add('jeedom::alert', array(
@@ -196,7 +194,6 @@ class weback extends eqLogic {
            'message' => __('Aucun robot trouvé', __FILE__)));
           log::add('weback', 'debug', 'Aucun robot trouvé');
        }
-
 
        /*log::add('weback', 'debug', '==== Amazon Lambda ====');
        log::add('weback', 'debug', 'Status = '.$result->get('StatusCode'));
