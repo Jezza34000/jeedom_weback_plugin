@@ -205,9 +205,9 @@ class weback extends eqLogic {
              $robot->setIsEnable(1);
              $robot->setIsVisible(1);
              $robot->setName('MonRobot '.$json['Request_Cotent'][0]['Sub_type']);
-             $mitsubishi->setConfiguration('Thing_Nick_Name', $json['Request_Cotent'][0]['Thing_Nick_Name']);
-             $mitsubishi->setConfiguration('Sub_type', $json['Request_Cotent'][0]['Sub_type']);
-             $mitsubishi->setConfiguration('Thing_Name', $json['Request_Cotent'][0]['Thing_Name']);//0 air/air, 1 air/water
+             $robot->setConfiguration('Thing_Nick_Name', $json['Request_Cotent'][0]['Thing_Nick_Name']);
+             $robot->setConfiguration('Sub_type', $json['Request_Cotent'][0]['Sub_type']);
+             $robot->setConfiguration('Thing_Name', $json['Request_Cotent'][0]['Thing_Name']);//0 air/air, 1 air/water
              $robot->save();
            } else {
              log::add('weback', 'debug', $json['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
