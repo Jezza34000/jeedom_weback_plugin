@@ -175,7 +175,7 @@ class weback extends eqLogic {
       //var_dump((string)$result->get('Payload')); => OK!
       log::add('weback', 'debug', 'AWS Lambda answer = ' . $return);
       $json = json_decode($return, true);
-      var_dump($json);
+      //var_dump($json);
 
        if ($json['Request_Result'] == 'success') {
          event::add('jeedom::alert', array(
