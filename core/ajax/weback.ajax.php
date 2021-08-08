@@ -32,7 +32,7 @@ try {
 
 
     if (init('action') == 'discover') {
-    SmartLife::discoverDevices(); // TODO get error message
+    weback::discoverDevices(); // TODO get error message
     if ($res === null)
             ajax::success();
         else

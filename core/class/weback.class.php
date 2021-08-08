@@ -67,6 +67,7 @@ class weback extends eqLogic {
          weback::getToken();
          weback::getAWScredential();
          weback::getDeviceList();
+         return null;
      }
 
 
