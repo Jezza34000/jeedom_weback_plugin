@@ -199,7 +199,7 @@ class weback extends eqLogic {
            $robot=weback::byLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name'], $json['Request_Cotent'][0]['Sub_type']);
            if (!is_object($robot)) {
              $robot = new weback();
-             $robot->setEqType_name($json['Request_Cotent'][0]['Sub_type']);
+             $robot->setEqType_name('weback');
              $robot->setLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name']);
              $robot->setIsEnable(1);
              $robot->setIsVisible(1);
