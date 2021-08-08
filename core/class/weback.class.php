@@ -149,7 +149,7 @@ class weback extends eqLogic {
            'credentials' => [
                 'key'    => config::byKey('AccessKeyId', 'weback'),
                 'secret' => config::byKey('SecretKey', 'weback'),
-                'token' => config::byKey('SessionToken', 'weback')]
+                'token' => config::byKey('SessionToken', 'weback'),]
        ]);
 
        $result = $client->invoke(array(
