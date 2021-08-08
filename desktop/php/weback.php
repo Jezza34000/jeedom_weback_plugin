@@ -125,9 +125,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 							<legend><i class="fas fa-cogs"></i> {{Informations}}</legend>
 							<div class="form-group">
+								<label class="col-sm-3 control-label"> {{Nom du robot}}</label>
+								<div class="col-sm-7">
+									<span class="eqLogicAttr" data-l1key="configuration" data-l2key="Thing_Nick_Name"></span>
+								</div>
+							</div>
+							<div class="form-group">
 								<label class="col-sm-3 control-label">{{Adresse MAC}}</label>
 								<div class="col-sm-7">
-	                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="Thing_Name"></span>
+	                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="Mac_Adress"></span>
 	              </div>
 							</div>
 							<div class="form-group">
@@ -135,12 +141,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="col-sm-7">
 	                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="Sub_type"></span>
 	              </div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label"> {{Nom du robot}}</label>
-								<div class="col-sm-7">
-									<span class="eqLogicAttr" data-l1key="configuration" data-l2key="Thing_Nick_Name"></span>
-								</div>
 							</div>
 							<!-- Champ de saisie du cron d'auto-actualisation + assistant cron -->
 							<!-- La fonction cron de la classe du plugin doit contenir le code prévu pour que ce champ soit fonctionnel -->
