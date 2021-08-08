@@ -182,7 +182,7 @@ class weback extends eqLogic {
            'level' => 'success',
            'page' => 'weback',
            'message' => __('Robot trouvé : '.$json['Request_Cotent']['Thing_Name'], __FILE__)));
-
+           log::add('weback', 'debug', 'Robot trouvé');
          /*config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
          config::save("Expiration", $json['Credentials']['Expiration'], 'weback');
          config::save("SecretKey", $json['Credentials']['SecretKey'], 'weback');
@@ -190,7 +190,11 @@ class weback extends eqLogic {
          config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');*/
 
        } else {
-
+         event::add('jeedom::alert', array(
+           'level' => 'alert',
+           'page' => 'weback',
+           'message' => __('Aucun robot trouvé', __FILE__)));
+          log::add('weback', 'debug', 'Aucun robot trouvé');
        }
 
 
