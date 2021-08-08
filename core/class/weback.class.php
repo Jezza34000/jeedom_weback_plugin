@@ -246,6 +246,36 @@ class weback extends eqLogic {
 
     }
 
+    public function loadCmdFromConf($_type) {
+      if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
+        return;
+      }
+      $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
+      if (!is_json($content)) {
+        return;
+      }
+      $device = json_decode($content, true);
+      if (!is_array($device) || !isset($device['commands'])) {
+        return true;
+      }
+      foreach ($device['commands'] as $command) {
+        $cmd = null;
+        foreach ($this->getCmd() as $liste_cmd) {
+          if ((isset($command['logicalId']) && $liste_cmd->getLogicalId() == $command['logicalId'])
+          || (isset($command['name']) && $liste_cmd->getName() == $command['name'])) {
+            $cmd = $liste_cmd;
+            break;
+          }
+        }
+        if ($cmd == null || !is_object($cmd)) {
+          $cmd = new webackCmd();
+          $cmd->setEqLogic_id($this->getId());
+          utils::a2o($cmd, $command);
+          $cmd->save();
+        }
+      }
+    }
+
 
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
@@ -309,36 +339,96 @@ class weback extends eqLogic {
     public function postInsert() {
 
       $domogeekCmd = new webackCmd();
-          $domogeekCmd->setName(__('Rafraichir', __FILE__));
+      $domogeekCmd->setName(__('Rafraichir', __FILE__));
       $domogeekCmd->setEqLogic_id($this->id);
-          $domogeekCmd->setType('action');
+      $domogeekCmd->setType('action');
       $domogeekCmd->setSubType('other');
       $domogeekCmd->setLogicalId('refresh');
-          $domogeekCmd->save();
+      $domogeekCmd->save();
 
-          $domogeekCmd = new webackCmd();
-          $domogeekCmd->setName(__('Etat', __FILE__));
-          $domogeekCmd->setEqLogic_id($this->id);
-          $domogeekCmd->setConfiguration('data', 'etatrobot');
-          $domogeekCmd->setUnite('');
-          $domogeekCmd->setType('info');
+      $domogeekCmd = new webackCmd();
+      $domogeekCmd->setName(__('Etat', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+      $domogeekCmd->setConfiguration('data', 'etatrobot');
+      $domogeekCmd->setUnite('');
+      $domogeekCmd->setType('info');
       $domogeekCmd->setEventOnly(1);
-          $domogeekCmd->setSubType('string');
+      $domogeekCmd->setSubType('string');
       $domogeekCmd->setIsHistorized(0);
       $domogeekCmd->setLogicalId('etatrobot');
-          $domogeekCmd->save();
+      $domogeekCmd->save();
 
-          $domogeekCmd = new webackCmd();
-          $domogeekCmd->setName(__('Batterie', __FILE__));
-          $domogeekCmd->setEqLogic_id($this->id);
-          $domogeekCmd->setConfiguration('data', 'batterierobot');
-          $domogeekCmd->setUnite('');
-          $domogeekCmd->setType('info');
+      $domogeekCmd = new webackCmd();
+      $domogeekCmd->setName(__('Etat détaillé', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+      $domogeekCmd->setConfiguration('data', 'etatdetaillerobot');
+      $domogeekCmd->setUnite('');
+      $domogeekCmd->setType('info');
       $domogeekCmd->setEventOnly(1);
-          $domogeekCmd->setSubType('string');
+      $domogeekCmd->setSubType('string');
+      $domogeekCmd->setIsHistorized(0);
+      $domogeekCmd->setLogicalId('etatdetaillerobot');
+      $domogeekCmd->save();
+
+      $domogeekCmd = new webackCmd();
+      $domogeekCmd->setName(__('Nettoyage auto', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+      $domogeekCmd->setType('action');
+      $domogeekCmd->setSubType('other');
+      $domogeekCmd->setLogicalId('smartcleanrobot');
+      $domogeekCmd->save();
+
+      $domogeekCmd = new webackCmd();
+      $domogeekCmd->setName(__('Pause', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+      $domogeekCmd->setType('action');
+      $domogeekCmd->setSubType('other');
+      $domogeekCmd->setLogicalId('pauserobot');
+      $domogeekCmd->save();
+
+      $domogeekCmd = new webackCmd();
+      $domogeekCmd->setName(__('Retour à la base', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+      $domogeekCmd->setType('action');
+      $domogeekCmd->setSubType('other');
+      $domogeekCmd->setLogicalId('returntohomerobot');
+      $domogeekCmd->save();
+
+      $domogeekCmd = new webackCmd();
+      $domogeekCmd->setName(__('Batterie', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+      $domogeekCmd->setConfiguration('data', 'batterierobot');
+      $domogeekCmd->setUnite('');
+      $domogeekCmd->setType('info');
+      $domogeekCmd->setEventOnly(1);
+      $domogeekCmd->setSubType('string');
       $domogeekCmd->setIsHistorized(0);
       $domogeekCmd->setLogicalId('batterierobot');
-          $domogeekCmd->save();
+      $domogeekCmd->save();
+
+      $domogeekCmd = new webackCmd();
+      $domogeekCmd->setName(__('Puissance aspiration', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+      $domogeekCmd->setConfiguration('data', 'puissanceaspirationrobot');
+      $domogeekCmd->setUnite('');
+      $domogeekCmd->setType('info');
+      $domogeekCmd->setEventOnly(1);
+      $domogeekCmd->setSubType('string');
+      $domogeekCmd->setIsHistorized(0);
+      $domogeekCmd->setLogicalId('puissanceaspirationrobot');
+      $domogeekCmd->save();
+
+      $domogeekCmd = new webackCmd();
+      $domogeekCmd->setName(__('Durée ménage', __FILE__));
+      $domogeekCmd->setEqLogic_id($this->id);
+      $domogeekCmd->setConfiguration('data', 'dureemenage');
+      $domogeekCmd->setUnite('');
+      $domogeekCmd->setType('info');
+      $domogeekCmd->setEventOnly(1);
+      $domogeekCmd->setSubType('string');
+      $domogeekCmd->setIsHistorized(0);
+      $domogeekCmd->setLogicalId('dureemenage');
+      $domogeekCmd->save();
 
     }
 

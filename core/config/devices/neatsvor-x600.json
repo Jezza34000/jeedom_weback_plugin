@@ -1,0 +1,335 @@
+{
+  "name": "neatsvor-x600",
+  "commands": [
+    {
+      "name": "AutoClean",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "icon": "<i class=\"fas fa-lightbulb\"><\/i>",
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : "true",
+        "flag" : "Power",
+        "idflag" : 1
+      },
+      "isVisible": 1,
+      "logicalId": "On"
+    },
+    {
+      "name": "Eteindre",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "icon": "<i class=\"fas fa-power-off\"><\/i>",
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : "false",
+        "flag" : "Power",
+        "idflag" : 1
+      },
+      "isVisible": 1,
+      "logicalId": "Off"
+    },
+    {
+      "name": "Power",
+      "type": "info",
+      "subtype": "binary",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "isVisible": 1,
+      "isHistorized": 0,
+      "logicalId": "Power",
+      "template": {
+        "dashboard": "line",
+        "mobile": "line"
+      }
+    },
+    {
+      "name": "Mode Chauffage",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "icon": "<i class=\"fas fa-fire\"><\/i>",
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : 1,
+        "flag" : "OperationMode",
+        "idflag" : 6
+      },
+      "isVisible": 1,
+      "logicalId": "Chauffage"
+    },
+    {
+      "name": "Mode Séchage",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "icon": "<i class=\"fas fa-tint\"><\/i>",
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : 2,
+        "flag" : "OperationMode",
+        "idflag" : 6
+      },
+      "isVisible": 1,
+      "logicalId": "Sechage"
+    },
+    {
+      "name": "Mode Froid",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "icon": "<i class=\"fas fa-snowflake\"><\/i>",
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : 3,
+        "flag" : "OperationMode",
+        "idflag" : 6
+      },
+      "isVisible": 1,
+      "logicalId": "Froid"
+    },
+    {
+      "name": "Mode Ventile",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "icon": "<i class=\"fas fa-fan\"><\/i>",
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : 7,
+        "flag" : "OperationMode",
+        "idflag" : 6
+      },
+      "isVisible": 1,
+      "logicalId": "Ventile"
+    },
+    {
+      "name": "Mode Auto",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "icon": "<i class=\"fas fa-sync\"><\/i>",
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : 8,
+        "flag" : "OperationMode",
+        "idflag" : 6
+      },
+      "isVisible": 1,
+      "logicalId": "Auto"
+    },
+    {
+      "name": "Mode Select",
+      "type": "action",
+      "subtype": "select",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : "select",
+        "flag" : "OperationMode",
+        "idflag" : 6,
+        "listValue" : "1|Chaud;2|Séchage;3|Froid;7|Ventile;8|Auto"
+      },
+      "isVisible": 1,
+      "logicalId": "selectOperationMode"
+    },
+    {
+      "name": "Ventilateur Select",
+      "type": "action",
+      "subtype": "select",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "option" : "select",
+        "flag" : "SetFanSpeed",
+        "idflag" : 8,
+        "listValue" : "0|Auto;1|1;2|2;3|3"
+      },
+      "isVisible": 1,
+      "logicalId": "selectSetFanSpeed"
+    },
+    {
+      "name": "Consigne",
+      "type": "info",
+      "subtype": "numeric",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "unite": "°C",
+      "isVisible": 1,
+      "logicalId": "SetTemperature"
+    },
+    {
+      "name": "Set Consigne",
+      "type": "action",
+      "subtype": "slider",
+      "display": {
+        "generic_type": "DONT",
+        "forceReturnLineBefore": 1
+      },
+      "configuration" : {
+        "option" : "slider",
+        "flag" : "SetTemperature",
+        "idflag" : 4,
+        "minValue" : 10,
+        "maxValue" : 30
+      },
+      "isVisible": 1,
+      "logicalId": "actionSetTemperature"
+    },
+    {
+      "name": "Augmenter Consigne",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "generic_type": "DONT",
+        "icon": "<i class=\"far fa-plus-square\"><\/i>"
+      },
+      "configuration" : {
+        "option" : "plus",
+        "flag" : "SetTemperature",
+        "idflag" : 4
+      },
+      "isVisible": 1,
+      "logicalId": "plus",
+      "value": "Consigne"
+    },
+    {
+      "name": "Diminuer Consigne",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "generic_type": "DONT",
+        "icon": "<i class=\"far fa-minus-square\"><\/i>"
+      },
+      "configuration" : {
+        "option" : "minus",
+        "flag" : "SetTemperature",
+        "idflag" : 4
+      },
+      "isVisible": 1,
+      "logicalId": "minus",
+      "value": "Consigne"
+    },
+    {
+      "name": "Set Ventilation",
+      "type": "action",
+      "subtype": "slider",
+      "display": {
+        "generic_type": "DONT",
+        "forceReturnLineBefore": 1
+      },
+      "configuration" : {
+        "option" : "slider",
+        "flag" : "SetFanSpeed",
+        "idflag" : 8,
+        "minValue" : 0,
+        "maxValue" : 3
+      },
+      "value": "Vitesse Ventilateur",
+      "isVisible": 1,
+      "logicalId": "actionSetFanSpeed"
+    },
+    {
+      "name": "Vitesse Ventilateur",
+      "type": "info",
+      "subtype": "numeric",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "isVisible": 0,
+      "isHistorized": 0,
+      "logicalId": "ActualFanSpeed",
+      "template": {
+        "dashboard": "line",
+        "mobile": "line"
+      }
+    },
+    {
+      "name": "Vitesse Ventilateur Texte",
+      "type": "info",
+      "subtype": "string",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "isVisible": 0,
+      "logicalId": "ActualFanSpeedText",
+      "template": {
+        "dashboard": "line",
+        "mobile": "line"
+      }
+    },
+    {
+      "name": "Température Sonde",
+      "type": "info",
+      "subtype": "numeric",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "isVisible": 1,
+      "isHistorized": 0,
+      "unite": "°C",
+      "logicalId": "RoomTemperature",
+      "template": {
+        "dashboard": "line",
+        "mobile": "line"
+      }
+    },
+    {
+      "name": "Mode",
+      "type": "info",
+      "subtype": "numeric",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "isVisible": 1,
+      "isHistorized": 0,
+      "logicalId": "OperationMode",
+      "template": {
+        "dashboard": "line",
+        "mobile": "line"
+      }
+    },
+    {
+      "name": "Mode Texte",
+      "type": "info",
+      "subtype": "string",
+      "display": {
+        "generic_type": "DONT"
+      },
+      "isVisible": 1,
+      "isHistorized": 0,
+      "logicalId": "OperationModeText",
+      "template": {
+        "dashboard": "line",
+        "mobile": "line"
+      }
+    },
+    {
+      "name": "Rafraichir",
+      "type": "action",
+      "subtype": "other",
+      "display": {
+        "icon": "<i class=\"fas fa-refresh\"><\/i>",
+        "generic_type": "DONT"
+      },
+      "configuration" : {
+        "request" : "refresh"
+      },
+      "isVisible": 1,
+      "logicalId": "refresh"
+    }
+  ]
+}
