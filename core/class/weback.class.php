@@ -61,6 +61,15 @@ class weback extends eqLogic {
      * return Array of Device
      */
 
+     static public function discoverDevices()
+     {
+         log::add('weback', 'debug', 'Démarrage de la recherche des robots...', true));
+         weback::getToken();
+         weback::getAWScredential();
+         weback::getDeviceList();
+     }
+
+
      public static function getToken() {
        log::add('weback', 'debug', 'Connexion à WeBack-login...');
        if (config::byKey('password', 'weback') != '' && config::byKey('user', 'weback') != '' && config::byKey('country', 'weback') != '') {
