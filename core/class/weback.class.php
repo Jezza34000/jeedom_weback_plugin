@@ -249,17 +249,20 @@ class weback extends eqLogic {
       }
     }
 
-    public function getDeviceShadow($name){
+    public static function getDeviceShadow(){
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
+          'endpoint' => config::byKey('End_Point', 'weback'),
           'version' => 'latest',
           'region'  => config::byKey('Region_Info', 'weback')
+          'credentials' => [
+               'key'    => config::byKey('AccessKeyId', 'weback'),
+               'secret' => config::byKey('SecretKey', 'weback'),
+               'token' => config::byKey('SessionToken', 'weback'),]
       ]);
-
       $result = $IoT->getThingShadow([
-          'thingName' => config::byKey('Thing_Name', 'weback'), 
+          'thingName' => config::byKey('Thing_Name', 'weback'),
       ]);
-
-      echo $result["payload"]->getContents();
+      var_dump((string)$result->get('payload'));
     }
 
     public function loadCmdFromConf($_type) {
