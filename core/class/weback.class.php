@@ -251,6 +251,7 @@ class weback extends eqLogic {
 
     public static function getDeviceShadow(){
       log::add('weback', 'debug', 'Mise à jour Shadow Device depuis Iot-Data...');
+      log::add('weback', 'debug', 'ThingName ='.config::byKey('Thing_Name', 'weback'));
       log::add('weback', 'debug', 'Region_Info ='.config::byKey('Region_Info', 'weback'));
       log::add('weback', 'debug', 'End_Point ='.config::byKey('End_Point', 'weback'));
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
