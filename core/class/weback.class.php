@@ -253,7 +253,8 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'Mise à jours des INFO (Status='.$shadowJson->state->reported->working_status.')');
       //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback=weback::byLogicalId('nono neatsvor-x600', 'weback');
-      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
+      var_dump($wback);
+      //$wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
     }
 
     public static function IsRenewlRequired(){
@@ -385,14 +386,12 @@ class weback extends eqLogic {
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
+      $webackcmd->setLogicalId('working_status');
       $webackcmd->setName(__('Etat détaillé', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setConfiguration('data', 'working_status');
-      $webackcmd->setUnite('');
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('working_status');
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
