@@ -261,11 +261,11 @@ class weback extends eqLogic {
       $tsexpiration = config::byKey('Expiration', 'weback');
       log::add('weback', 'debug', $tsexpiration.'/'.$tsnow);
       if ($tsexpiration < $tsnow) {
-        log::add('weback', 'debug', '=> OK, valid');
-        return false;
-      } else {
         log::add('weback', 'debug', '=> EXPIRED');
         return true;
+      } else {
+        log::add('weback', 'debug', '=> OK, valid');
+        return false;
       }
     }
 
