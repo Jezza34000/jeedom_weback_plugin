@@ -414,7 +414,7 @@ class weback extends eqLogic {
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Puissance aspiration', __FILE__));
+      $webackcmd->setName(__('Aspiration', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
@@ -459,30 +459,6 @@ class weback extends eqLogic {
       $webackcmd->setSubType('numeric');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('clean_area');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Nettoyage auto', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('smartcleanrobot');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Pause', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('pauserobot');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Retour à la base', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('returntohomerobot');
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -531,7 +507,32 @@ class weback extends eqLogic {
       $webackcmd->setLogicalId('continue_clean');
       $webackcmd->save();
 
+      // =========================
+      // Robot ACTION
 
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Nettoyage auto', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('smartcleanrobot');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Pause', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('pauserobot');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Retour à la base', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('returntohomerobot');
+      $webackcmd->save();
 
     }
 
