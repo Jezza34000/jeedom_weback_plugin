@@ -252,9 +252,8 @@ class weback extends eqLogic {
       $shadowJson = json_decode($return, false);
       log::add('weback', 'debug', 'Mise à jours des INFO (Status='.$shadowJson->state->reported->working_status.')');
       //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
-      $wback=weback::byLogicalId('nono neatsvor-x600', 'weback');
-      var_dump($wback);
-      //$wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
+      $wback=weback::byLogicalId('nononeatsvor-x600-20-4e-f6-9e-f2-a1', 'weback');
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
     }
 
     public static function IsRenewlRequired(){
