@@ -38,6 +38,7 @@ class weback extends eqLogic {
          if (weback::getToken() == true) {
                if (weback::getAWScredential() == true) {
                        if (weback::getDeviceList() == true) {
+                         log::add('weback', 'debug', '### Recherche robot terminé avec succès!', true);
                          return true;
                        } else {
                          log::add('weback', 'debug', 'Recherche des robots KO > Echec GetDeviceList', true);
