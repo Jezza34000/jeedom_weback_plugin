@@ -272,7 +272,7 @@ class weback extends eqLogic {
     }
 
     public static function updateStatusDevices($calledLogicalID){
-      log::add('weback', 'debug', 'UpdateStatus de '..' demandé');
+      log::add('weback', 'debug', 'UpdateStatus de '.$calledLogicalID.' demandé');
       // Vérification si le TOKEN AWS IOT est toujours valable
       if (weback::IsRenewlRequired() == false){
         weback::getDeviceShadow($calledLogicalID);
@@ -309,7 +309,7 @@ class weback extends eqLogic {
         log::add('weback', 'debug', 'Refresh (CRON)');
         $eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('weback', true);
     		foreach ($eqLogics as $webackrbt) {
-          log::add('weback', 'debug', 'Actualisation de :'.$webackrbt->getHumanName());
+          log::add('weback', 'debug', 'Actualisation de : '.$webackrbt->getHumanName());
           weback::updateStatusDevices($webackrbt->getLogicalId());
     		}
       }
