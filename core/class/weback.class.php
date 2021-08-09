@@ -250,9 +250,8 @@ class weback extends eqLogic {
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
-      log::add('weback', 'debug', 'Mise à jours des INFO');
+      log::add('weback', 'debug', 'Mise à jours des INFO (Status='.$shadowJson->state->reported->working_status.')');
       $weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
-
     }
 
     public static function IsRenewlRequired(){
