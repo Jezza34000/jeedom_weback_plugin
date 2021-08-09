@@ -623,7 +623,7 @@ class webackCmd extends cmd {
             weback::updateStatusDevices($this->getLogicalId());
             break;
           case 'autoclean':
-            weback::webackSendAction($this->getLogicalId(), "AutoClean");
+            weback::SendAction($this->getLogicalId(), "AutoClean");
             break;
         }
 
