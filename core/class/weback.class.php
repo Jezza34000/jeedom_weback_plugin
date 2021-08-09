@@ -258,7 +258,7 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'Check AWS token validity');
       $date = new DateTime();
       $tsnow = $date->getTimestamp();
-      $tsexpiration = config::byKey('AccessKeyId', 'weback');
+      $tsexpiration = config::byKey('Expiration', 'weback');
       log::add('weback', 'debug', $tsexpiration.'/'.$tsnow);
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'debug', '=> OK, valid');
