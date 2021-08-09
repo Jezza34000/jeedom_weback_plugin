@@ -35,10 +35,22 @@ class weback extends eqLogic {
      public static function discoverRobot()
      {
          log::add('weback', 'debug', 'Démarrage de la recherche des robots...', true);
-         weback::getToken();
-         weback::getAWScredential();
-         weback::getDeviceList();
-         return null;
+         if (weback::getToken() == true) {
+               if (weback::getAWScredential() == true) {
+                       if (weback::getDeviceList() == true) {
+                         return true;
+                       } else {
+                         log::add('weback', 'debug', 'Recherche des robots KO > Echec GetDeviceList', true);
+                         return false;
+                       }
+                 } else {
+                   log::add('weback', 'debug', 'Recherche des robots KO > Echec AWS Credentials', true);
+                   return false;
+                 }
+           } else {
+             log::add('weback', 'debug', 'Recherche des robots KO > Echec WeBack login', true);
+             return false;
+           }
      }
 
 
@@ -85,6 +97,9 @@ class weback extends eqLogic {
            return false;
          }
          curl_close($ch);
+       } else {
+         log::add('weback', 'debug', 'Information de connexion à WeBack manquantes');
+         return false;
        }
      }
 
@@ -117,7 +132,6 @@ class weback extends eqLogic {
            config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
            config::save("Expiration", $json['Credentials']['Expiration'], 'weback');
            config::save("SecretKey", $json['Credentials']['SecretKey'], 'weback');
-           config::save("IdentityId", $json['IdentityId'], 'weback');
            config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');
            return true;
          } else {
@@ -164,24 +178,15 @@ class weback extends eqLogic {
        if ($json['Request_Result'] == 'success') {
            log::add('weback', 'debug', 'Robot trouvé : ' .$json['Request_Cotent'][0]['Thing_Name']);
            weback::addNewRobot($json);
-           // sauvegarde des informations
-           config::save("Thing_Name", $json['Request_Cotent'][0]['Thing_Name'], 'weback');
-           config::save("Thing_Nick_Name", $json['Request_Cotent'][0]['Thing_Nick_Name'], 'weback');
-           config::save("Sub_type", $json['Request_Cotent'][0]['Sub_type'], 'weback');
-           config::save("Image_Url", $json['Request_Cotent'][0]['Image_Url'], 'weback');
+           return true;
        } else {
          event::add('jeedom::alert', array(
            'level' => 'alert',
            'page' => 'weback',
            'message' => __('Aucun robot trouvé', __FILE__)));
           log::add('weback', 'debug', 'Aucun robot trouvé');
+          return false;
        }
-
-       /*log::add('weback', 'debug', '==== Amazon Lambda ====');
-       log::add('weback', 'debug', 'Status = '.$result->get('StatusCode'));
-       log::add('weback', 'debug', 'FunctionError  = '.$result->get('FunctionError'));
-       log::add('weback', 'debug', 'LogResult   = '.$result->get('LogResult'));
-       log::add('weback', 'debug', 'Payload   = '.$result->get('Payload'));*/
      }
 
     public static function addNewRobot($device) {
@@ -206,7 +211,7 @@ class weback extends eqLogic {
 
     public static function getDeviceShadow(){
       log::add('weback', 'debug', 'Mise à jour Shadow Device depuis Iot-Data...');
-      log::add('weback', 'debug', 'ThingName ='.config::byKey('Thing_Name', 'weback'));
+      //log::add('weback', 'debug', 'ThingName ='.config::byKey('Thing_Name', 'weback'));
       log::add('weback', 'debug', 'Region_Info ='.config::byKey('Region_Info', 'weback'));
       log::add('weback', 'debug', 'End_Point ='.config::byKey('End_Point', 'weback'));
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
@@ -241,7 +246,7 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('error_info', $shadowJson->state->reported->error_info);
       $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
-      $wback->checkAndUpdateCmd('clean_area', $shadowJson->state->reported->clean_area);
+      $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', ($shadowJson->state->reported->clean_time)/60);
     }
 
