@@ -379,7 +379,6 @@ class weback extends eqLogic {
       $webackcmd->setConfiguration('data', 'etatrobot');
       $webackcmd->setUnite('');
       $webackcmd->setType('info');
-      $webackcmd->setEventOnly(1);
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('etatrobot');
@@ -391,7 +390,6 @@ class weback extends eqLogic {
       $webackcmd->setConfiguration('data', 'working_status');
       $webackcmd->setUnite('');
       $webackcmd->setType('info');
-      $webackcmd->setEventOnly(1);
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('working_status');
@@ -425,9 +423,8 @@ class weback extends eqLogic {
       $webackcmd->setName(__('Batterie', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setConfiguration('data', 'battery_level');
-      $webackcmd->setUnite('');
+      $webackcmd->setUnite('%');
       $webackcmd->setType('info');
-      $webackcmd->setEventOnly(1);
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('battery_level');
@@ -439,7 +436,6 @@ class weback extends eqLogic {
       $webackcmd->setConfiguration('data', 'puissanceaspirationrobot');
       $webackcmd->setUnite('');
       $webackcmd->setType('info');
-      $webackcmd->setEventOnly(1);
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('puissanceaspirationrobot');
@@ -451,7 +447,6 @@ class weback extends eqLogic {
       $webackcmd->setConfiguration('data', 'dureemenage');
       $webackcmd->setUnite('');
       $webackcmd->setType('info');
-      $webackcmd->setEventOnly(1);
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('dureemenage');
