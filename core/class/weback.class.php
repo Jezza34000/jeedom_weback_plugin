@@ -220,7 +220,6 @@ class weback extends eqLogic {
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
           'endpointType' => 'iot:Data-ATS',
-          //'scheme'  => 'https',
           'http'    => [
             'verify' => false
             ],
@@ -293,6 +292,31 @@ class weback extends eqLogic {
                   }
             }
       }
+    }
+
+    public static function SendAction($calledLogicalID, $action) {
+      log::add('weback', 'debug', 'Envoi d\une action au robot...');
+      $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
+          'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
+          'endpointType' => 'iot:Data-ATS',
+          'http'    => [
+            'verify' => false
+            ],
+          'version' => 'latest',
+          'region'  => config::byKey('Region_Info', 'weback'),
+          'credentials' => [
+               'key'    => config::byKey('AccessKeyId', 'weback'),
+               'secret' => config::byKey('SecretKey', 'weback'),
+               'token' => config::byKey('SessionToken', 'weback'),]
+      ]);
+      $result = $IoT->updateThingShadow([
+          'payload' => '',
+          'thingName' => $calledLogicalID,
+      ]);
+      $return = (string)$result['payload']->getContents();
+      log::add('weback', 'debug', 'IOT Return : ' . $return);
+      $shadowJson = json_decode($return, false);
+      //log::add('weback', 'debug', 'OK> Mise à jours des INFO de ');
     }
 
   /*
@@ -498,7 +522,7 @@ class weback extends eqLogic {
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('smartcleanrobot');
+      $webackcmd->setLogicalId('autoclean');
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -595,9 +619,12 @@ class webackCmd extends cmd {
 
        switch ($this->getLogicalId()) {
           case 'refresh':
-          log::add('weback', 'debug', 'Refresh (MANUEL)');
-          weback::updateStatusDevices($this->getLogicalId());
-          break;
+            log::add('weback', 'debug', 'Refresh (MANUEL)');
+            weback::updateStatusDevices($this->getLogicalId());
+            break;
+          case 'autoclean':
+            weback::webackSendAction($this->getLogicalId(), "AutoClean");
+            break;
         }
 
      }
