@@ -305,9 +305,13 @@ class weback extends eqLogic {
 
 
      //Fonction exécutée automatiquement toutes les minutes par Jeedom
-      public static function cron() {
+      public static function cron($_eqlogic_id = null) {
         log::add('weback', 'debug', 'Refresh (CRON)');
-        weback::updateStatusDevices();
+        $eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('weback', true);
+    		foreach ($eqLogics as $webackrbt) {
+          log::add('weback', 'debug', 'Actualisation de :'.$webackrbt->getHumanName());
+          weback::updateStatusDevices();
+    		}
       }
 
     /*
