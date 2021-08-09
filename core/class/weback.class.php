@@ -251,7 +251,7 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, true);
 
-      print_r($shadowJson);
+      //print_r($shadowJson);
 
       $test = $shadowJson->state->reported->working_status;
 print_r($test);
