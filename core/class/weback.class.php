@@ -186,34 +186,13 @@ class weback extends eqLogic {
       //var_dump($json);
 
        if ($json['Request_Result'] == 'success') {
-         /*event::add('jeedom::alert', array(
-           'level' => 'success',
-           'page' => 'weback',
-           'message' => __('Robot trouvé : '.$json['Request_Cotent'][0]['Thing_Name'], __FILE__)));*/
            log::add('weback', 'debug', 'Robot trouvé : ' .$json['Request_Cotent'][0]['Thing_Name']);
+           weback::addNewRobot($json);
            // sauvegarde des informations
            config::save("Thing_Name", $json['Request_Cotent'][0]['Thing_Name'], 'weback');
            config::save("Thing_Nick_Name", $json['Request_Cotent'][0]['Thing_Nick_Name'], 'weback');
            config::save("Sub_type", $json['Request_Cotent'][0]['Sub_type'], 'weback');
            config::save("Image_Url", $json['Request_Cotent'][0]['Image_Url'], 'weback');
-
-           $robot=weback::byLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name'], 'weback');
-           if (!is_object($robot)) {
-             log::add('weback', 'debug', $json['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
-             $robot = new weback();
-             $robot->setEqType_name('weback');
-             $robot->setLogicalId($json['Request_Cotent'][0]['Thing_Nick_Name'].$json['Request_Cotent'][0]['Thing_Name']);
-             $robot->setIsEnable(1);
-             $robot->setIsVisible(1);
-             $robot->setName($json['Request_Cotent'][0]['Thing_Nick_Name']." ".$json['Request_Cotent'][0]['Sub_type']);
-             $robot->setConfiguration('Thing_Nick_Name', $json['Request_Cotent'][0]['Thing_Nick_Name']);
-             $robot->setConfiguration('Sub_type', $json['Request_Cotent'][0]['Sub_type']);
-             $robot->setConfiguration('Thing_Name', $json['Request_Cotent'][0]['Thing_Name']);
-             $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($json['Request_Cotent'][0]['Thing_Name'],-17)));
-             $robot->save();
-           } else {
-             log::add('weback', 'debug', $json['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
-           }
        } else {
          event::add('jeedom::alert', array(
            'level' => 'alert',
@@ -230,20 +209,22 @@ class weback extends eqLogic {
      }
 
     public static function addNewRobot($device) {
-
-      $robot=weback::byLogicalId($device['BuildingID'] . $device['DeviceID'], 'mitsubishi');
+      $robot=weback::byLogicalId($device['Request_Cotent'][0]['Thing_Nick_Name'].$device['Request_Cotent'][0]['Thing_Name'], 'weback');
       if (!is_object($robot)) {
+        log::add('weback', 'debug', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
         $robot = new weback();
-        $robot->setEqType_name('mitsubishi');
-        $robot->setLogicalId($device['BuildingID'] . $device['DeviceID']);
+        $robot->setEqType_name('weback');
+        $robot->setLogicalId($device['Request_Cotent'][0]['Thing_Nick_Name'].$device['Request_Cotent'][0]['Thing_Name']);
         $robot->setIsEnable(1);
         $robot->setIsVisible(1);
-        $robot->setName($device['DeviceName']);
-        $robot->setConfiguration('DeviceID', $device['DeviceID']);
-        $robot->setConfiguration('BuildingID', $device['BuildingID']);
-        $robot->setConfiguration('DeviceType', $device['Device']['DeviceType']);//0 air/air, 1 air/water
-        $robot->setConfiguration('SubType', 'air');
+        $robot->setName($device['Request_Cotent'][0]['Thing_Nick_Name']." ".$device['Request_Cotent'][0]['Sub_type']);
+        $robot->setConfiguration('Thing_Nick_Name', $device['Request_Cotent'][0]['Thing_Nick_Name']);
+        $robot->setConfiguration('Sub_type', $device['Request_Cotent'][0]['Sub_type']);
+        $robot->setConfiguration('Thing_Name', $device['Request_Cotent'][0]['Thing_Name']);
+        $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['Request_Cotent'][0]['Thing_Name'],-17)));
         $robot->save();
+      } else {
+        log::add('weback', 'debug', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
       }
     }
 
