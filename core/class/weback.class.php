@@ -259,7 +259,7 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->voice_volume);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->carpet_pressurization);
-      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->undistrub_mode;
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->undistrub_mode);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->fan_status);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->water_level);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->error_info);
