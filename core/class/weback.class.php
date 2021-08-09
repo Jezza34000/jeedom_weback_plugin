@@ -246,9 +246,9 @@ class weback extends eqLogic {
     }
 
     public static function IsRenewlRequired(){
-      log::add('weback', 'debug', 'TS validity Checking...');
       $tsnow = new DateTime();
       $tsexpiration = config::byKey('AccessKeyId', 'weback');
+      log::add('weback', 'debug', 'TS validity Checking (now:'.$tsnow.'/token:'.$tsexpiration);
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'debug', '=> OK VALID');
         return false;
