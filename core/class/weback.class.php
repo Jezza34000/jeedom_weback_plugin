@@ -26,34 +26,6 @@ use Aws\Lambda\LambdaClient;
 
 class weback extends eqLogic {
     /*     * *************************Attributs****************************** */
-
-    public static function dependancy_info() {
-        log::add("weback", 'debug', "Vérification des dépendances...", $_logicalId);
-        $return = array();
-        $return['log'] = log::getPathToLog(__CLASS__ . '_update');
-        $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependency';
-        if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependency')) {
-            $return['state'] = 'in_progress';
-        } else {
-            if (exec(system::getCmdSudo() . system::get('cmd_check') . '-Ec "python3\-requests|python3\-boto3"') < 2) { // adaptez la liste des paquets et le total
-                $return['state'] = 'nok';
-            } elseif (exec(system::getCmdSudo() . 'pip3 list | grep -Ewc "weback-unofficial"') < 1) { // adaptez la liste des paquets et le total
-                $return['state'] = 'nok';
-            } else {
-                $return['state'] = 'ok';
-                log::add("weback", 'debug', "Dépendances OK", $_logicalId);
-            }
-        }
-        return $return;
-    }
-
-    public static function dependancy_install() {
-        log::remove(__CLASS__ . '_update');
-        log::add("weback", 'debug', "Installation des dépendances...", $_logicalId);
-        return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder(__CLASS__) . '/dependency', 'log' => log::getPathToLog(__CLASS__ . '_update'));
-    }
-
-
     /**
      * Recherche les équipements sur clique du bouton
      *
@@ -254,7 +226,7 @@ class weback extends eqLogic {
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
-      log::add('weback', 'debug', 'Mise à jours des INFO (Status='.$shadowJson->state->reported->working_status.')');
+      log::add('weback', 'debug', 'OK> Mise à jours des INFO');
       //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback=weback::byLogicalId('nononeatsvor-x600-20-4e-f6-9e-f2-a1', 'weback');
       // Update INFO plugin

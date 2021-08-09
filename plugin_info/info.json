@@ -8,7 +8,7 @@
 	"author" : "Jezza",
 	"require" : "3.3.39",
 	"category" : "devicecommunication",
-	"hasDependency" : true,
+	"hasDependency" : false,
 	"hasOwnDeamon" : false,
 	"maxDependancyInstallTime" : 10,
 	"changelog" : "https://jeedom.github.io/plugin-template/#language#/changelog",
