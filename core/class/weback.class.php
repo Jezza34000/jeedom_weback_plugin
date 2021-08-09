@@ -239,7 +239,7 @@ class weback extends eqLogic {
       $shadowJson = json_decode($return, false);
       log::add('weback', 'debug', 'OK> Mise à jours des INFO');
       //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
-      $wback=weback::byLogicalId('nononeatsvor-x600-20-4e-f6-9e-f2-a1', 'weback');
+      $wback=weback::byLogicalId('neatsvor-x600-20-4e-f6-9e-f2-a1', 'weback');
       // Update INFO plugin
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
