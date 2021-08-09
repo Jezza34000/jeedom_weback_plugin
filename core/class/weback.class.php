@@ -256,8 +256,8 @@ class weback extends eqLogic {
 
     public static function IsRenewlRequired(){
       log::add('weback', 'debug', 'Check AWS token validity');
-      $date = new DateTime();
-      $tsnow = $date->getTimestamp();
+      $date_utc = new DateTime("now", new DateTimeZone("UTC"));
+      $tsnow = $date_utc->getTimestamp();
       $tsexpiration = config::byKey('Expiration', 'weback');
       log::add('weback', 'debug', $tsexpiration.'/'.$tsnow);
       if ($tsexpiration < $tsnow) {
