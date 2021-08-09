@@ -249,12 +249,12 @@ class weback extends eqLogic {
       ]);
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
-      $shadowJson = json_decode($return, true);
+      $shadowJson = json_decode($return, false);
 
-      //print_r($shadowJson);
+      print_r($shadowJson);
 
-      $test = $shadowJson->state->reported->working_status;
-print_r($test);
+      /*$test = $shadowJson->state->reported->working_status;
+      print_r($test);*/
 
       //$weback->checkAndUpdateCmd('working_status', $shadowJson['state']['reported']['working_status']);
 
