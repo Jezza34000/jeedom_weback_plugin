@@ -212,8 +212,8 @@ class weback extends eqLogic {
       }
     }
 
-    public static function getDeviceShadow(){
-      log::add('weback', 'debug', 'Mise à jour Shadow Device depuis Iot-Data...');
+    public static function getDeviceShadow($calledLogicalID){
+      log::add('weback', 'debug', 'Mise à jour Shadow Device depuis IOT-Data...');
       //log::add('weback', 'debug', 'ThingName ='.config::byKey('Thing_Name', 'weback'));
       log::add('weback', 'debug', 'Region_Info ='.config::byKey('Region_Info', 'weback'));
       log::add('weback', 'debug', 'End_Point ='.config::byKey('End_Point', 'weback'));
@@ -232,14 +232,14 @@ class weback extends eqLogic {
                'token' => config::byKey('SessionToken', 'weback'),]
       ]);
       $result = $IoT->getThingShadow([
-          'thingName' => config::byKey('Thing_Name', 'weback'),
+          'thingName' => $calledLogicalID,
       ]);
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
-      log::add('weback', 'debug', 'OK> Mise à jours des INFO');
+      log::add('weback', 'debug', 'OK> Mise à jours des INFO de '.$calledLogicalID);
       //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
-      $wback=weback::byLogicalId('neatsvor-x600-20-4e-f6-9e-f2-a1', 'weback');
+      $wback=weback::byLogicalId($calledLogicalID, 'weback');
       // Update INFO plugin
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
@@ -271,11 +271,11 @@ class weback extends eqLogic {
       }
     }
 
-    public static function updateStatusDevices(){
-      log::add('weback', 'debug', '=>> UpdateStatusDevices demandé');
+    public static function updateStatusDevices($calledLogicalID){
+      log::add('weback', 'debug', 'UpdateStatus de '..' demandé');
       // Vérification si le TOKEN AWS IOT est toujours valable
       if (weback::IsRenewlRequired() == false){
-        weback::getDeviceShadow();
+        weback::getDeviceShadow($calledLogicalID);
       } else {
             log::add('weback', 'debug', 'Renouvellement du jeton requis...');
             // Renouvellement du TOKEN
@@ -310,7 +310,7 @@ class weback extends eqLogic {
         $eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('weback', true);
     		foreach ($eqLogics as $webackrbt) {
           log::add('weback', 'debug', 'Actualisation de :'.$webackrbt->getHumanName());
-          weback::updateStatusDevices();
+          weback::updateStatusDevices($webackrbt->getLogicalId());
     		}
       }
 
