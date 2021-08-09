@@ -229,7 +229,6 @@ class weback extends eqLogic {
        log::add('weback', 'debug', 'Payload   = '.$result->get('Payload'));*/
      }
 
-
     public static function addNewRobot($device) {
 
       $robot=weback::byLogicalId($device['BuildingID'] . $device['DeviceID'], 'mitsubishi');
@@ -249,6 +248,7 @@ class weback extends eqLogic {
     }
 
     public static function getDeviceShadow(){
+      weback::IsRenewlRequired();
       log::add('weback', 'debug', 'Mise à jour Shadow Device depuis Iot-Data...');
       log::add('weback', 'debug', 'ThingName ='.config::byKey('Thing_Name', 'weback'));
       log::add('weback', 'debug', 'Region_Info ='.config::byKey('Region_Info', 'weback'));
@@ -270,6 +270,24 @@ class weback extends eqLogic {
       ]);
       var_dump((string)$result->get('payload'));
     }
+
+    public static function IsRenewlRequired(){
+      log::add('weback', 'debug', 'TS validity Checking...');
+      $tsnow = new DateTime();
+      $tsexpiration = config::byKey('AccessKeyId', 'weback');
+      if ($tsexpiration < $tsnow) {
+        log::add('weback', 'debug', '=> OK VALID');
+        return true;
+      } else {
+        log::add('weback', 'debug', '=> EXPIRED');
+        return false;
+      }
+    }
+
+    public static function updateStatusDevices(){
+      log::add('weback', 'debug', 'CRON > UpdateStatusDevices');
+    }
+
 
     public function loadCmdFromConf($_type) {
       if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
@@ -301,7 +319,6 @@ class weback extends eqLogic {
       }
     }
 
-
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
    * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
@@ -310,11 +327,11 @@ class weback extends eqLogic {
 
     /*     * ***********************Methode static*************************** */
 
-    /*
-     * Fonction exécutée automatiquement toutes les minutes par Jeedom
+
+     //Fonction exécutée automatiquement toutes les minutes par Jeedom
       public static function cron() {
+        weback::updateStatusDevices()
       }
-     */
 
     /*
      * Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
