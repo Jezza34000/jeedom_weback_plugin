@@ -2,7 +2,7 @@
 	"id" : "weback",
 	"name" : "WeBack",
 	"description" : {
-		"fr_FR": "Plugin pour controler les robots Neatsvor via WebBack API (non officiel)"
+		"fr_FR": "Plugin pour controler les robots Neatsvor qui utilise l'application WebBack"
 	},
 	"licence" : "AGPL",
 	"author" : "Jezza",
@@ -14,8 +14,8 @@
 	"changelog" : "https://jeedom.github.io/plugin-template/#language#/changelog",
 	"documentation" : "https://jeedom.github.io/plugin-template/#language#/",
 	"link" : {
-		"forum":"Lien vers le forum",
-		"video" : "Lien vers une video"
+		"forum":"",
+		"video" : ""
 	},
 	"language": [
 		"fr_FR"

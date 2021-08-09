@@ -39,7 +39,7 @@ class weback extends eqLogic {
                if (weback::getAWScredential() == true) {
                        if (weback::getDeviceList() == true) {
                          log::add('weback', 'debug', '### Recherche robot terminé avec succès!', true);
-                         return true;
+                         return null;
                        } else {
                          log::add('weback', 'debug', 'Recherche des robots KO > Echec GetDeviceList', true);
                          return false;
@@ -196,7 +196,7 @@ class weback extends eqLogic {
         log::add('weback', 'debug', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
         $robot = new weback();
         $robot->setEqType_name('weback');
-        $robot->setLogicalId($device['Request_Cotent'][0]['Thing_Nick_Name'].$device['Request_Cotent'][0]['Thing_Name']);
+        $robot->setLogicalId($device['Request_Cotent'][0]['Thing_Name']);
         $robot->setIsEnable(1);
         $robot->setIsVisible(1);
         $robot->setName($device['Request_Cotent'][0]['Thing_Nick_Name']." ".$device['Request_Cotent'][0]['Sub_type']);

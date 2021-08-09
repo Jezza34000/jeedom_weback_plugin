@@ -39,7 +39,7 @@ try {
 
     if (init('action') == 'discover') {
 		weback::discoverRobot(); // TODO get error message
-		if ($res === true)
+		if ($res === null)
             ajax::success();
         else
             throw new Exception(__('Une erreur est survenue lors de la recherche des équipements ', __FILE__));
