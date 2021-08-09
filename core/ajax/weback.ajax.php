@@ -31,12 +31,6 @@ try {
   */
     ajax::init();
 
-    if (init('action') == 'checkConnection') {
-        $res = weback::getDeviceShadow();
-        if ($res !== null)
-        ajax::success(); // TODO si erreur
-    }
-
     if (init('action') == 'discover') {
 		weback::discoverRobot(); // TODO get error message
 		if ($res === null)

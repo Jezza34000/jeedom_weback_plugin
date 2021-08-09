@@ -48,34 +48,5 @@ if (!isConnect()) {
             <input class="configKey form-control" data-l1key="country" value="33" />
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-md-4 control-label">{{Test}}</label>
-        <div class="col-md-4">
-            <a class="btn btn-default" id="btSearchDevice"><i class='fa fa-refresh'></i> {{Tester la connexion}}</a>
-        </div>
-    </div>
   </fieldset>
 </form>
-
-<script>
-    $('#btSearchDevice').on('click', function () {
-        $.ajax({// fonction permettant de faire de l'ajax
-            type: "POST", // methode de transmission des données au fichier php
-            url: "plugins/weback/core/ajax/weback.ajax.php", // url du fichier php
-            data: {
-            	action: "checkConnection",
-            },
-            dataType: 'json',
-            error: function (request, status, error) {
-            	handleAjaxError(request, status, error);
-            },
-            success: function (data) { // si l'appel a bien fonctionné
-            if (data.state != 'ok') {
-            	$('#div_alert').showAlert({message: data.result, level: 'danger'});
-            	return;
-            }
-            $('#div_alert').showAlert({message: '{{Test de connexion au cloud WeBack réussie}}', level: 'success'});
-          }
-        });
-    });
-</script>
