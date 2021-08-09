@@ -253,7 +253,20 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'Mise à jours des INFO (Status='.$shadowJson->state->reported->working_status.')');
       //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback=weback::byLogicalId('nononeatsvor-x600-20-4e-f6-9e-f2-a1', 'weback');
+      // Update INFO plugin
+      $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->voice_switch);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->voice_volume);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->carpet_pressurization);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->undistrub_mode;
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->fan_status);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->water_level);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->error_info);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->battery_level);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->continue_clean);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->clean_area);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->clean_time);
     }
 
     public static function IsRenewlRequired(){
@@ -377,7 +390,6 @@ class weback extends eqLogic {
       $webackcmd->setName(__('Etat', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setConfiguration('data', 'etatrobot');
-      $webackcmd->setUnite('');
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
@@ -420,10 +432,9 @@ class weback extends eqLogic {
       $webackcmd = new webackCmd();
       $webackcmd->setName(__('Batterie', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setConfiguration('data', 'battery_level');
       $webackcmd->setUnite('%');
       $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
+      $webackcmd->setSubType('numeric');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('battery_level');
       $webackcmd->save();
@@ -431,23 +442,94 @@ class weback extends eqLogic {
       $webackcmd = new webackCmd();
       $webackcmd->setName(__('Puissance aspiration', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setConfiguration('data', 'puissanceaspirationrobot');
-      $webackcmd->setUnite('');
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('puissanceaspirationrobot');
+      $webackcmd->setLogicalId('fan_status');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Debit eau', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('water_level');
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
       $webackcmd->setName(__('Durée ménage', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setConfiguration('data', 'dureemenage');
       $webackcmd->setUnite('');
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('numeric');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('clean_area');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Superficie nettoyé', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setUnite('m²');
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('numeric');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('clean_time');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Haut parleur', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('dureemenage');
+      $webackcmd->setLogicalId('voice_switch');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Volume haut parleur', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setUnite('%');
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('voice_volume');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('carpet_pressurization', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('carpet_pressurization');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('continue_clean', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('continue_clean');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('error_info', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('error_info');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Mode ne pas deranger', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('undistrub_mode');
       $webackcmd->save();
 
     }
