@@ -87,7 +87,6 @@ class weback extends eqLogic {
             'Content-Length: ' . strlen($data_string))
           );
          $server_output = curl_exec($ch);
-         curl_close($ch);
          $json = json_decode($server_output, true);
          log::add('weback', 'debug', 'WeBack answer = ' . print_r($json, true));
 
@@ -107,14 +106,18 @@ class weback extends eqLogic {
            config::save("Customer_Service_Card_URL", $json['Customer_Service_Card_URL'], 'weback');
            config::save("Thing_Register_URL", $json['Thing_Register_URL'], 'weback');
            config::save("Thing_Register_URL_Signature", $json['Thing_Register_URL_Signature'], 'weback');
+           return true;
          } else {
+           log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
            log::add('weback', 'debug', 'Echec de connexion à WeBack-Login :'.$json['Fail_Reason']);
+           return false;
          }
+         curl_close($ch);
        }
      }
 
      public static function getAWScredential() {
-       log::add('weback', 'debug', 'Récupération des informations de connexion de AWS Cognito...');
+       log::add('weback', 'debug', 'Connexion à AWS Cognito...');
          $ch = curl_init();
          $data = array("IdentityId" => config::byKey('Identity_Id', 'weback'), "Logins" => array("cognito-identity.amazonaws.com" => config::byKey('Token', 'weback')));
          $data_string = json_encode($data);
@@ -144,9 +147,11 @@ class weback extends eqLogic {
            config::save("SecretKey", $json['Credentials']['SecretKey'], 'weback');
            config::save("IdentityId", $json['IdentityId'], 'weback');
            config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');
+           return true;
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
            log::add('weback', 'debug', 'Echec d\'obtention des informations de connexion depuis AWS Cognito');
+           return false;
          }
          curl_close($ch);
      }
@@ -228,7 +233,6 @@ class weback extends eqLogic {
     }
 
     public static function getDeviceShadow(){
-      weback::IsRenewlRequired();
       log::add('weback', 'debug', 'Mise à jour Shadow Device depuis Iot-Data...');
       log::add('weback', 'debug', 'ThingName ='.config::byKey('Thing_Name', 'weback'));
       log::add('weback', 'debug', 'Region_Info ='.config::byKey('Region_Info', 'weback'));
@@ -275,15 +279,35 @@ class weback extends eqLogic {
       $tsexpiration = config::byKey('AccessKeyId', 'weback');
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'debug', '=> OK VALID');
-        return true;
+        return false;
       } else {
         log::add('weback', 'debug', '=> EXPIRED');
-        return false;
+        return true;
       }
     }
 
     public static function updateStatusDevices(){
-      log::add('weback', 'debug', 'CRON > UpdateStatusDevices');
+      log::add('weback', 'debug', '=>> UpdateStatusDevices demandé');
+      // Vérification si le TOKEN AWS IOT est toujours valable
+      if (weback::IsRenewlRequired() == false){
+        weback::getDeviceShadow()
+      } else {
+            log::add('weback', 'debug', 'Renouvellement du jeton requis...');
+            // Renouvellement du TOKEN
+            if (weback::getAWScredential()) {
+              // TOKEN AWS OK
+              weback::getDeviceShadow()
+            } else {
+                  // Renouvellement de la connexion à WeBack
+                  if (weback::getToken()) {
+                    // Connexion WeBackOK
+                    weback::getAWScredential()
+                    weback::getDeviceShadow()
+                  } else {
+                    log::add('weback', 'debug', 'CRON > Impossible de mettre à jour connexion echouée à WeBack');
+                  }
+            }
+      }
     }
 
 
@@ -328,6 +352,7 @@ class weback extends eqLogic {
 
      //Fonction exécutée automatiquement toutes les minutes par Jeedom
       public static function cron() {
+        log::add('weback', 'debug', 'Execution CRON');
         weback::updateStatusDevices();
       }
 
