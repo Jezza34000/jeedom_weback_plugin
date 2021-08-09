@@ -253,7 +253,10 @@ class weback extends eqLogic {
 
       print_r($shadowJson);
 
-      $weback->checkAndUpdateCmd('working_status', $shadowJson['state']['reported']['working_status']);
+      $test = $shadowJson->state->reported->working_status;
+print_r($test);
+
+      //$weback->checkAndUpdateCmd('working_status', $shadowJson['state']['reported']['working_status']);
 
     }
 
