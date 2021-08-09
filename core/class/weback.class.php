@@ -290,19 +290,19 @@ class weback extends eqLogic {
       log::add('weback', 'debug', '=>> UpdateStatusDevices demandé');
       // Vérification si le TOKEN AWS IOT est toujours valable
       if (weback::IsRenewlRequired() == false){
-        weback::getDeviceShadow()
+        weback::getDeviceShadow();
       } else {
             log::add('weback', 'debug', 'Renouvellement du jeton requis...');
             // Renouvellement du TOKEN
             if (weback::getAWScredential()) {
               // TOKEN AWS OK
-              weback::getDeviceShadow()
+              weback::getDeviceShadow();
             } else {
                   // Renouvellement de la connexion à WeBack
                   if (weback::getToken()) {
                     // Connexion WeBackOK
-                    weback::getAWScredential()
-                    weback::getDeviceShadow()
+                    weback::getAWScredential();
+                    weback::getDeviceShadow();
                   } else {
                     log::add('weback', 'debug', 'CRON > Impossible de mettre à jour connexion echouée à WeBack');
                   }
