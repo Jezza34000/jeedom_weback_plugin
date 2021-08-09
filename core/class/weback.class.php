@@ -257,7 +257,7 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
-      $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->voice_volume);
+      $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
       $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
       $wback->checkAndUpdateCmd('undistrub_mode', $shadowJson->state->reported->undistrub_mode);
       $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
@@ -266,7 +266,7 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', $shadowJson->state->reported->clean_area);
-      $wback->checkAndUpdateCmd('clean_time', $shadowJson->state->reported->clean_time);
+      $wback->checkAndUpdateCmd('clean_time', ($shadowJson->state->reported->clean_time)/60);
     }
 
     public static function IsRenewlRequired(){
@@ -384,6 +384,15 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('refresh');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Connecté', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('binary');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('connected');
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
