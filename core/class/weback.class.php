@@ -152,6 +152,7 @@ class weback extends eqLogic {
      }
 
      public static function getDeviceList() {
+       log::add('weback', 'debug', 'Récupération des informations depuis AWS Lambda Device_Manager_V2...');
        $client = LambdaClient::factory([
            'version' => 'latest',
            'region'  => config::byKey('Region_Info', 'weback'),
@@ -213,8 +214,6 @@ class weback extends eqLogic {
            } else {
              log::add('weback', 'debug', $json['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
            }
-
-
        } else {
          event::add('jeedom::alert', array(
            'level' => 'alert',
