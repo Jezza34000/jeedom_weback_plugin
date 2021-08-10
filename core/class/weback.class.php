@@ -696,30 +696,29 @@ class webackCmd extends cmd {
         ROBOT_CTRL_SPEED_MAX("Max"),
         */
         $eqLogic = $this->getEqLogic();
-        log::add('weback', 'debug', 'ACTION POUR ='.$eqLogic);
-
+        
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL)');
             weback::updateStatusDevices();
             break;
           case 'autoclean':
-            weback::SendAction($this->getLogicalId(), "AutoClean");
+            weback::SendAction($eqLogic, "AutoClean");
             break;
           case 'standby':
-            weback::SendAction($this->getLogicalId(), "Standby");
+            weback::SendAction($eqLogic, "Standby");
             break;
           case 'backcharging':
-            weback::SendAction($this->getLogicalId(), "BackCharging");
+            weback::SendAction($eqLogic, "BackCharging");
             break;
           case 'quiet':
-            weback::SendAction($this->getLogicalId(), "Quiet");
+            weback::SendAction($eqLogic, "Quiet");
             break;
           case 'normal':
-            weback::SendAction($this->getLogicalId(), "Normal");
+            weback::SendAction($eqLogic, "Normal");
             break;
           case 'strong':
-            weback::SendAction($this->getLogicalId(), "Strong");
+            weback::SendAction($eqLogic, "Strong");
             break;
         }
 
