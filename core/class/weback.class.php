@@ -205,8 +205,6 @@ class weback extends eqLogic {
         $robot->setConfiguration('Thing_Name', $device['Request_Cotent'][0]['Thing_Name']);
         $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['Request_Cotent'][0]['Thing_Name'],-17)));
         $robot->save();
-        //WorkAround
-        config::save("Thing_Name", $device['Request_Cotent'][0]['Thing_Name'], 'weback');
       } else {
         log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
       }
