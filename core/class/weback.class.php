@@ -279,7 +279,7 @@ class weback extends eqLogic {
             if (weback::getAWScredential()) {
               // TOKEN AWS OK
               log::add('weback', 'debug', 'Renouvellement OK poursuite de la MAJ');
-              weback::getDeviceShadow($calledLogicalID));
+              weback::getDeviceShadow($calledLogicalID);
             } else {
                   // Renouvellement de la connexion à WeBack
                   if (weback::getToken()) {
