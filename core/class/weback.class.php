@@ -485,7 +485,7 @@ class weback extends eqLogic {
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('fan_status');
-      $webackcmdtate->setOrder(9);
+      $webackcmd->setOrder(9);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -494,7 +494,7 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('fan_quiet');
-      $webackcmdtate->setOrder(10);
+      $webackcmd->setOrder(10);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -503,7 +503,7 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('fan_normal');
-      $webackcmdtate->setOrder(11);
+      $webackcmd->setOrder(11);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -512,7 +512,7 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('fan_strong');
-      $webackcmdtate->setOrder(12);
+      $webackcmd->setOrder(12);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -522,7 +522,7 @@ class weback extends eqLogic {
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('water_level');
-      $webackcmdtate->setOrder(13);
+      $webackcmd->setOrder(13);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -531,7 +531,7 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('water_low');
-      $webackcmdtate->setOrder(14);
+      $webackcmd->setOrder(14);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -540,7 +540,7 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('water_normal');
-      $webackcmdtate->setOrder(15);
+      $webackcmd->setOrder(15);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -549,7 +549,7 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('water_high');
-      $webackcmdtate->setOrder(16);
+      $webackcmd->setOrder(16);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -559,7 +559,7 @@ class weback extends eqLogic {
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
-      $webackcmdtate->setOrder(17);
+      $webackcmd->setOrder(17);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -569,7 +569,7 @@ class weback extends eqLogic {
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('error_info');
-      $webackcmdtate->setOrder(18);
+      $webackcmd->setOrder(18);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -580,7 +580,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('undistrub_mode');
-      $webackcmdtate->setOrder(19);
+      $webackcmd->setOrder(19);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -591,7 +591,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('voice_switch');
-      $webackcmdtate->setOrder(20);
+      $webackcmd->setOrder(20);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -603,7 +603,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('voice_volume');
-      $webackcmdtate->setOrder(21);
+      $webackcmd->setOrder(21);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -614,6 +614,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('carpet_pressurization');
+      $webackcmd->setOrder(22);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -624,6 +625,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('continue_clean');
+      $webackcmd->setOrder(23);
       $webackcmd->save();
 
       /*$webackcmd = new webackCmd();
