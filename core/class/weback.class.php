@@ -214,9 +214,7 @@ class weback extends eqLogic {
 
     public static function getDeviceShadow($calledLogicalID){
       log::add('weback', 'debug', 'Mise à jour Shadow Device depuis IOT-Data...');
-      //log::add('weback', 'debug', 'ThingName ='.config::byKey('Thing_Name', 'weback'));
-      log::add('weback', 'debug', 'Region_Info ='.config::byKey('Region_Info', 'weback'));
-      log::add('weback', 'debug', 'End_Point ='.config::byKey('End_Point', 'weback'));
+      log::add('weback', 'debug', 'End_Point ='.config::byKey('End_Point', 'weback').' / Region_Info ='.config::byKey('Region_Info', 'weback'));
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
           'endpointType' => 'iot:Data-ATS',
@@ -256,11 +254,11 @@ class weback extends eqLogic {
     }
 
     public static function IsRenewlRequired(){
-      log::add('weback', 'debug', 'Check AWS token validity');
+
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
       $tsnow = $date_utc->getTimestamp();
       $tsexpiration = config::byKey('Expiration', 'weback');
-      log::add('weback', 'debug', $tsexpiration.'/'.$tsnow);
+      log::add('weback', 'debug', 'Vérification validité TOKAN AWS ('.$tsexpiration..')');
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'debug', '=> EXPIRED');
         return true;
@@ -280,13 +278,14 @@ class weback extends eqLogic {
             // Renouvellement du TOKEN
             if (weback::getAWScredential()) {
               // TOKEN AWS OK
-              weback::getDeviceShadow();
+              log::add('weback', 'debug', 'Renouvellement OK poursuite de la MAJ');
+              weback::getDeviceShadow($calledLogicalID));
             } else {
                   // Renouvellement de la connexion à WeBack
                   if (weback::getToken()) {
                     // Connexion WeBackOK
                     weback::getAWScredential();
-                    weback::getDeviceShadow();
+                    weback::getDeviceShadow($calledLogicalID);
                   } else {
                     log::add('weback', 'debug', 'CRON > Impossible de mettre à jour connexion echouée à WeBack');
                   }
