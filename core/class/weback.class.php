@@ -309,8 +309,19 @@ class weback extends eqLogic {
                'secret' => config::byKey('SecretKey', 'weback'),
                'token' => config::byKey('SessionToken', 'weback'),]
       ]);
+      // Formatage du Payload
+      $data = array (
+          "state" => array (
+              "desired" =>
+                       array(
+                        "working_status" => $action
+                       ),
+              )
+          );
+      $payload = json_encode($data);
+
       $result = $IoT->updateThingShadow([
-          'payload' => '',
+          'payload' => $payload,
           'thingName' => $calledLogicalID,
       ]);
       $return = (string)$result['payload']->getContents();
