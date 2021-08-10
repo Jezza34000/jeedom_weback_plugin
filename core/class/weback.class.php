@@ -606,7 +606,7 @@ class weback extends eqLogic {
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Normal', __FILE__));
+      $webackcmd->setName(__('Defaut', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
