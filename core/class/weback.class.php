@@ -293,7 +293,7 @@ class weback extends eqLogic {
       }
     }
 
-    public static function SendAction($calledLogicalID, $action) {
+    public static function SendAction($calledLogicalID, $action, $param) {
       log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandé : '.$action);
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
@@ -313,7 +313,7 @@ class weback extends eqLogic {
           "state" => array (
               "desired" =>
                        array(
-                        "working_status" => $action
+                        $action => $param
                        ),
               )
           );
@@ -555,7 +555,7 @@ class weback extends eqLogic {
       $webackcmd->setLogicalId('backcharging');
       $webackcmd->save();
 
-      $webackcmd = new webackCmd();
+      /*$webackcmd = new webackCmd();
       $webackcmd->setName(__('Réglage aspiration', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
@@ -571,14 +571,14 @@ class weback extends eqLogic {
       $webackcmd->setSubType('select');
       $webackcmd->setLogicalId('modewater');
       $webackcmd->setConfiguration('listValue', '1|Faible;2|Normal;3|Elevé');
-      $webackcmd->save();
+      $webackcmd->save();*/
 
-      /*$webackcmd = new webackCmd();
+      $webackcmd = new webackCmd();
       $webackcmd->setName(__('Silencieux', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('quiet');
+      $webackcmd->setLogicalId('fan_quiet');
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -586,7 +586,7 @@ class weback extends eqLogic {
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('normal');
+      $webackcmd->setLogicalId('fan_normal');
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -594,9 +594,32 @@ class weback extends eqLogic {
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('strong');
-      $webackcmd->save();*/
+      $webackcmd->setLogicalId('fan_strong');
+      $webackcmd->save();
 
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Faible', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('water_low');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Normal', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('water_normal');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Elevé', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('water_high');
+      $webackcmd->save();
     }
 
  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
@@ -709,22 +732,31 @@ class webackCmd extends cmd {
             weback::updateStatusDevices($eqToSendAction);
             break;
           case 'autoclean':
-            weback::SendAction($eqToSendAction, "AutoClean");
+            weback::SendAction($eqToSendAction, "working_status", "AutoClean");
             break;
           case 'standby':
-            weback::SendAction($eqToSendAction, "Standby");
+            weback::SendAction($eqToSendAction, "working_status", "Standby");
             break;
           case 'backcharging':
-            weback::SendAction($eqToSendAction, "BackCharging");
+            weback::SendAction($eqToSendAction, "working_status","BackCharging");
             break;
-          case 'quiet':
-            weback::SendAction($eqToSendAction, "Quiet");
+          case 'fan_quiet':
+            weback::SendAction($eqToSendAction, "fan_status", "Quiet");
             break;
-          case 'normal':
-            weback::SendAction($eqToSendAction, "Normal");
+          case 'fan_normal':
+            weback::SendAction($eqToSendAction, "fan_status", "Normal");
             break;
-          case 'strong':
-            weback::SendAction($eqToSendAction, "Strong");
+          case 'fan_strong':
+            weback::SendAction($eqToSendAction, "fan_status", "Strong");
+            break;
+          case 'water_low':
+            weback::SendAction($eqToSendAction, "water_level", "Low");
+            break;
+          case 'water_normal':
+            weback::SendAction($eqToSendAction, "water_level", "Default");
+            break;
+          case 'water_high':
+            weback::SendAction($eqToSendAction, "water_level", "High");
             break;
         }
 
