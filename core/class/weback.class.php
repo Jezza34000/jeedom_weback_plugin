@@ -696,11 +696,14 @@ class webackCmd extends cmd {
         */
 
       //$eqLogicID = $this->getEqLogic(); NOK
-      $eqLogic = $this->getEqLogic_id();
-      $eqLogicID= $eqLogic->getEqLogic();
+      $eqLogicID = $this->getEqLogic_id();
+      $robot=weback::byEqLogicId($eqLogicID, 'weback');
+      $logicidgg = $robot->getLogicalId()
 
-      log::add('weback', 'debug', 'TEST: '.$eqLogicID);
+      log::add('weback', 'debug', 'TEST: '.$logicidgg);
       $eqLogic= 'neatsvor-x600-20-4e-f6-9e-f2-a1';
+
+
 
        switch ($this->getLogicalId()) {
           case 'refresh':
