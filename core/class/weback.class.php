@@ -241,7 +241,7 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
       $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
-      $wback->checkAndUpdateCmd('undistrub_mode', strval($shadowJson->state->reported->undistrub_mode));
+      $wback->checkAndUpdateCmd('undistrub_mode', print_r($shadowJson->state->reported->undistrub_mode, true));
       $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
       $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
       $wback->checkAndUpdateCmd('error_info', $shadowJson->state->reported->error_info);
@@ -249,8 +249,8 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', ($shadowJson->state->reported->clean_time)/60);
-      $wback->checkAndUpdateCmd('planning_rect_x', strval($shadowJson->state->reported->planning_rect_x));
-      $wback->checkAndUpdateCmd('planning_rect_y', strval($shadowJson->state->reported->planning_rect_y));
+      $wback->checkAndUpdateCmd('planning_rect_x', print_r($shadowJson->state->reported->planning_rect_x, true));
+      $wback->checkAndUpdateCmd('planning_rect_y', print_r($shadowJson->state->reported->planning_rect_y, true));
     }
 
     public static function IsRenewlRequired(){
