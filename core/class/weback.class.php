@@ -294,7 +294,6 @@ class weback extends eqLogic {
     }
 
     public static function SendAction($calledLogicalID, $action) {
-      $calledLogicalID = 'neatsvor-x600-20-4e-f6-9e-f2-a1';
       log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandé : '.$action);
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
@@ -695,6 +694,7 @@ class webackCmd extends cmd {
         ROBOT_CTRL_SPEED_SOUND_STOP_2("Quiet"),
         ROBOT_CTRL_SPEED_MAX("Max"),
         */
+        $eqLogic = $this->getEqLogic();
 
        switch ($this->getLogicalId()) {
           case 'refresh':
