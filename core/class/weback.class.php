@@ -249,6 +249,8 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', ($shadowJson->state->reported->clean_time)/60);
+      $wback->checkAndUpdateCmd('planning_rect_x', $shadowJson->state->reported->planning_rect_x);
+      $wback->checkAndUpdateCmd('planning_rect_y', $shadowJson->state->reported->planning_rect_y);
     }
 
     public static function IsRenewlRequired(){
@@ -624,6 +626,28 @@ class weback extends eqLogic {
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('continue_clean');
       $webackcmd->setOrder(23);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('planning_rect_x', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
+      $webackcmd->setLogicalId('planning_rect_x');
+      $webackcmd->setOrder(24);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('planning_rect_y', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
+      $webackcmd->setLogicalId('planning_rect_y');
+      $webackcmd->setOrder(25);
       $webackcmd->save();
 
       /*$webackcmd = new webackCmd();
