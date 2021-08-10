@@ -94,12 +94,12 @@ class weback extends eqLogic {
            return true;
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
-           log::add('weback', 'debug', 'Echec de connexion à WeBack-Login :'.$json['Fail_Reason']);
+           log::add('weback', 'error', 'Echec de connexion à WeBack-Login : '.$json['Fail_Reason']);
            return false;
          }
          curl_close($ch);
        } else {
-         log::add('weback', 'debug', 'Information de connexion à WeBack manquantes');
+         log::add('weback', 'info', 'Information de connexion à WeBack manquantes');
          return false;
        }
      }
@@ -137,7 +137,7 @@ class weback extends eqLogic {
            return true;
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
-           log::add('weback', 'debug', 'Echec d\'obtention des informations de connexion depuis AWS Cognito');
+           log::add('weback', 'error', 'Echec d\'obtention des informations de connexion depuis AWS Cognito');
            return false;
          }
          curl_close($ch);
@@ -177,7 +177,7 @@ class weback extends eqLogic {
       //var_dump($json);
 
        if ($json['Request_Result'] == 'success') {
-           log::add('weback', 'debug', 'Robot trouvé : ' .$json['Request_Cotent'][0]['Thing_Name']);
+           log::add('weback', 'info', 'Robot trouvé : ' .$json['Request_Cotent'][0]['Thing_Name']);
            weback::addNewRobot($json);
            return true;
        } else {
@@ -185,7 +185,7 @@ class weback extends eqLogic {
            'level' => 'alert',
            'page' => 'weback',
            'message' => __('Aucun robot trouvé', __FILE__)));
-          log::add('weback', 'debug', 'Aucun robot trouvé');
+          log::add('weback', 'info', 'Aucun robot trouvé');
           return false;
        }
      }
@@ -193,7 +193,7 @@ class weback extends eqLogic {
     public static function addNewRobot($device) {
       $robot=weback::byLogicalId($device['Request_Cotent'][0]['Thing_Name'], 'weback');
       if (!is_object($robot)) {
-        log::add('weback', 'debug', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
+        log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
         $robot = new weback();
         $robot->setEqType_name('weback');
         $robot->setLogicalId($device['Request_Cotent'][0]['Thing_Name']);
@@ -208,7 +208,7 @@ class weback extends eqLogic {
         //WorkAround
         config::save("Thing_Name", $device['Request_Cotent'][0]['Thing_Name'], 'weback');
       } else {
-        log::add('weback', 'debug', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
+        log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
       }
     }
 
@@ -260,10 +260,10 @@ class weback extends eqLogic {
       $tsexpiration = config::byKey('Expiration', 'weback');
       log::add('weback', 'debug', 'Vérification validité TOKAN AWS ('.$tsexpiration.')');
       if ($tsexpiration < $tsnow) {
-        log::add('weback', 'debug', '=> EXPIRED');
+        log::add('weback', 'debug', '> Expired');
         return true;
       } else {
-        log::add('weback', 'debug', '=> OK, valid');
+        log::add('weback', 'debug', '> OK, valid');
         return false;
       }
     }
@@ -294,7 +294,7 @@ class weback extends eqLogic {
     }
 
     public static function SendAction($calledLogicalID, $action) {
-      log::add('weback', 'debug', 'Envoi d\une action au robot...');
+      log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandé : '.$action);
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
           'endpointType' => 'iot:Data-ATS',
