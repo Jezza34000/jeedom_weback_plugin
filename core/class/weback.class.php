@@ -694,7 +694,10 @@ class webackCmd extends cmd {
         ROBOT_CTRL_SPEED_SOUND_STOP_2("Quiet"),
         ROBOT_CTRL_SPEED_MAX("Max"),
         */
-        $eqLogic = $this->getEqLogic();
+
+
+      //$eqLogic = $this->getEqLogic();
+      $eqLogic= 'neatsvor-x600-20-4e-f6-9e-f2-a1';
 
        switch ($this->getLogicalId()) {
           case 'refresh':
