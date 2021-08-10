@@ -699,7 +699,7 @@ class webackCmd extends cmd {
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL)');
-            weback::updateStatusDevices();
+            weback::updateStatusDevices($eqLogic);
             break;
           case 'autoclean':
             weback::SendAction($eqLogic, "AutoClean");
