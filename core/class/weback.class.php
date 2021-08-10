@@ -701,7 +701,7 @@ class webackCmd extends cmd {
       $logicidgg = $robot->getLogicalId();*/
 
       $eqLogic = $this->getEqLogic();
-      $test = $eqLogic->getlogicalId()
+      $test = $eqLogic->getlogicalId();
 
 
       log::add('weback', 'debug', 'TEST: '.$test);
