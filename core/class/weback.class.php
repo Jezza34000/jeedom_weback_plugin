@@ -557,6 +557,24 @@ class weback extends eqLogic {
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Force aspiration', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('select');
+      $webackcmd->setLogicalId('modeaspiration');
+      $webackcmd->setConfiguration('listValue', '1|Silencieux;2|Normal;3|Fort');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Débit eau', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('select');
+      $webackcmd->setLogicalId('modewater');
+      $webackcmd->setConfiguration('listValue', '1|Faible;2|Normal;3|Elevé');
+      $webackcmd->save();
+
+      /*$webackcmd = new webackCmd();
       $webackcmd->setName(__('Silencieux', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
@@ -578,7 +596,7 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('strong');
-      $webackcmd->save();
+      $webackcmd->save();*/
 
     }
 
@@ -681,7 +699,7 @@ class webackCmd extends cmd {
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL)');
-            weback::updateStatusDevices($this->getLogicalId());
+            weback::updateStatusDevices();
             break;
           case 'autoclean':
             weback::SendAction($this->getLogicalId(), "AutoClean");
