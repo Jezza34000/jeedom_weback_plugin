@@ -695,8 +695,7 @@ class webackCmd extends cmd {
         ROBOT_CTRL_SPEED_SOUND_STOP_2("Quiet"),
         ROBOT_CTRL_SPEED_MAX("Max"),
         */
-        $eqLogic = $this->getEqLogic();
-        
+
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL)');
