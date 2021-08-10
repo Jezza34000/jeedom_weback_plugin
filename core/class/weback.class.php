@@ -258,7 +258,7 @@ class weback extends eqLogic {
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
       $tsnow = $date_utc->getTimestamp();
       $tsexpiration = config::byKey('Expiration', 'weback');
-      log::add('weback', 'debug', 'Vérification validité TOKAN AWS ('.$tsexpiration..')');
+      log::add('weback', 'debug', 'Vérification validité TOKAN AWS ('.$tsexpiration.')');
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'debug', '=> EXPIRED');
         return true;
