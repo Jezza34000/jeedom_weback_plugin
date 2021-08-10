@@ -405,6 +405,7 @@ class weback extends eqLogic {
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
       $webackcmd->setLogicalId('refresh');
+      $webackcmd->setOrder(1);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -414,42 +415,7 @@ class weback extends eqLogic {
       $webackcmd->setSubType('binary');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('connected');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setLogicalId('working_status');
-      $webackcmd->setName(__('Etat', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Erreur', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('error_info');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Aspiration', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('fan_status');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Debit eau', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('water_level');
+      $webackcmd->setOrder(2);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -460,6 +426,7 @@ class weback extends eqLogic {
       $webackcmd->setSubType('numeric');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('battery_level');
+      $webackcmd->setOrder(3);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -470,6 +437,7 @@ class weback extends eqLogic {
       $webackcmd->setSubType('numeric');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('clean_time');
+      $webackcmd->setOrder(4);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -480,6 +448,128 @@ class weback extends eqLogic {
       $webackcmd->setSubType('numeric');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setLogicalId('clean_area');
+      $webackcmd->setOrder(5);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Nettoyage auto', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('autoclean');
+      $webackcmd->setOrder(6);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Pause', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('standby');
+      $webackcmd->setOrder(7);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Retour à la base', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('backcharging');
+      $webackcmd->setOrder(8);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Aspiration', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('fan_status');
+      $webackcmdtate->setOrder(9);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Silencieux', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('fan_quiet');
+      $webackcmdtate->setOrder(10);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Normal', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('fan_normal');
+      $webackcmdtate->setOrder(11);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Fort', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('fan_strong');
+      $webackcmdtate->setOrder(12);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Debit eau', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('water_level');
+      $webackcmdtate->setOrder(13);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Faible', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('water_low');
+      $webackcmdtate->setOrder(14);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Defaut', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('water_normal');
+      $webackcmdtate->setOrder(15);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Elevé', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('water_high');
+      $webackcmdtate->setOrder(16);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setLogicalId('working_status');
+      $webackcmd->setName(__('Etat', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmdtate->setOrder(17);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Erreur', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('error_info');
+      $webackcmdtate->setOrder(18);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -488,7 +578,9 @@ class weback extends eqLogic {
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('undistrub_mode');
+      $webackcmdtate->setOrder(19);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -497,7 +589,9 @@ class weback extends eqLogic {
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('voice_switch');
+      $webackcmdtate->setOrder(20);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -507,7 +601,9 @@ class weback extends eqLogic {
       $webackcmd->setType('info');
       $webackcmd->setSubType('string');
       $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('voice_volume');
+      $webackcmdtate->setOrder(21);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -516,6 +612,7 @@ class weback extends eqLogic {
       $webackcmd->setType('info');
       $webackcmd->setSubType('binary');
       $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('carpet_pressurization');
       $webackcmd->save();
 
@@ -525,34 +622,8 @@ class weback extends eqLogic {
       $webackcmd->setType('info');
       $webackcmd->setSubType('binary');
       $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('continue_clean');
-      $webackcmd->save();
-
-      // =========================
-      // Robot ACTION
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Nettoyage auto', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('autoclean');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Pause', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('standby');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Retour à la base', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('backcharging');
       $webackcmd->save();
 
       /*$webackcmd = new webackCmd();
@@ -572,54 +643,6 @@ class weback extends eqLogic {
       $webackcmd->setLogicalId('modewater');
       $webackcmd->setConfiguration('listValue', '1|Faible;2|Normal;3|Elevé');
       $webackcmd->save();*/
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Silencieux', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_quiet');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Normal', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_normal');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Fort', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_strong');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Faible', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_low');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Defaut', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_normal');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Elevé', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_high');
-      $webackcmd->save();
     }
 
  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
