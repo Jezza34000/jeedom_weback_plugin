@@ -235,13 +235,19 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'OK> Mise à jours des INFO de '.$calledLogicalID);
       //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
+
       // Update INFO plugin
+      if ($shadowJson->state->reported->undistrub_mode == 'on') {
+        $undistrub = true;
+      } else {
+        $undistrub = false;
+      }
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
       $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
-      $wback->checkAndUpdateCmd('undistrub_mode', print_r($shadowJson->state->reported->undistrub_mode, true));
+      $wback->checkAndUpdateCmd('undistrub_mode', $undistrub);
       $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
       $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
       $wback->checkAndUpdateCmd('error_info', $shadowJson->state->reported->error_info);
@@ -251,6 +257,9 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('clean_time', ($shadowJson->state->reported->clean_time)/60);
       $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
       $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
+      $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
+      //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
+      //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
     }
 
     public static function IsRenewlRequired(){
@@ -650,7 +659,41 @@ class weback extends eqLogic {
       $webackcmd->setOrder(25);
       $webackcmd->save();
 
-      /*$webackcmd = new webackCmd();
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('goto_point', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
+      $webackcmd->setLogicalId('goto_point');
+      $webackcmd->setOrder(26);
+      $webackcmd->save();
+
+/*
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('laser_goto_path_x', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
+      $webackcmd->setLogicalId('laser_goto_path_x');
+      $webackcmd->setOrder(27);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('laser_goto_path_y', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('string');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsVisible(0);
+      $webackcmd->setLogicalId('laser_goto_path_y');
+      $webackcmd->setOrder(28);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
       $webackcmd->setName(__('Réglage aspiration', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
@@ -666,7 +709,8 @@ class weback extends eqLogic {
       $webackcmd->setSubType('select');
       $webackcmd->setLogicalId('modewater');
       $webackcmd->setConfiguration('listValue', '1|Faible;2|Normal;3|Elevé');
-      $webackcmd->save();*/
+      $webackcmd->save();
+*/
     }
 
  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
