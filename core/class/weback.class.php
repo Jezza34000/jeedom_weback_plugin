@@ -698,7 +698,7 @@ class webackCmd extends cmd {
       //$eqLogicID = $this->getEqLogic(); NOK
       $eqLogicID = $this->getEqLogic_id();
       $robot=weback::byEqLogicId($eqLogicID, 'weback');
-      $logicidgg = $robot->getLogicalId()
+      $logicidgg = $robot->getLogicalId();
 
       log::add('weback', 'debug', 'TEST: '.$logicidgg);
       $eqLogic= 'neatsvor-x600-20-4e-f6-9e-f2-a1';
