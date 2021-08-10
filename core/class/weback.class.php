@@ -695,9 +695,11 @@ class webackCmd extends cmd {
         ROBOT_CTRL_SPEED_MAX("Max"),
         */
 
+      //$eqLogicID = $this->getEqLogic(); NOK
+      $eqLogic = $this->getEqLogic_id();
+      $eqLogicID= $eqLogic->getEqLogic();
 
-      //$eqLogicID = $this->getEqLogic();
-      log::add('weback', 'debug', 'TEST: '.print_r($_options, true));
+      log::add('weback', 'debug', 'TEST: '.$eqLogicID);
       $eqLogic= 'neatsvor-x600-20-4e-f6-9e-f2-a1';
 
        switch ($this->getLogicalId()) {
