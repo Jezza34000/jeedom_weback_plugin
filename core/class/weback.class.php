@@ -585,7 +585,7 @@ class weback extends eqLogic {
       $webackcmd->setName(__('Mode ne pas deranger', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
+      $webackcmd->setSubType('binary');
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('undistrub_mode');
