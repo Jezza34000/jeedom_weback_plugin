@@ -701,36 +701,30 @@ class webackCmd extends cmd {
       $logicidgg = $robot->getLogicalId();*/
 
       $eqLogic = $this->getEqLogic();
-      $test = $eqLogic->getlogicalId();
-
-
-      log::add('weback', 'debug', 'TEST: '.$test);
-
-
-      $eqLogic= 'neatsvor-x600-20-4e-f6-9e-f2-a1';
+      $eqToSendAction = $eqLogic->getlogicalId();
 
        switch ($this->getLogicalId()) {
           case 'refresh':
-            log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqLogic);
-            weback::updateStatusDevices($eqLogic);
+            log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
+            weback::updateStatusDevices($eqToSendAction);
             break;
           case 'autoclean':
-            weback::SendAction($eqLogic, "AutoClean");
+            weback::SendAction($eqToSendAction, "AutoClean");
             break;
           case 'standby':
-            weback::SendAction($eqLogic, "Standby");
+            weback::SendAction($eqToSendAction, "Standby");
             break;
           case 'backcharging':
-            weback::SendAction($eqLogic, "BackCharging");
+            weback::SendAction($eqToSendAction, "BackCharging");
             break;
           case 'quiet':
-            weback::SendAction($eqLogic, "Quiet");
+            weback::SendAction($eqToSendAction, "Quiet");
             break;
           case 'normal':
-            weback::SendAction($eqLogic, "Normal");
+            weback::SendAction($eqToSendAction, "Normal");
             break;
           case 'strong':
-            weback::SendAction($eqLogic, "Strong");
+            weback::SendAction($eqToSendAction, "Strong");
             break;
         }
 
