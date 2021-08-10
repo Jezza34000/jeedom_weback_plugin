@@ -557,7 +557,7 @@ class weback extends eqLogic {
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Force aspiration', __FILE__));
+      $webackcmd->setName(__('Réglage aspiration', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('select');
@@ -566,7 +566,7 @@ class weback extends eqLogic {
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Débit eau', __FILE__));
+      $webackcmd->setName(__('Réglage eau', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('select');
