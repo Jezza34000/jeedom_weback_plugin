@@ -249,8 +249,8 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', ($shadowJson->state->reported->clean_time)/60);
-      $wback->checkAndUpdateCmd('planning_rect_x', print_r($shadowJson->state->reported->planning_rect_x, true));
-      $wback->checkAndUpdateCmd('planning_rect_y', print_r($shadowJson->state->reported->planning_rect_y, true));
+      $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
+      $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
     }
 
     public static function IsRenewlRequired(){
