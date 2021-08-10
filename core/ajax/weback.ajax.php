@@ -32,11 +32,11 @@ try {
     ajax::init();
 
     if (init('action') == 'discover') {
-		weback::discoverRobot(); // TODO get error message
-		if ($res === null)
+		$result = weback::discoverRobot();
+		if ($result === null)
             ajax::success();
         else
-            throw new Exception(__('Une erreur est survenue lors de la recherche des équipements ', __FILE__));
+            throw new Exception(__('Une erreur est survenue lors de la recherche des équipements, '.$result, __FILE__));
 	}
 
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));

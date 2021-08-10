@@ -42,15 +42,15 @@ class weback extends eqLogic {
                          return null;
                        } else {
                          log::add('weback', 'debug', 'Recherche des robots KO > Echec GetDeviceList', true);
-                         return false;
+                         return "impossible de trouver un robot sur le compte.";
                        }
                  } else {
                    log::add('weback', 'debug', 'Recherche des robots KO > Echec AWS Credentials', true);
-                   return false;
+                   return "impossible de se connecter.";
                  }
            } else {
              log::add('weback', 'debug', 'Recherche des robots KO > Echec WeBack login', true);
-             return false;
+             return "impossible de se connecter à WeBack.";
            }
      }
 
