@@ -545,7 +545,7 @@ class weback extends eqLogic {
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('pauserobot');
+      $webackcmd->setLogicalId('standby');
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -553,7 +553,31 @@ class weback extends eqLogic {
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('action');
       $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('returntohomerobot');
+      $webackcmd->setLogicalId('backcharging');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Silencieux', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('quiet');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Normal', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('normal');
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Fort', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('other');
+      $webackcmd->setLogicalId('strong');
       $webackcmd->save();
 
     }
@@ -632,6 +656,28 @@ class webackCmd extends cmd {
   // Exécution d'une commande
      public function execute($_options = array()) {
 
+       /*ROBOT_CTRL_CLEAN_STOP("Standby"),
+        ROBOT_CTRL_CLEAN_CHARGE("BackCharging"),
+        ROBOT_CTRL_CLEAN_STOP2("Stop"),
+        ROBOT_CTRL_MODE_SPOT("SpotClean"),
+        ROBOT_CTRL_MODE_PLAN("PlanClean"),
+        ROBOT_CTRL_MODE_ROOM("RoomClean"),
+        ROBOT_CTRL_MODE_AUTO("AutoClean"),
+        ROBOT_CTRL_MODE_EDGE("EdgeClean"),
+        ROBOT_CTRL_MODE_FIXED("StrongClean"),
+        ROBOT_CTRL_MODE_Z("ZmodeClean"),
+        ROBOT_CTRL_MODE_MOPPING("MopClean"),
+        ROBOT_CTRL_VACUUM("VacuumClean"),
+        PLANNING_RECT("PlanningRect"),
+        ROBOT_CTRL_MODE_PLAN2("SmartClean"),
+        ROBOT_CTRL_SPEED_NORMAL("Normal"),
+        ROBOT_CTRL_SPEED_STRONG("Strong"),
+        ROBOT_CTRL_SPEED_STOP("Pause"),
+        ROBOT_CTRL_SPEED_SOUND_STOP("Quite"),
+        ROBOT_CTRL_SPEED_SOUND_STOP_2("Quiet"),
+        ROBOT_CTRL_SPEED_MAX("Max"),
+        */
+
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL)');
@@ -639,6 +685,21 @@ class webackCmd extends cmd {
             break;
           case 'autoclean':
             weback::SendAction($this->getLogicalId(), "AutoClean");
+            break;
+          case 'standby':
+            weback::SendAction($this->getLogicalId(), "Standby");
+            break;
+          case 'backcharging':
+            weback::SendAction($this->getLogicalId(), "BackCharging");
+            break;
+          case 'quiet':
+            weback::SendAction($this->getLogicalId(), "Quiet");
+            break;
+          case 'normal':
+            weback::SendAction($this->getLogicalId(), "Normal");
+            break;
+          case 'strong':
+            weback::SendAction($this->getLogicalId(), "Strong");
             break;
         }
 
