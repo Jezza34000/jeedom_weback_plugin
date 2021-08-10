@@ -331,6 +331,11 @@ class weback extends eqLogic {
       public static function cron($_eqlogic_id = null) {
         log::add('weback', 'debug', 'Refresh (CRON)');
         $eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('weback', true);
+
+        if (count($eqLogics) > 0) {
+          log::add('weback', 'debug', 'Nombres de robot à actualiser : '.count($eqLogics));
+        }
+        
     		foreach ($eqLogics as $webackrbt) {
           log::add('weback', 'debug', 'Actualisation de : '.$webackrbt->getHumanName());
           weback::updateStatusDevices($webackrbt->getLogicalId());
