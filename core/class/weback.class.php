@@ -264,16 +264,17 @@ class weback extends eqLogic {
       //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
 
       $result = weback::DeterminateSimpleState($wstatus, $shadowJson->state->reported->error_info);
-      if ($result == "docked") {
-        $wback->checkAndUpdateCmd('isworking', 0);
-        $wback->checkAndUpdateCmd('isdocked', 1);
-      } elseif ($result == "working") {
-        $wback->checkAndUpdateCmd('isdocked', 0);
-        $wback->checkAndUpdateCmd('isworking', 1);
-      } else {
-        $wback->checkAndUpdateCmd('isdocked', 0);
-        $wback->checkAndUpdateCmd('isworking', 0);
-        log::add('weback', 'debug', 'Aucune equivalence Docked/Working trouvé pour l\'état : '.$wstatus);
+        if ($result == "docked") {
+          $wback->checkAndUpdateCmd('isworking', 0);
+          $wback->checkAndUpdateCmd('isdocked', 1);
+        } elseif ($result == "working") {
+          $wback->checkAndUpdateCmd('isdocked', 0);
+          $wback->checkAndUpdateCmd('isworking', 1);
+        } else {
+          $wback->checkAndUpdateCmd('isdocked', 0);
+          $wback->checkAndUpdateCmd('isworking', 0);
+          log::add('weback', 'debug', 'Aucune equivalence Docked/Working trouvé pour l\'état : '.$wstatus);
+        }
       }
 
     public static function IsRenewlRequired(){
