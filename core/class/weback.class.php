@@ -242,8 +242,10 @@ class weback extends eqLogic {
       } else {
         $undistrub = false;
       }
+
+      $wstatus = $shadowJson->state->reported->working_status;
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
-      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
+      $wback->checkAndUpdateCmd('working_status', $wstatus);
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
       $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
@@ -254,16 +256,27 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
-      $wback->checkAndUpdateCmd('clean_time', ($shadowJson->state->reported->clean_time)/60);
+      $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
       $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
       $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
       $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
       //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
       //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
-    }
+
+      $result = weback::DeterminateSimpleState($wstatus, $shadowJson->state->reported->error_info);
+      if ($result == "docked") {
+        $wback->checkAndUpdateCmd('isworking', 0);
+        $wback->checkAndUpdateCmd('isdocked', 1);
+      } elseif ($result == "working") {
+        $wback->checkAndUpdateCmd('isdocked', 0);
+        $wback->checkAndUpdateCmd('isworking', 1);
+      } else {
+        $wback->checkAndUpdateCmd('isdocked', 0);
+        $wback->checkAndUpdateCmd('isworking', 0);
+        log::add('weback', 'debug', 'Aucune equivalence Docked/Working trouvé pour l\'état : '.$wstatus);
+      }
 
     public static function IsRenewlRequired(){
-
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
       $tsnow = $date_utc->getTimestamp();
       $tsexpiration = config::byKey('Expiration', 'weback');
@@ -337,6 +350,39 @@ class weback extends eqLogic {
       $shadowJson = json_decode($return, false);
       //log::add('weback', 'debug', 'OK> Mise à jours des INFO de ');
     }
+
+    public static function DeterminateSimpleState($working_status, $error){
+      /*
+      ==================WORKING
+      ROBOT_WORK_STATUS_STOP("Hibernating"),
+      ROBOT_WORK_STATUS_STANDBY("Standby"),
+      ROBOT_WORK_STATUS_CTRL("DirectionControl"),
+      ROBOT_WORK_STATUS_ERROR("Malfunction"),
+      ROBOT_WORK_STATUS_LOWPOWER("Lowpower"),
+      ROBOT_WORK_STATUS_WORKING("Cleaning"),
+      ROBOT_WORK_STATUS_WORK_OVER("Cleandone"),
+      ROBOT_WORK_STATUS_GO_CHARGE("Backcharging"),
+      ==================DOCKED
+      ROBOT_WORK_STATUS_CHARGING_3("Charging"),
+      ROBOT_WORK_STATUS_CHARGING("Pilecharging"),
+      ROBOT_WORK_STATUS_CHARGE_OVER("Chargedone"),
+      ROBOT_WORK_STATUS_CHARGING2("DirCharging"),
+      */
+
+      $dockedStatus = array("Charging", "Pilecharging", "Chargedone", "DirCharging");
+      $workingStatus = array("Relocation", "AutoClean", "EdgeClean", "SpotClean", "RoomClean",
+      "MopClean", "Standby", "PlanningLocation", "StrongClean", "PlanningRect", "ZmodeClean", "BackCharging");
+      // Docked Status
+      if (in_array($working_status, $dockedStatus)) {
+          return "docked";
+      }
+      // Working Status
+      if (in_array($working_status, $workingStatus)) {
+          return "working";
+      }
+      return null;
+    }
+
 
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
@@ -582,6 +628,27 @@ class weback extends eqLogic {
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
+      $webackcmd->setName(__('En fonction', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('binary');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('isworking');
+      $webackcmd->setOrder(19);
+      $webackcmd->save();
+
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Sur la base', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('info');
+      $webackcmd->setSubType('binary');
+      $webackcmd->setIsHistorized(0);
+      $webackcmd->setLogicalId('isdocked');
+      $webackcmd->setOrder(20);
+      $webackcmd->save();
+
+
+      $webackcmd = new webackCmd();
       $webackcmd->setName(__('Mode ne pas deranger', __FILE__));
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('info');
@@ -589,7 +656,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('undistrub_mode');
-      $webackcmd->setOrder(19);
+      $webackcmd->setOrder(21);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -600,7 +667,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('voice_switch');
-      $webackcmd->setOrder(20);
+      $webackcmd->setOrder(22);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -612,7 +679,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('voice_volume');
-      $webackcmd->setOrder(21);
+      $webackcmd->setOrder(23);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -623,7 +690,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('carpet_pressurization');
-      $webackcmd->setOrder(22);
+      $webackcmd->setOrder(24);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -634,7 +701,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('continue_clean');
-      $webackcmd->setOrder(23);
+      $webackcmd->setOrder(25);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -645,7 +712,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('planning_rect_x');
-      $webackcmd->setOrder(24);
+      $webackcmd->setOrder(26);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -656,7 +723,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('planning_rect_y');
-      $webackcmd->setOrder(25);
+      $webackcmd->setOrder(27);
       $webackcmd->save();
 
       $webackcmd = new webackCmd();
@@ -667,7 +734,7 @@ class weback extends eqLogic {
       $webackcmd->setIsHistorized(0);
       $webackcmd->setIsVisible(0);
       $webackcmd->setLogicalId('goto_point');
-      $webackcmd->setOrder(26);
+      $webackcmd->setOrder(28);
       $webackcmd->save();
 
 /*
