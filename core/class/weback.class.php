@@ -370,7 +370,7 @@ class weback extends eqLogic {
       ROBOT_WORK_STATUS_CHARGING2("DirCharging"),
       */
 
-      $dockedStatus = array("Charging", "Pilecharging", "Chargedone", "DirCharging");
+      $dockedStatus = array("Charging", "Pilecharging", "Chargedone", "DirCharging", "ChargeDone");
       $workingStatus = array("Relocation", "AutoClean", "EdgeClean", "SpotClean", "RoomClean",
       "MopClean", "Standby", "PlanningLocation", "StrongClean", "PlanningRect", "ZmodeClean", "BackCharging");
       // Docked Status
