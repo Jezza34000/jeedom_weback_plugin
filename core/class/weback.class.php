@@ -370,8 +370,8 @@ class weback extends eqLogic {
       ROBOT_WORK_STATUS_CHARGING2("DirCharging"),
       */
 
-      $dockedStatus = array("Charging", "Pilecharging", "Chargedone", "DirCharging", "ChargeDone");
-      $workingStatus = array("Relocation", "AutoClean", "EdgeClean", "SpotClean", "RoomClean",
+      $dockedStatus = array("Charging", "PileCharging", "DirCharging", "ChargeDone");
+      $workingStatus = array("Relocation", "AutoClean", "SmartClean", "EdgeClean", "SpotClean", "RoomClean",
       "MopClean", "Standby", "PlanningLocation", "StrongClean", "PlanningRect", "ZmodeClean", "BackCharging");
       // Docked Status
       if (in_array($working_status, $dockedStatus)) {
@@ -633,7 +633,7 @@ class weback extends eqLogic {
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('info');
       $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsHistorized(1);
       $webackcmd->setLogicalId('isworking');
       $webackcmd->setOrder(19);
       $webackcmd->save();
@@ -643,7 +643,7 @@ class weback extends eqLogic {
       $webackcmd->setEqLogic_id($this->id);
       $webackcmd->setType('info');
       $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
+      $webackcmd->setIsHistorized(1);
       $webackcmd->setLogicalId('isdocked');
       $webackcmd->setOrder(20);
       $webackcmd->save();
