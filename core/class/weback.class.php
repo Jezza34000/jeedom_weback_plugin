@@ -594,6 +594,7 @@ class webackCmd extends cmd {
                 } else {
                   log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
                 }
+                break;
             case 'setwaterlevel':
               if ($_options['select'] == "1") {
                 $action = "Low";
@@ -604,11 +605,10 @@ class webackCmd extends cmd {
               } else {
                 log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
               }
-
+              break;
             case 'cleanspot':
               log::add('weback', 'debug', 'Spot info :'.$_options['message']);
               break;
-
             case 'cleanroom':
               log::add('weback', 'debug', 'Room info :'.$_options['message']);
               break;
