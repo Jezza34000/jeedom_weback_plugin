@@ -458,14 +458,15 @@ class weback extends eqLogic {
     }
 
     public function loadCmdFromConf($_type) {
-      log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON :'.$_type);
+      log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON : '.$_type);
       if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
         log::add('weback', 'error', 'Fichier de configuration de robot introuvable !');
         return;
       }
       $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
+      log::add('weback', 'error', 'Content : '.$content);
       if (!is_json($content)) {
-        log::add('weback', 'error', 'Format du fichier de configuration n\'pas du JSON valide !');
+        log::add('weback', 'error', 'Format du fichier de configuration n\'est pas du JSON valide !');
         return;
       }
       $device = json_decode($content, true);
