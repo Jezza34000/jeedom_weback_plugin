@@ -212,7 +212,7 @@ class weback extends eqLogic {
 
     public static function getDeviceShadow($calledLogicalID){
       log::add('weback', 'debug', 'Mise à jour Shadow Device depuis IOT-Data...');
-      log::add('weback', 'debug', 'End_Point ='.config::byKey('End_Point', 'weback').' / Region_Info ='.config::byKey('Region_Info', 'weback'));
+      log::add('weback', 'debug', 'End_Point='.config::byKey('End_Point', 'weback').' / Region_Info='.config::byKey('Region_Info', 'weback'));
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
           'endpointType' => 'iot:Data-ATS',
@@ -232,10 +232,9 @@ class weback extends eqLogic {
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
-      log::add('weback', 'debug', 'OK> Mise à jours des INFO de '.$calledLogicalID);
+      log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
       //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
-
       // Update INFO plugin
       if ($shadowJson->state->reported->undistrub_mode == 'on') {
         $undistrub = true;
