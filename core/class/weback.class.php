@@ -587,6 +587,7 @@ class webackCmd extends cmd {
             weback::SendAction($eqToSendAction, "working_status","BackCharging");
             break;
           case 'setaspiration':
+              log::add('weback', 'debug', 'SetAspiration='.$_options['select']);
               if ($_options['select'] == "1") {
                 $action = "Quiet";
               } elseif ($_options['select'] == "2") {
@@ -598,6 +599,7 @@ class webackCmd extends cmd {
               }
               break;
           case 'setwaterlevel':
+            log::add('weback', 'debug', 'SetWater='.$_options['select']);
             if ($_options['select'] == "1") {
               $action = "Low";
             } elseif ($_options['select'] == "2") {
