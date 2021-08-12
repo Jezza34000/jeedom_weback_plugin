@@ -464,11 +464,11 @@ class weback extends eqLogic {
         return;
       }
       $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
-      /*log::add('weback', 'error', 'Content : '.$content);
+      log::add('weback', 'error', 'Content : '.$content);
       if (!is_json($content)) {
         log::add('weback', 'error', 'Format du fichier de configuration n\'est pas du JSON valide !');
         return;
-      }*/
+      }
       $device = json_decode($content, true);
       if (!is_array($device) || !isset($device['commands'])) {
         log::add('weback', 'error', 'Pas de configuration valide trouvé dans le fichier');
