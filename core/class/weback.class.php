@@ -625,7 +625,7 @@ class webackCmd extends cmd {
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'cleanroom':
-            log::add('weback', 'debug', 'Room info :'.$_options['message']);
+            log::add('weback', 'debug', 'Room info X:'.$_options['message']." Y:".$_options['title']);
             $actionToSend = array("working_status" => "PlanningRect");
             $actionToSend["planning_rect_x"] = "[".$_options['title']."]";
             $actionToSend["planning_rect_y"] = "[".$_options['message']."]";
