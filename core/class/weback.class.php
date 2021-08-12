@@ -568,7 +568,7 @@ class webackCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
 
-      log::add('weback', 'debug', 'Execute '.$this->getLogicalId());
+      //log::add('weback', 'debug', 'Execute '.$this->getLogicalId());
 
        switch ($this->getLogicalId()) {
           case 'refresh':
@@ -580,10 +580,12 @@ class webackCmd extends cmd {
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'standby':
-            weback::SendAction($eqToSendAction, "working_status", "Standby");
+            $actionToSend = array("working_status" => "Standby");
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'backcharging':
-            weback::SendAction($eqToSendAction, "working_status","BackCharging");
+            $actionToSend = array("working_status" => "BackCharging");
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'setaspiration':
               log::add('weback', 'debug', 'SetAspiration='.$_options['select']);
@@ -596,7 +598,8 @@ class webackCmd extends cmd {
               } else {
                 log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
               }
-              weback::SendAction($eqToSendAction, "fan_status", $action);
+              $actionToSend = array("fan_status" => $action);
+              weback::SendAction($eqToSendAction, $actionToSend);
               break;
           case 'setwaterlevel':
             log::add('weback', 'debug', 'SetWater='.$_options['select']);
@@ -609,13 +612,22 @@ class webackCmd extends cmd {
             } else {
               log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
             }
-            weback::SendAction($eqToSendAction, "water_level", $action);
+            $actionToSend = array("water_level" => $action);
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'cleanspot':
             log::add('weback', 'debug', 'Spot info :'.$_options['message']);
+            $coordinates = explode(" ", $_options['message']);
+            $actionToSend = array("goto_point" => "[".$coordinates[0].",".$coordinates[1]."]");
+            $actionToSend["laser_goto_path_x"] = "[".$coordinates[0]."]";
+            $actionToSend["laser_goto_path_y"] = "[".$coordinates[1]."]";
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'cleanroom':
             log::add('weback', 'debug', 'Room info :'.$_options['message']);
+            $actionToSend = array("planning_rect_x" => "[".$_options['title']."]");
+            $actionToSend["planning_rect_y"] = "[".$_options['message']."]";
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
         }
 
