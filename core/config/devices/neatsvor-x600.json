@@ -72,6 +72,23 @@
 			"logicalId": "backcharging",
 			"Order": "12"
 		},
+    {
+      "name": "Nettoyer spot",
+      "type": "action",
+      "subtype": "message",
+      "isVisible": 0,
+      "logicalId": "cleanspot",
+      "Order": "13"
+    },
+    {
+      "name": "Nettoyer pièce",
+      "type": "action",
+      "subtype": "message",
+      "isVisible": 0,
+      "logicalId": "cleamroom",
+      "Order": "14"
+    },
+
 		{
 			"name": "Aspiration",
 			"type": "info",

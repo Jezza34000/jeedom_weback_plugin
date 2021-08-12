@@ -648,6 +648,13 @@ class webackCmd extends cmd {
               weback::SendAction($eqToSendAction, "water_level", $action);
               break;
 
+            case 'cleanspot'
+
+              break;
+              
+            case 'cleanroom'
+
+              break;
         }
 
      }
