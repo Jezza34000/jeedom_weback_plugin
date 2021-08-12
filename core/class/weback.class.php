@@ -617,7 +617,7 @@ class webackCmd extends cmd {
             break;
           case 'cleanspot':
             log::add('weback', 'debug', 'Spot info :'.$_options['message']);
-            $coordinates = explode(" ", $_options['message']);
+            $coordinates = explode(",", $_options['message']);
             $actionToSend = array("goto_point" => "[".$coordinates[0].",".$coordinates[1]."]");
             $actionToSend["laser_goto_path_x"] = "[".$coordinates[0]."]";
             $actionToSend["laser_goto_path_y"] = "[".$coordinates[1]."]";
