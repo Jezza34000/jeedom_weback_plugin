@@ -78,6 +78,10 @@
       "subtype": "message",
       "isVisible": 0,
       "logicalId": "cleanspot",
+      "Display": {
+        "title_placeholder": "Coordonnée X",
+        "message_placeholder": "Coordonnée Y"
+      },
       "Order": "13"
     },
     {
@@ -85,7 +89,7 @@
       "type": "action",
       "subtype": "message",
       "isVisible": 0,
-      "logicalId": "cleamroom",
+      "logicalId": "cleanroom",
       "Order": "14"
     },
 
