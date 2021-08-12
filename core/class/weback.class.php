@@ -933,6 +933,7 @@ class webackCmd extends cmd {
                 default:
                   log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
                   break;
+                }
             weback::SendAction($eqToSendAction, "fan_status", $action);
             break;
 
