@@ -317,7 +317,7 @@ class weback extends eqLogic {
     }
 
     public static function SendAction($calledLogicalID, $action, $param) {
-      log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandé : '.$action);
+      log::add('weback', 'debug', 'Envoi d\'une commande au robot: '.$calledLogicalID.' Action demandé : '.$action. '/'.$param);
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
           'endpointType' => 'iot:Data-ATS',
@@ -570,48 +570,50 @@ class webackCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
 
+      log::add('weback', 'debug', 'Execute '.$this->getLogicalId());
+
        switch ($this->getLogicalId()) {
-            case 'refresh':
-              log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
-              weback::updateStatusDevices($eqToSendAction);
-              break;
-            case 'autoclean':
-              weback::SendAction($eqToSendAction, "working_status", "AutoClean");
-              break;
-            case 'standby':
-              weback::SendAction($eqToSendAction, "working_status", "Standby");
-              break;
-            case 'backcharging':
-              weback::SendAction($eqToSendAction, "working_status","BackCharging");
-              break;
-            case 'setaspiration':
-                if ($_options['select'] == "1") {
-                  $action = "Quiet";
-                } elseif ($_options['select'] == "2") {
-                  $action = "Normal";
-                } elseif ($_options['select'] == "3") {
-                  $action = "Strong";
-                } else {
-                  log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-                }
-                break;
-            case 'setwaterlevel':
+          case 'refresh':
+            log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
+            weback::updateStatusDevices($eqToSendAction);
+            break;
+          case 'autoclean':
+            weback::SendAction($eqToSendAction, "working_status", "AutoClean");
+            break;
+          case 'standby':
+            weback::SendAction($eqToSendAction, "working_status", "Standby");
+            break;
+          case 'backcharging':
+            weback::SendAction($eqToSendAction, "working_status","BackCharging");
+            break;
+          case 'setaspiration':
               if ($_options['select'] == "1") {
-                $action = "Low";
+                $action = "Quiet";
               } elseif ($_options['select'] == "2") {
-                $action = "Default";
+                $action = "Normal";
               } elseif ($_options['select'] == "3") {
-                $action = "High";
+                $action = "Strong";
               } else {
                 log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
               }
               break;
-            case 'cleanspot':
-              log::add('weback', 'debug', 'Spot info :'.$_options['message']);
-              break;
-            case 'cleanroom':
-              log::add('weback', 'debug', 'Room info :'.$_options['message']);
-              break;
+          case 'setwaterlevel':
+            if ($_options['select'] == "1") {
+              $action = "Low";
+            } elseif ($_options['select'] == "2") {
+              $action = "Default";
+            } elseif ($_options['select'] == "3") {
+              $action = "High";
+            } else {
+              log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
+            }
+            break;
+          case 'cleanspot':
+            log::add('weback', 'debug', 'Spot info :'.$_options['message']);
+            break;
+          case 'cleanroom':
+            log::add('weback', 'debug', 'Room info :'.$_options['message']);
+            break;
         }
 
      }
