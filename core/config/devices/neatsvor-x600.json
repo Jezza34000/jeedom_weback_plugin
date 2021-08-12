@@ -2,334 +2,226 @@
   "name": "neatsvor-x600",
   "commands": [
     {
-      "name": "AutoClean",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "icon": "<i class=\"fas fa-lightbulb\"><\/i>",
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : "true",
-        "flag" : "Power",
-        "idflag" : 1
-      },
-      "isVisible": 1,
-      "logicalId": "On"
-    },
-    {
-      "name": "Eteindre",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "icon": "<i class=\"fas fa-power-off\"><\/i>",
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : "false",
-        "flag" : "Power",
-        "idflag" : 1
-      },
-      "isVisible": 1,
-      "logicalId": "Off"
-    },
-    {
-      "name": "Power",
-      "type": "info",
-      "subtype": "binary",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "isVisible": 1,
-      "isHistorized": 0,
-      "logicalId": "Power",
-      "template": {
-        "dashboard": "line",
-        "mobile": "line"
-      }
-    },
-    {
-      "name": "Mode Chauffage",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "icon": "<i class=\"fas fa-fire\"><\/i>",
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : 1,
-        "flag" : "OperationMode",
-        "idflag" : 6
-      },
-      "isVisible": 1,
-      "logicalId": "Chauffage"
-    },
-    {
-      "name": "Mode Séchage",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "icon": "<i class=\"fas fa-tint\"><\/i>",
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : 2,
-        "flag" : "OperationMode",
-        "idflag" : 6
-      },
-      "isVisible": 1,
-      "logicalId": "Sechage"
-    },
-    {
-      "name": "Mode Froid",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "icon": "<i class=\"fas fa-snowflake\"><\/i>",
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : 3,
-        "flag" : "OperationMode",
-        "idflag" : 6
-      },
-      "isVisible": 1,
-      "logicalId": "Froid"
-    },
-    {
-      "name": "Mode Ventile",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "icon": "<i class=\"fas fa-fan\"><\/i>",
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : 7,
-        "flag" : "OperationMode",
-        "idflag" : 6
-      },
-      "isVisible": 1,
-      "logicalId": "Ventile"
-    },
-    {
-      "name": "Mode Auto",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "icon": "<i class=\"fas fa-sync\"><\/i>",
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : 8,
-        "flag" : "OperationMode",
-        "idflag" : 6
-      },
-      "isVisible": 1,
-      "logicalId": "Auto"
-    },
-    {
-      "name": "Mode Select",
-      "type": "action",
-      "subtype": "select",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : "select",
-        "flag" : "OperationMode",
-        "idflag" : 6,
-        "listValue" : "1|Chaud;2|Séchage;3|Froid;7|Ventile;8|Auto"
-      },
-      "isVisible": 1,
-      "logicalId": "selectOperationMode"
-    },
-    {
-      "name": "Ventilateur Select",
-      "type": "action",
-      "subtype": "select",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "configuration" : {
-        "option" : "select",
-        "flag" : "SetFanSpeed",
-        "idflag" : 8,
-        "listValue" : "0|Auto;1|1;2|2;3|3"
-      },
-      "isVisible": 1,
-      "logicalId": "selectSetFanSpeed"
-    },
-    {
-      "name": "Consigne",
-      "type": "info",
-      "subtype": "numeric",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "unite": "°C",
-      "isVisible": 1,
-      "logicalId": "SetTemperature"
-    },
-    {
-      "name": "Set Consigne",
-      "type": "action",
-      "subtype": "slider",
-      "display": {
-        "generic_type": "DONT",
-        "forceReturnLineBefore": 1
-      },
-      "configuration" : {
-        "option" : "slider",
-        "flag" : "SetTemperature",
-        "idflag" : 4,
-        "minValue" : 10,
-        "maxValue" : 30
-      },
-      "isVisible": 1,
-      "logicalId": "actionSetTemperature"
-    },
-    {
-      "name": "Augmenter Consigne",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "generic_type": "DONT",
-        "icon": "<i class=\"far fa-plus-square\"><\/i>"
-      },
-      "configuration" : {
-        "option" : "plus",
-        "flag" : "SetTemperature",
-        "idflag" : 4
-      },
-      "isVisible": 1,
-      "logicalId": "plus",
-      "value": "Consigne"
-    },
-    {
-      "name": "Diminuer Consigne",
-      "type": "action",
-      "subtype": "other",
-      "display": {
-        "generic_type": "DONT",
-        "icon": "<i class=\"far fa-minus-square\"><\/i>"
-      },
-      "configuration" : {
-        "option" : "minus",
-        "flag" : "SetTemperature",
-        "idflag" : 4
-      },
-      "isVisible": 1,
-      "logicalId": "minus",
-      "value": "Consigne"
-    },
-    {
-      "name": "Set Ventilation",
-      "type": "action",
-      "subtype": "slider",
-      "display": {
-        "generic_type": "DONT",
-        "forceReturnLineBefore": 1
-      },
-      "configuration" : {
-        "option" : "slider",
-        "flag" : "SetFanSpeed",
-        "idflag" : 8,
-        "minValue" : 0,
-        "maxValue" : 3
-      },
-      "value": "Vitesse Ventilateur",
-      "isVisible": 1,
-      "logicalId": "actionSetFanSpeed"
-    },
-    {
-      "name": "Vitesse Ventilateur",
-      "type": "info",
-      "subtype": "numeric",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "isVisible": 0,
-      "isHistorized": 0,
-      "logicalId": "ActualFanSpeed",
-      "template": {
-        "dashboard": "line",
-        "mobile": "line"
-      }
-    },
-    {
-      "name": "Vitesse Ventilateur Texte",
-      "type": "info",
-      "subtype": "string",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "isVisible": 0,
-      "logicalId": "ActualFanSpeedText",
-      "template": {
-        "dashboard": "line",
-        "mobile": "line"
-      }
-    },
-    {
-      "name": "Température Sonde",
-      "type": "info",
-      "subtype": "numeric",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "isVisible": 1,
-      "isHistorized": 0,
-      "unite": "°C",
-      "logicalId": "RoomTemperature",
-      "template": {
-        "dashboard": "line",
-        "mobile": "line"
-      }
-    },
-    {
-      "name": "Mode",
-      "type": "info",
-      "subtype": "numeric",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "isVisible": 1,
-      "isHistorized": 0,
-      "logicalId": "OperationMode",
-      "template": {
-        "dashboard": "line",
-        "mobile": "line"
-      }
-    },
-    {
-      "name": "Mode Texte",
-      "type": "info",
-      "subtype": "string",
-      "display": {
-        "generic_type": "DONT"
-      },
-      "isVisible": 1,
-      "isHistorized": 0,
-      "logicalId": "OperationModeText",
-      "template": {
-        "dashboard": "line",
-        "mobile": "line"
-      }
-    },
-    {
       "name": "Rafraichir",
       "type": "action",
       "subtype": "other",
-      "display": {
-        "icon": "<i class=\"fas fa-refresh\"><\/i>",
-        "generic_type": "DONT"
-      },
+      "isVisible": 1,
+      "logicalId": "refresh",
+      "Order": "1"
+    },
+    {
+      "name": "Connecté",
+      "type": "info",
+      "subtype": "binary",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "connected",
+      "Order": "2"
+    },
+    {
+      "name": "Batterie",
+      "type": "info",
+      "Unite":"%",
+      "subtype": "numeric",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "battery_level",
+      "Order": "3"
+    },
+    {
+      "name": "Durée ménage",
+      "type": "info",
+      "Unite":"min",
+      "subtype": "numeric",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "clean_time",
+      "Order": "4"
+    },
+    {
+      "name": "Superficie nettoyé",
+      "type": "info",
+      "Unite":"m²",
+      "subtype": "numeric",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "clean_area",
+      "Order": "5"
+    },
+    {
+      "name": "Nettoyage auto",
+      "type": "action",
+      "subtype": "other",
+      "isVisible": 1,
+      "logicalId": "autoclean",
+      "Order": "10"
+    },
+    {
+      "name": "Pause",
+      "type": "action",
+      "subtype": "other",
+      "isVisible": 1,
+      "logicalId": "standby",
+      "Order": "11"
+    },
+    {
+      "name": "Retour à la base",
+      "type": "action",
+      "subtype": "other",
+      "isVisible": 1,
+      "logicalId": "backcharging",
+      "Order": "12"
+    },
+    {
+      "name": "Aspiration",
+      "type": "info",
+      "subtype": "string",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "fan_status",
+      "Order": "20"
+    },
+    {
+      "name": "Réglage aspiration",
+      "type": "action",
+      "subtype": "select",
       "configuration" : {
-        "request" : "refresh"
+        "option" : "select",
+        "listValue" : "1|Silencieux;2|Normal;3|Fort"
       },
       "isVisible": 1,
-      "logicalId": "refresh"
-    }
+      "logicalId": "setaspiration",
+      "Order": "21"
+    },
+    {
+      "name": "Débit lavage",
+      "type": "info",
+      "subtype": "string",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "water_level",
+      "Order": "30"
+    },
+    {
+      "name": "Réglage lavage",
+      "type": "action",
+      "subtype": "select",
+      "configuration" : {
+        "option" : "select",
+        "listValue" : "1|Faible;2|Defaut;3|Elevé"
+      },
+      "isVisible": 1,
+      "logicalId": "setwaterlevel",
+      "Order": "31"
+    },
+    {
+      "name": "Etat",
+      "type": "info",
+      "subtype": "string",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "working_status",
+      "Order": "40"
+    },
+    {
+      "name": "Erreur",
+      "type": "info",
+      "subtype": "string",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "error_info",
+      "Order": "41"
+    },
+    {
+      "name": "En fonction",
+      "type": "info",
+      "subtype": "binary",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "isworking",
+      "Order": "50"
+    },
+    {
+      "name": "Sur la base",
+      "type": "info",
+      "subtype": "binary",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "isdocked",
+      "Order": "51"
+    },
+    {
+      "name": "Nettoyage à finir",
+      "type": "info",
+      "subtype": "binary",
+      "IsHistorized": 0,
+      "isVisible": 1,
+      "logicalId": "continue_clean",
+      "Order": "52"
+    },
+
+    {
+      "name": "Mode ne pas deranger",
+      "type": "info",
+      "subtype": "binary",
+      "IsHistorized": 0,
+      "isVisible": 0,
+      "logicalId": "undistrub_mode",
+      "Order": "60"
+    },
+    {
+      "name": "Haut parleur",
+      "type": "info",
+      "subtype": "string",
+      "IsHistorized": 0,
+      "isVisible": 0,
+      "logicalId": "voice_switch",
+      "Order": "61"
+    },
+    {
+      "name": "Volume haut parleur",
+      "type": "info",
+      "subtype": "numeric",
+      "IsHistorized": 0,
+      "isVisible": 0,
+      "logicalId": "voice_volume",
+      "Order": "62"
+    },
+    {
+      "name": "carpet_pressurization",
+      "type": "info",
+      "subtype": "binary",
+      "IsHistorized": 0,
+      "isVisible": 0,
+      "logicalId": "carpet_pressurization",
+      "Order": "63"
+    },
+    {
+      "name": "planning_rect_x",
+      "type": "info",
+      "subtype": "string",
+      "IsHistorized": 0,
+      "isVisible": 0,
+      "logicalId": "planning_rect_x",
+      "Order": "64"
+    },
+    {
+      "name": "planning_rect_y",
+      "type": "info",
+      "subtype": "string",
+      "IsHistorized": 0,
+      "isVisible": 0,
+      "logicalId": "planning_rect_y",
+      "Order": "65"
+    },
+    {
+      "name": "goto_point",
+      "type": "info",
+      "subtype": "string",
+      "IsHistorized": 0,
+      "isVisible": 0,
+      "logicalId": "goto_point",
+      "Order": "66"
+    },
   ]
 }

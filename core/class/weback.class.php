@@ -453,334 +453,37 @@ class weback extends eqLogic {
 
  // Fonction exécutée automatiquement après la création de l'équipement
     public function postInsert() {
+      weback::loadCmdFromConf('neatsvor-x600');
+    }
 
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Rafraichir', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('refresh');
-      $webackcmd->setOrder(1);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Connecté', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('connected');
-      $webackcmd->setOrder(2);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Batterie', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setUnite('%');
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('numeric');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('battery_level');
-      $webackcmd->setOrder(3);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Durée ménage', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setUnite('min');
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('numeric');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('clean_time');
-      $webackcmd->setOrder(4);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Superficie nettoyé', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setUnite('m²');
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('numeric');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('clean_area');
-      $webackcmd->setOrder(5);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Nettoyage auto', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('autoclean');
-      $webackcmd->setOrder(6);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Pause', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('standby');
-      $webackcmd->setOrder(7);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Retour à la base', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('backcharging');
-      $webackcmd->setOrder(8);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Aspiration', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('fan_status');
-      $webackcmd->setOrder(9);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Silencieux', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_quiet');
-      $webackcmd->setOrder(10);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Normal', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_normal');
-      $webackcmd->setOrder(11);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Fort', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_strong');
-      $webackcmd->setOrder(12);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Debit eau', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('water_level');
-      $webackcmd->setOrder(13);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Faible', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_low');
-      $webackcmd->setOrder(14);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Defaut', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_normal');
-      $webackcmd->setOrder(15);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Elevé', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_high');
-      $webackcmd->setOrder(16);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setLogicalId('working_status');
-      $webackcmd->setName(__('Etat', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setOrder(17);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Erreur', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('error_info');
-      $webackcmd->setOrder(18);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('En fonction', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(1);
-      $webackcmd->setLogicalId('isworking');
-      $webackcmd->setOrder(19);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Sur la base', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(1);
-      $webackcmd->setLogicalId('isdocked');
-      $webackcmd->setOrder(20);
-      $webackcmd->save();
-
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Mode ne pas deranger', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('undistrub_mode');
-      $webackcmd->setOrder(21);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Haut parleur', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('voice_switch');
-      $webackcmd->setOrder(22);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Volume haut parleur', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setUnite('%');
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('voice_volume');
-      $webackcmd->setOrder(23);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('carpet_pressurization', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('carpet_pressurization');
-      $webackcmd->setOrder(24);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('continue_clean', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('continue_clean');
-      $webackcmd->setOrder(25);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('planning_rect_x', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('planning_rect_x');
-      $webackcmd->setOrder(26);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('planning_rect_y', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('planning_rect_y');
-      $webackcmd->setOrder(27);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('goto_point', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('goto_point');
-      $webackcmd->setOrder(28);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Réglage aspiration', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('select');
-      $webackcmd->setLogicalId('setaspiration');
-      $webackcmd->setConfiguration('listValue', '1|Silencieux;2|Normal;3|Fort');
-      $webackcmd->setOrder(29);
-      $webackcmd->save();
-
-/*
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('laser_goto_path_x', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('laser_goto_path_x');
-      $webackcmd->setOrder(27);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('laser_goto_path_y', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('laser_goto_path_y');
-      $webackcmd->setOrder(28);
-      $webackcmd->save();
-
-
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Réglage eau', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('select');
-      $webackcmd->setLogicalId('modewater');
-      $webackcmd->setConfiguration('listValue', '1|Faible;2|Normal;3|Elevé');
-      $webackcmd->save();
-*/
+    public function loadCmdFromConf($_type) {
+      if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
+        return;
+      }
+      $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
+      if (!is_json($content)) {
+        return;
+      }
+      $device = json_decode($content, true);
+      if (!is_array($device) || !isset($device['commands'])) {
+        return true;
+      }
+      foreach ($device['commands'] as $command) {
+        $cmd = null;
+        foreach ($this->getCmd() as $liste_cmd) {
+          if ((isset($command['logicalId']) && $liste_cmd->getLogicalId() == $command['logicalId'])
+          || (isset($command['name']) && $liste_cmd->getName() == $command['name'])) {
+            $cmd = $liste_cmd;
+            break;
+          }
+        }
+        if ($cmd == null || !is_object($cmd)) {
+          $cmd = new webackCmd();
+          $cmd->setEqLogic_id($this->getId());
+          utils::a2o($cmd, $command);
+          $cmd->save();
+        }
+      }
     }
 
  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
@@ -901,24 +604,6 @@ class webackCmd extends cmd {
           case 'backcharging':
             weback::SendAction($eqToSendAction, "working_status","BackCharging");
             break;
-          case 'fan_quiet':
-            weback::SendAction($eqToSendAction, "fan_status", "Quiet");
-            break;
-          case 'fan_normal':
-            weback::SendAction($eqToSendAction, "fan_status", "Normal");
-            break;
-          case 'fan_strong':
-            weback::SendAction($eqToSendAction, "fan_status", "Strong");
-            break;
-          case 'water_low':
-            weback::SendAction($eqToSendAction, "water_level", "Low");
-            break;
-          case 'water_normal':
-            weback::SendAction($eqToSendAction, "water_level", "Default");
-            break;
-          case 'water_high':
-            weback::SendAction($eqToSendAction, "water_level", "High");
-            break;
           case 'setaspiration':
               switch ($_options['select']) {
                 case '1':
@@ -936,6 +621,24 @@ class webackCmd extends cmd {
                 }
             weback::SendAction($eqToSendAction, "fan_status", $action);
             break;
+
+            case 'setwaterlevel':
+                switch ($_options['select']) {
+                  case '1':
+                    $action = "Low";
+                    break;
+                  case '2':
+                    $action = "Default";
+                    break;
+                  case '3':
+                    $action = "High";
+                    break;
+                  default:
+                    log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
+                    break;
+                  }
+              weback::SendAction($eqToSendAction, "water_level", $action);
+              break;
 
         }
 
