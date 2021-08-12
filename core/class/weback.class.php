@@ -619,7 +619,7 @@ class webackCmd extends cmd {
             log::add('weback', 'debug', 'Spot info :'.$_options['message']);
             $coordinates = explode(",", $_options['message']);
             $actionToSend = array("working_status" => "PlanningLocation");
-            $actionToSend["goto_point"] = "[".$coordinates[0].",".$coordinates[1]."]");
+            $actionToSend["goto_point"] = "[".$coordinates[0].",".$coordinates[1]."]";
             $actionToSend["laser_goto_path_x"] = "[".$coordinates[0]."]";
             $actionToSend["laser_goto_path_y"] = "[".$coordinates[1]."]";
             weback::SendAction($eqToSendAction, $actionToSend);
@@ -627,7 +627,7 @@ class webackCmd extends cmd {
           case 'cleanroom':
             log::add('weback', 'debug', 'Room info :'.$_options['message']);
             $actionToSend = array("working_status" => "PlanningRect");
-            $actionToSend["planning_rect_x"] = "[".$_options['title']."]");
+            $actionToSend["planning_rect_x"] = "[".$_options['title']."]";
             $actionToSend["planning_rect_y"] = "[".$_options['message']."]";
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
