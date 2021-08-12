@@ -567,82 +567,43 @@ class webackCmd extends cmd {
 
   // Exécution d'une commande
      public function execute($_options = array()) {
-
-       /*ROBOT_CTRL_CLEAN_STOP("Standby"),
-        ROBOT_CTRL_CLEAN_CHARGE("BackCharging"),
-        ROBOT_CTRL_CLEAN_STOP2("Stop"),
-        ROBOT_CTRL_MODE_SPOT("SpotClean"),
-        ROBOT_CTRL_MODE_PLAN("PlanClean"),
-        ROBOT_CTRL_MODE_ROOM("RoomClean"),
-        ROBOT_CTRL_MODE_AUTO("AutoClean"),
-        ROBOT_CTRL_MODE_EDGE("EdgeClean"),
-        ROBOT_CTRL_MODE_FIXED("StrongClean"),
-        ROBOT_CTRL_MODE_Z("ZmodeClean"),
-        ROBOT_CTRL_MODE_MOPPING("MopClean"),
-        ROBOT_CTRL_VACUUM("VacuumClean"),
-        PLANNING_RECT("PlanningRect"),
-        ROBOT_CTRL_MODE_PLAN2("SmartClean"),
-        ROBOT_CTRL_SPEED_NORMAL("Normal"),
-        ROBOT_CTRL_SPEED_STRONG("Strong"),
-        ROBOT_CTRL_SPEED_STOP("Pause"),
-        ROBOT_CTRL_SPEED_SOUND_STOP("Quite"),
-        ROBOT_CTRL_SPEED_SOUND_STOP_2("Quiet"),
-        ROBOT_CTRL_SPEED_MAX("Max"),
-        */
-
-      //$eqLogicID = $this->getEqLogic(); NOK
-      /*$eqLogicID = $this->getEqLogic_id();
-      $robot=weback::byEqLogicId($eqLogicID, 'weback');
-      $logicidgg = $robot->getLogicalId();*/
-
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
 
        switch ($this->getLogicalId()) {
-          case 'refresh':
-            log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
-            weback::updateStatusDevices($eqToSendAction);
-            break;
-          case 'autoclean':
-            weback::SendAction($eqToSendAction, "working_status", "AutoClean");
-            break;
-          case 'standby':
-            weback::SendAction($eqToSendAction, "working_status", "Standby");
-            break;
-          case 'backcharging':
-            weback::SendAction($eqToSendAction, "working_status","BackCharging");
-            break;
-          case 'setaspiration':
-              switch ($_options['select']) {
-                case '1':
+            case 'refresh':
+              log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
+              weback::updateStatusDevices($eqToSendAction);
+              break;
+            case 'autoclean':
+              weback::SendAction($eqToSendAction, "working_status", "AutoClean");
+              break;
+            case 'standby':
+              weback::SendAction($eqToSendAction, "working_status", "Standby");
+              break;
+            case 'backcharging':
+              weback::SendAction($eqToSendAction, "working_status","BackCharging");
+              break;
+            case 'setaspiration':
+                if ($_options['select'] == "1") {
                   $action = "Quiet";
-                  break;
-                case '2':
+                } elseif ($_options['select'] == "2") {
                   $action = "Normal";
-                  break;
-                case '3':
+                } elseif ($_options['select'] == "3") {
                   $action = "Strong";
-                  break;
-                default:
+                } else {
                   log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-                  break;
                 }
-
             case 'setwaterlevel':
-                switch ($_options['select']) {
-                  case '1':
-                    $action = "Low";
-                    break;
-                  case '2':
-                    $action = "Default";
-                    break;
-                  case '3':
-                    $action = "High";
-                    break;
-                  default:
-                    log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-                    break;
-                  }
+              if ($_options['select'] == "1") {
+                $action = "Low";
+              } elseif ($_options['select'] == "2") {
+                $action = "Default";
+              } elseif ($_options['select'] == "3") {
+                $action = "High";
+              } else {
+                log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
+              }
 
             case 'cleanspot':
               log::add('weback', 'debug', 'Spot info :'.$_options['message']);
