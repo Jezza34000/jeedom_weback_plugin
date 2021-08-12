@@ -471,6 +471,7 @@ class weback extends eqLogic {
       }*/
       $device = json_decode($content, true);
       if (!is_array($device) || !isset($device['commands'])) {
+        log::add('weback', 'error', 'Pas de configuration valide trouvé dans le fichier');
         return true;
       }
       foreach ($device['commands'] as $command) {
