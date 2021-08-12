@@ -1,227 +1,226 @@
 {
-  "name": "neatsvor-x600",
-  "commands": [
-    {
-      "name": "Rafraichir",
-      "type": "action",
-      "subtype": "other",
-      "isVisible": 1,
-      "logicalId": "refresh",
-      "Order": "1"
-    },
-    {
-      "name": "Connecté",
-      "type": "info",
-      "subtype": "binary",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "connected",
-      "Order": "2"
-    },
-    {
-      "name": "Batterie",
-      "type": "info",
-      "Unite":"%",
-      "subtype": "numeric",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "battery_level",
-      "Order": "3"
-    },
-    {
-      "name": "Durée ménage",
-      "type": "info",
-      "Unite":"min",
-      "subtype": "numeric",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "clean_time",
-      "Order": "4"
-    },
-    {
-      "name": "Superficie nettoyé",
-      "type": "info",
-      "Unite":"m²",
-      "subtype": "numeric",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "clean_area",
-      "Order": "5"
-    },
-    {
-      "name": "Nettoyage auto",
-      "type": "action",
-      "subtype": "other",
-      "isVisible": 1,
-      "logicalId": "autoclean",
-      "Order": "10"
-    },
-    {
-      "name": "Pause",
-      "type": "action",
-      "subtype": "other",
-      "isVisible": 1,
-      "logicalId": "standby",
-      "Order": "11"
-    },
-    {
-      "name": "Retour à la base",
-      "type": "action",
-      "subtype": "other",
-      "isVisible": 1,
-      "logicalId": "backcharging",
-      "Order": "12"
-    },
-    {
-      "name": "Aspiration",
-      "type": "info",
-      "subtype": "string",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "fan_status",
-      "Order": "20"
-    },
-    {
-      "name": "Réglage aspiration",
-      "type": "action",
-      "subtype": "select",
-      "configuration" : {
-        "option" : "select",
-        "listValue" : "1|Silencieux;2|Normal;3|Fort"
-      },
-      "isVisible": 1,
-      "logicalId": "setaspiration",
-      "Order": "21"
-    },
-    {
-      "name": "Débit lavage",
-      "type": "info",
-      "subtype": "string",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "water_level",
-      "Order": "30"
-    },
-    {
-      "name": "Réglage lavage",
-      "type": "action",
-      "subtype": "select",
-      "configuration" : {
-        "option" : "select",
-        "listValue" : "1|Faible;2|Defaut;3|Elevé"
-      },
-      "isVisible": 1,
-      "logicalId": "setwaterlevel",
-      "Order": "31"
-    },
-    {
-      "name": "Etat",
-      "type": "info",
-      "subtype": "string",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "working_status",
-      "Order": "40"
-    },
-    {
-      "name": "Erreur",
-      "type": "info",
-      "subtype": "string",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "error_info",
-      "Order": "41"
-    },
-    {
-      "name": "En fonction",
-      "type": "info",
-      "subtype": "binary",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "isworking",
-      "Order": "50"
-    },
-    {
-      "name": "Sur la base",
-      "type": "info",
-      "subtype": "binary",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "isdocked",
-      "Order": "51"
-    },
-    {
-      "name": "Nettoyage à finir",
-      "type": "info",
-      "subtype": "binary",
-      "IsHistorized": 0,
-      "isVisible": 1,
-      "logicalId": "continue_clean",
-      "Order": "52"
-    },
-
-    {
-      "name": "Mode ne pas deranger",
-      "type": "info",
-      "subtype": "binary",
-      "IsHistorized": 0,
-      "isVisible": 0,
-      "logicalId": "undistrub_mode",
-      "Order": "60"
-    },
-    {
-      "name": "Haut parleur",
-      "type": "info",
-      "subtype": "string",
-      "IsHistorized": 0,
-      "isVisible": 0,
-      "logicalId": "voice_switch",
-      "Order": "61"
-    },
-    {
-      "name": "Volume haut parleur",
-      "type": "info",
-      "subtype": "numeric",
-      "IsHistorized": 0,
-      "isVisible": 0,
-      "logicalId": "voice_volume",
-      "Order": "62"
-    },
-    {
-      "name": "carpet_pressurization",
-      "type": "info",
-      "subtype": "binary",
-      "IsHistorized": 0,
-      "isVisible": 0,
-      "logicalId": "carpet_pressurization",
-      "Order": "63"
-    },
-    {
-      "name": "planning_rect_x",
-      "type": "info",
-      "subtype": "string",
-      "IsHistorized": 0,
-      "isVisible": 0,
-      "logicalId": "planning_rect_x",
-      "Order": "64"
-    },
-    {
-      "name": "planning_rect_y",
-      "type": "info",
-      "subtype": "string",
-      "IsHistorized": 0,
-      "isVisible": 0,
-      "logicalId": "planning_rect_y",
-      "Order": "65"
-    },
-    {
-      "name": "goto_point",
-      "type": "info",
-      "subtype": "string",
-      "IsHistorized": 0,
-      "isVisible": 0,
-      "logicalId": "goto_point",
-      "Order": "66"
-    },
-  ]
+	"name": "neatsvor-x600",
+	"commands": [
+		{
+			"name": "Rafraichir",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"logicalId": "refresh",
+			"Order": "1"
+		},
+		{
+			"name": "Connecté",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "connected",
+			"Order": "2"
+		},
+		{
+			"name": "Batterie",
+			"type": "info",
+			"Unite": "%",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "battery_level",
+			"Order": "3"
+		},
+		{
+			"name": "Durée ménage",
+			"type": "info",
+			"Unite": "min",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "clean_time",
+			"Order": "4"
+		},
+		{
+			"name": "Superficie nettoyé",
+			"type": "info",
+			"Unite": "m²",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "clean_area",
+			"Order": "5"
+		},
+		{
+			"name": "Nettoyage auto",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"logicalId": "autoclean",
+			"Order": "10"
+		},
+		{
+			"name": "Pause",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"logicalId": "standby",
+			"Order": "11"
+		},
+		{
+			"name": "Retour à la base",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"logicalId": "backcharging",
+			"Order": "12"
+		},
+		{
+			"name": "Aspiration",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "fan_status",
+			"Order": "20"
+		},
+		{
+			"name": "Réglage aspiration",
+			"type": "action",
+			"subtype": "select",
+			"configuration": {
+				"option": "select",
+				"listValue": "1|Silencieux;2|Normal;3|Fort"
+			},
+			"isVisible": 1,
+			"logicalId": "setaspiration",
+			"Order": "21"
+		},
+		{
+			"name": "Débit lavage",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "water_level",
+			"Order": "30"
+		},
+		{
+			"name": "Réglage lavage",
+			"type": "action",
+			"subtype": "select",
+			"configuration": {
+				"option": "select",
+				"listValue": "1|Faible;2|Defaut;3|Elevé"
+			},
+			"isVisible": 1,
+			"logicalId": "setwaterlevel",
+			"Order": "31"
+		},
+		{
+			"name": "Etat",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "working_status",
+			"Order": "40"
+		},
+		{
+			"name": "Erreur",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "error_info",
+			"Order": "41"
+		},
+		{
+			"name": "En fonction",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "isworking",
+			"Order": "50"
+		},
+		{
+			"name": "Sur la base",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "isdocked",
+			"Order": "51"
+		},
+		{
+			"name": "Nettoyage à finir",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "continue_clean",
+			"Order": "52"
+		},
+		{
+			"name": "Mode ne pas deranger",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "undistrub_mode",
+			"Order": "60"
+		},
+		{
+			"name": "Haut parleur",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "voice_switch",
+			"Order": "61"
+		},
+		{
+			"name": "Volume haut parleur",
+			"type": "info",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "voice_volume",
+			"Order": "62"
+		},
+		{
+			"name": "carpet_pressurization",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "carpet_pressurization",
+			"Order": "63"
+		},
+		{
+			"name": "planning_rect_x",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "planning_rect_x",
+			"Order": "64"
+		},
+		{
+			"name": "planning_rect_y",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "planning_rect_y",
+			"Order": "65"
+		},
+		{
+			"name": "goto_point",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "goto_point",
+			"Order": "66"
+		}
+	]
 }
