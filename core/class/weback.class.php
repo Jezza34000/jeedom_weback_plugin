@@ -474,8 +474,8 @@ class weback extends eqLogic {
         log::add('weback', 'error', 'Pas de configuration valide trouvé dans le fichier');
         return true;
       }
+      log::add('weback', 'debug', 'Nombre de commandes à ajouter : '.count($device['commands']));
       foreach ($device['commands'] as $command) {
-        log::add('weback', 'debug', 'Nombre de commandes à ajouter : '.count($device['commands']));
         $cmd = null;
         foreach ($this->getCmd() as $liste_cmd) {
           if ((isset($command['logicalId']) && $liste_cmd->getLogicalId() == $command['logicalId'])
@@ -484,6 +484,7 @@ class weback extends eqLogic {
             break;
           }
         }
+        log::add('weback', 'debug', 'Ajout de : '.$command['name']));
         if ($cmd == null || !is_object($cmd)) {
           $cmd = new webackCmd();
           $cmd->setEqLogic_id($this->getId());
