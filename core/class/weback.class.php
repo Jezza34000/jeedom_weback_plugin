@@ -737,6 +737,16 @@ class weback extends eqLogic {
       $webackcmd->setOrder(28);
       $webackcmd->save();
 
+      $webackcmd = new webackCmd();
+      $webackcmd->setName(__('Réglage aspiration', __FILE__));
+      $webackcmd->setEqLogic_id($this->id);
+      $webackcmd->setType('action');
+      $webackcmd->setSubType('select');
+      $webackcmd->setLogicalId('setaspiration');
+      $webackcmd->setConfiguration('listValue', '1|Silencieux;2|Normal;3|Fort');
+      $webackcmd->setOrder(29);
+      $webackcmd->save();
+
 /*
       $webackcmd = new webackCmd();
       $webackcmd->setName(__('laser_goto_path_x', __FILE__));
@@ -760,14 +770,7 @@ class weback extends eqLogic {
       $webackcmd->setOrder(28);
       $webackcmd->save();
 
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Réglage aspiration', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('select');
-      $webackcmd->setLogicalId('modeaspiration');
-      $webackcmd->setConfiguration('listValue', '1|Silencieux;2|Normal;3|Fort');
-      $webackcmd->save();
+
 
       $webackcmd = new webackCmd();
       $webackcmd->setName(__('Réglage eau', __FILE__));
@@ -916,6 +919,23 @@ class webackCmd extends cmd {
           case 'water_high':
             weback::SendAction($eqToSendAction, "water_level", "High");
             break;
+          case 'setaspiration':
+              switch ($_options['select']) {
+                case '1':
+                  $action = "Quiet";
+                  break;
+                case '2':
+                  $action = "Normal";
+                  break;
+                case '3':
+                  $action = "Strong";
+                  break;
+                default:
+                  log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
+                  break;
+            weback::SendAction($eqToSendAction, "fan_status", $action);
+            break;
+
         }
 
      }
