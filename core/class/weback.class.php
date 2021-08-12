@@ -484,7 +484,7 @@ class weback extends eqLogic {
             break;
           }
         }
-        log::add('weback', 'debug', 'Ajout de : '.$command['name']));
+        log::add('weback', 'debug', 'Ajout de : '.$command['name']);
         if ($cmd == null || !is_object($cmd)) {
           $cmd = new webackCmd();
           $cmd->setEqLogic_id($this->getId());
@@ -649,11 +649,11 @@ class webackCmd extends cmd {
               break;
 
             case 'cleanspot'
-
+              log::add('weback', 'debug', 'Spot info :'.$_options['message']);
               break;
-              
-            case 'cleanroom'
 
+            case 'cleanroom'
+              log::add('weback', 'debug', 'Room info :'.$_options['message']);
               break;
         }
 
