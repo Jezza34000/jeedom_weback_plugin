@@ -205,6 +205,7 @@ class weback extends eqLogic {
         $robot->setConfiguration('Thing_Name', $device['Request_Cotent'][0]['Thing_Name']);
         $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['Request_Cotent'][0]['Thing_Name'],-17)));
         $robot->save();
+        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type']);
       } else {
         log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
       }
@@ -453,15 +454,18 @@ class weback extends eqLogic {
 
  // Fonction exécutée automatiquement après la création de l'équipement
     public function postInsert() {
-      weback::loadCmdFromConf('neatsvor-x600');
+
     }
 
     public function loadCmdFromConf($_type) {
+      log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON :'.$_type);
       if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
+        log::add('weback', 'error', 'Fichier de configuration de robot introuvable !');
         return;
       }
       $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
       if (!is_json($content)) {
+        log::add('weback', 'error', 'Format du fichier de configuration n\'pas du JSON valide !');
         return;
       }
       $device = json_decode($content, true);
@@ -469,6 +473,7 @@ class weback extends eqLogic {
         return true;
       }
       foreach ($device['commands'] as $command) {
+        log::add('weback', 'debug', 'Nombre de commandes à ajouter : '.count($device['commands']));
         $cmd = null;
         foreach ($this->getCmd() as $liste_cmd) {
           if ((isset($command['logicalId']) && $liste_cmd->getLogicalId() == $command['logicalId'])
