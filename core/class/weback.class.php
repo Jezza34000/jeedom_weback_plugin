@@ -316,7 +316,7 @@ class weback extends eqLogic {
       }
     }
 
-    public static function SendAction($calledLogicalID, $action, $param) {
+    public static function SendAction($calledLogicalID, $action) {
       log::add('weback', 'debug', 'Envoi d\'une commande au robot: '.$calledLogicalID.' Action demandé : '.$action. '/'.$param);
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
@@ -335,10 +335,8 @@ class weback extends eqLogic {
       $data = array (
           "state" => array (
               "desired" =>
-                       array(
-                        $action => $param
-                       ),
-              )
+                    $action,
+            )
           );
       $payload = json_encode($data);
 
@@ -578,7 +576,8 @@ class webackCmd extends cmd {
             weback::updateStatusDevices($eqToSendAction);
             break;
           case 'autoclean':
-            weback::SendAction($eqToSendAction, "working_status", "AutoClean");
+            $actionToSend = array("working_status" => "AutoClean");
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'standby':
             weback::SendAction($eqToSendAction, "working_status", "Standby");
@@ -597,7 +596,7 @@ class webackCmd extends cmd {
               } else {
                 log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
               }
-              weback::SendAction($eqToSendAction, "fan_status",$action);
+              weback::SendAction($eqToSendAction, "fan_status", $action);
               break;
           case 'setwaterlevel':
             log::add('weback', 'debug', 'SetWater='.$_options['select']);
@@ -610,7 +609,7 @@ class webackCmd extends cmd {
             } else {
               log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
             }
-            weback::SendAction($eqToSendAction, "water_level",$action);
+            weback::SendAction($eqToSendAction, "water_level", $action);
             break;
           case 'cleanspot':
             log::add('weback', 'debug', 'Spot info :'.$_options['message']);
