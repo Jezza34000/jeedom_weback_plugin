@@ -8,9 +8,9 @@ L'API utilisé est non officiel, et basé sur le reverse engineering trouvé sur
 (non testé avec les autres)
 
 * Controle du robot disponible :
-Nettoyage Auto / Pause / Retour à la base
-Réglage de la vitesse d'aspiration 
-Régalge du débit d'eau
+-Nettoyage Auto / Pause / Retour à la base
+-Réglage de la vitesse d'aspiration 
+-Réglage du débit d'eau
 
 Certains paramètres sont remonté par le robot mais je n'ai pas compris leur usage :
 -carpet_pressurization (true/false)
