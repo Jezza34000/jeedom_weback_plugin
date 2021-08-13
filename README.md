@@ -1,4 +1,4 @@
-# Plugin pour utiliser les robots Neatsvor sur Jeedom
+# Plugin pour utiliser les robots Neatsvor & Tesvor sur Jeedom
 
 * Permet le controle des robots aspirateur de marque Neatsvor & Tesvor
 Via l'application WeBack/Tesvor. 
