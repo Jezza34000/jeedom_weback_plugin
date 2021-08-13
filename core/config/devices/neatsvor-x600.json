@@ -175,15 +175,6 @@
 			"Order": "51"
 		},
 		{
-			"name": "Nettoyage à finir",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 1,
-			"logicalId": "continue_clean",
-			"Order": "52"
-		},
-		{
 			"name": "Mode ne pas deranger",
 			"type": "info",
 			"subtype": "binary",
@@ -220,13 +211,22 @@
 			"Order": "63"
 		},
 		{
+			"name": "continue_clean",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "continue_clean",
+			"Order": "64"
+		},
+		{
 			"name": "planning_rect_x",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "planning_rect_x",
-			"Order": "64"
+			"Order": "65"
 		},
 		{
 			"name": "planning_rect_y",
@@ -235,7 +235,7 @@
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "planning_rect_y",
-			"Order": "65"
+			"Order": "66"
 		},
 		{
 			"name": "goto_point",
@@ -244,7 +244,7 @@
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "goto_point",
-			"Order": "66"
+			"Order": "67"
 		}
 	]
 }
