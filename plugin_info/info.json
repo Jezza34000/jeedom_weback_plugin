@@ -2,7 +2,7 @@
 	"id" : "weback",
 	"name" : "WeBack",
 	"description" : {
-		"fr_FR": "Plugin pour controler les robots aspirateur des marques : Neatsvor/Tesvor qui utilise les applications WeBack & Tesvor"
+		"fr_FR": "Plugin pour controler les robots aspirateur des marques : Neatsvor / Tesvor qui utilise les applications WeBack & Tesvor"
 	},
 	"licence" : "AGPL",
 	"author" : "Jezza",
