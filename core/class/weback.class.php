@@ -106,13 +106,14 @@ class weback extends eqLogic {
 
      public static function getAWScredential() {
        log::add('weback', 'debug', 'Connexion à AWS Cognito...');
+         $region = config::byKey('Region_Info', 'weback');
          $ch = curl_init();
          $data = array("IdentityId" => config::byKey('Identity_Id', 'weback'), "Logins" => array("cognito-identity.amazonaws.com" => config::byKey('Token', 'weback')));
          $data_string = json_encode($data);
 
          log::add('weback', 'debug', 'JSON AWS to send = ' . print_r($data_string, true));
 
-         curl_setopt($ch, CURLOPT_URL, "https://cognito-identity.eu-central-1.amazonaws.com");
+         curl_setopt($ch, CURLOPT_URL, "https://cognito-identity.".$region.".amazonaws.com");
          curl_setopt($ch, CURLOPT_POST, 1);
          curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -382,7 +383,6 @@ class weback extends eqLogic {
       return null;
     }
 
-
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
    * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
@@ -458,7 +458,7 @@ class weback extends eqLogic {
     public function loadCmdFromConf($_type) {
       log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON : '.$_type);
       if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
-        log::add('weback', 'error', 'Fichier de configuration de robot introuvable !');
+        log::add('weback', 'error', 'Fichier de configuration du robot introuvable !');
         return;
       }
       $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
