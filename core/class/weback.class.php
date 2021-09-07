@@ -76,7 +76,6 @@ class weback extends eqLogic {
          log::add('weback', 'debug', 'WeBack answer = ' . print_r($json, true));
 
          if ($json['Request_Result'] == 'success') {
-           //config::save("token", $json['LoginData']['ContextKey'], 'mitsubishi');
            log::add('weback', 'debug', 'Identifiant/mot de passe WeBack-Login OK');
            // Enregistrement des informations de connexion
            config::save("Identity_Pool_Id", $json['Identity_Pool_Id'], 'weback');
@@ -86,11 +85,6 @@ class weback extends eqLogic {
            config::save("Token", $json['Token'], 'weback');
            config::save("Token_Duration", $json['Token_Duration'], 'weback');
            config::save("Region_Info", $json['Region_Info'], 'weback');
-           config::save("Configuration_Page_URL", $json['Configuration_Page_URL'], 'weback');
-           config::save("Discovery_Page_URL", $json['Discovery_Page_URL'], 'weback');
-           config::save("Customer_Service_Card_URL", $json['Customer_Service_Card_URL'], 'weback');
-           config::save("Thing_Register_URL", $json['Thing_Register_URL'], 'weback');
-           config::save("Thing_Register_URL_Signature", $json['Thing_Register_URL_Signature'], 'weback');
            return true;
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
@@ -127,7 +121,6 @@ class weback extends eqLogic {
          log::add('weback', 'debug', 'AWS Cognito answer = ' . print_r($json, true));
 
          if ($json['Credentials'] != NULL) {
-           //config::save("token", $json['LoginData']['ContextKey'], 'mitsubishi');
            log::add('weback', 'debug', 'Information de connexion AWS Cognito OK');
            // Enregistrement des informations de connexion
            config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
@@ -171,10 +164,8 @@ class weback extends eqLogic {
       ), true));
 
       $return = (string)$result['Payload']->getContents();
-      //var_dump((string)$result->get('Payload')); => OK!
       log::add('weback', 'debug', 'AWS Lambda answer : ' . $return);
       $json = json_decode($return, true);
-      //var_dump($json);
 
        if ($json['Request_Result'] == 'success') {
            log::add('weback', 'info', 'Robot trouvé : ' .$json['Request_Cotent'][0]['Thing_Name']);
@@ -233,7 +224,6 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
       log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
-      //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
       // Update INFO plugin
       if ($shadowJson->state->reported->undistrub_mode == 'on') {
