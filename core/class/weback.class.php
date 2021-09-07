@@ -38,7 +38,7 @@ class weback extends eqLogic {
          if (weback::getToken() == true) {
                if (weback::getAWScredential() == true) {
                        if (weback::getDeviceList() == true) {
-                         log::add('weback', 'debug', '### Recherche robot terminé avec succès!', true);
+                         log::add('weback', 'debug', '### Recherche robot terminée avec succès!', true);
                          return null;
                        } else {
                          log::add('weback', 'debug', 'Recherche des robots KO > Echec GetDeviceList', true);
@@ -99,7 +99,7 @@ class weback extends eqLogic {
          }
          curl_close($ch);
        } else {
-         log::add('weback', 'info', 'Information de connexion à WeBack manquantes');
+         log::add('weback', 'info', 'Informations de connexion à WeBack manquantes');
          return false;
        }
      }
@@ -272,7 +272,7 @@ class weback extends eqLogic {
         } else {
           $wback->checkAndUpdateCmd('isdocked', 0);
           $wback->checkAndUpdateCmd('isworking', 0);
-          log::add('weback', 'debug', 'Aucune equivalence Docked/Working trouvé pour l\'état : '.$wstatus);
+          log::add('weback', 'debug', 'Aucune équivalence Docked/Working trouvée pour l\'état : '.$wstatus);
         }
       }
 
@@ -316,7 +316,7 @@ class weback extends eqLogic {
     }
 
     public static function SendAction($calledLogicalID, $action, $param) {
-      log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandé : '.$action);
+      log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandée : '.$action);
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
           'endpointType' => 'iot:Data-ATS',
@@ -399,7 +399,7 @@ class weback extends eqLogic {
         if (count($eqLogics) > 0) {
           log::add('weback', 'debug', 'Refresh (CRON) démarré pour actualiser : '.count($eqLogics).' robot(s)');
           foreach ($eqLogics as $webackrbt) {
-            log::add('weback', 'debug', 'Process d\'acutalisation démarré pour : '.$webackrbt->getHumanName());
+            log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName());
             weback::updateStatusDevices($webackrbt->getLogicalId());
           }
         } else {
