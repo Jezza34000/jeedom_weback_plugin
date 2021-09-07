@@ -256,11 +256,6 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
-      $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
-      $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
-      $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
-      //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
-      //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
 
       $result = weback::DeterminateSimpleState($wstatus, $shadowJson->state->reported->error_info);
         if ($result == "docked") {
@@ -681,103 +676,6 @@ class weback extends eqLogic {
       $webackcmd->setLogicalId('voice_volume');
       $webackcmd->setOrder(23);
       $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('carpet_pressurization', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('carpet_pressurization');
-      $webackcmd->setOrder(24);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('continue_clean', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('continue_clean');
-      $webackcmd->setOrder(25);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('planning_rect_x', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('planning_rect_x');
-      $webackcmd->setOrder(26);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('planning_rect_y', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('planning_rect_y');
-      $webackcmd->setOrder(27);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('goto_point', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('goto_point');
-      $webackcmd->setOrder(28);
-      $webackcmd->save();
-
-/*
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('laser_goto_path_x', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('laser_goto_path_x');
-      $webackcmd->setOrder(27);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('laser_goto_path_y', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('laser_goto_path_y');
-      $webackcmd->setOrder(28);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Réglage aspiration', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('select');
-      $webackcmd->setLogicalId('modeaspiration');
-      $webackcmd->setConfiguration('listValue', '1|Silencieux;2|Normal;3|Fort');
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Réglage eau', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('select');
-      $webackcmd->setLogicalId('modewater');
-      $webackcmd->setConfiguration('listValue', '1|Faible;2|Normal;3|Elevé');
-      $webackcmd->save();
-*/
     }
 
  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
@@ -875,11 +773,6 @@ class webackCmd extends cmd {
         ROBOT_CTRL_SPEED_SOUND_STOP_2("Quiet"),
         ROBOT_CTRL_SPEED_MAX("Max"),
         */
-
-      //$eqLogicID = $this->getEqLogic(); NOK
-      /*$eqLogicID = $this->getEqLogic_id();
-      $robot=weback::byEqLogicId($eqLogicID, 'weback');
-      $logicidgg = $robot->getLogicalId();*/
 
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
