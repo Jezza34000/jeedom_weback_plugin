@@ -1,18 +1,18 @@
 # Plugin pour utiliser les robots Neatsvor & Tesvor sur Jeedom
 
-* Permet le controle des robots aspirateur de marque Neatsvor & Tesvor
+* Permet le contrôle des robots aspirateur de marque Neatsvor & Tesvor
 Via l'application WeBack/Tesvor. 
-L'API utilisé est non officiel, et basé sur le reverse engineering trouvé sur ce dépot : https://github.com/opravdin/weback-unofficial
+L'API utilisée est non officielle, et basée sur le reverse engineering trouvé sur ce dépôt : https://github.com/opravdin/weback-unofficial
 
-* Pleinnement fonctionnel avec le modèle Neatsvor X600 
+* Pleinement fonctionnel avec le modèle Neatsvor X600 
 (non testé avec les autres)
 
-* Controle du robot disponible :
+* Contrôle du robot disponible :
 -Nettoyage Auto / Pause / Retour à la base
 -Réglage de la vitesse d'aspiration 
 -Réglage du débit d'eau
 
-Certains paramètres sont remonté par le robot mais je n'ai pas compris leur usage :
+Certains paramètres sont remontés par le robot mais je n'ai pas compris leur usage :
 -carpet_pressurization (true/false)
 -continue_clean (true/false)
 
