@@ -595,6 +595,8 @@ class webackCmd extends cmd {
                 $action = "Normal";
               } elseif ($_options['select'] == "3") {
                 $action = "Strong";
+              } elseif ($_options['select'] == "4") {
+                $action = "Max";
               } else {
                 log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
               }
