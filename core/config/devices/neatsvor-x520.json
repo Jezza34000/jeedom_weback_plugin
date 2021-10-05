@@ -72,29 +72,29 @@
 			"logicalId": "backcharging",
 			"Order": "12"
 		},
-    {
-      "name": "Nettoyer spot",
-      "type": "action",
-      "subtype": "message",
-      "isVisible": 0,
-      "logicalId": "cleanspot",
-      "Display": {
-        "message_placeholder": "Coordonnées X,Y"
-      },
-      "Order": "13"
-    },
-    {
-      "name": "Nettoyer pièce",
-      "type": "action",
-      "subtype": "message",
-      "isVisible": 0,
-      "logicalId": "cleanroom",
-      "Display": {
-        "title_placeholder": "planning_rect_x",
-        "message_placeholder": "planning_rect_y"
-      },
-      "Order": "14"
-    },
+		{
+		  "name": "Nettoyer spot",
+		  "type": "action",
+		  "subtype": "message",
+		  "isVisible": 0,
+		  "logicalId": "cleanspot",
+		  "Display": {
+			"message_placeholder": "Coordonnées X,Y"
+		  },
+		  "Order": "13"
+		},
+		{
+		  "name": "Nettoyer pièce",
+		  "type": "action",
+		  "subtype": "message",
+		  "isVisible": 0,
+		  "logicalId": "cleanroom",
+		  "Display": {
+			"title_placeholder": "planning_rect_x",
+			"message_placeholder": "planning_rect_y"
+		  },
+		  "Order": "14"
+		},
 		{
 			"name": "Nettoyage bordure",
 			"type": "action",
