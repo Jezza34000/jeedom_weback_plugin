@@ -95,7 +95,14 @@
       },
       "Order": "14"
     },
-
+		{
+			"name": "Nettoyage bordure",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"logicalId": "edgeclean",
+			"Order": "15"
+		},
 		{
 			"name": "Aspiration",
 			"type": "info",
