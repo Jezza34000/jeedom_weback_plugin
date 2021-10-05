@@ -261,6 +261,12 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
       $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
       $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
+      // X520 spécific parametres
+      $wback->checkAndUpdateCmd('optical_flow', $shadowJson->state->reported->optical_flow);
+      $wback->checkAndUpdateCmd('left_water', $shadowJson->state->reported->left_water);
+      $wback->checkAndUpdateCmd('cliff_detect', $shadowJson->state->reported->cliff_detect);
+      $wback->checkAndUpdateCmd('final_edge', $shadowJson->state->reported->final_edge);
+      $wback->checkAndUpdateCmd('uv_lamp', $shadowJson->state->reported->uv_lamp);
       //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
       //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
 
