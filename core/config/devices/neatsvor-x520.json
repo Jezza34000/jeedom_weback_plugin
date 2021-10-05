@@ -111,7 +111,7 @@
 			"subtype": "select",
 			"configuration": {
 				"option": "select",
-				"listValue": "1|Silencieux;2|Normal;3|Fort;4|Max
+				"listValue": "1|Silencieux;2|Normal;3|Fort;4|Max"
 			},
 			"isVisible": 1,
 			"logicalId": "setaspiration",
