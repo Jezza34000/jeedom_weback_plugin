@@ -585,7 +585,7 @@ class webackCmd extends cmd {
             $actionToSend = array("working_status" => "AutoClean");
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
-          case 'edgeclean':
+          case 'edgeclean': // Not supported by X600
             $actionToSend = array("working_status" => "EdgeClean");
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
