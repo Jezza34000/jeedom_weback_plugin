@@ -245,6 +245,51 @@
 			"isVisible": 0,
 			"logicalId": "goto_point",
 			"Order": "67"
+		},
+		{
+			"name": "optical_flow",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "optical_flow",
+			"Order": "68"
+		},
+		{
+			"name": "left_water",
+			"type": "info",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "left_water",
+			"Order": "69"
+		},
+		{
+			"name": "cliff_detect",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "cliff_detect",
+			"Order": "70"
+		},
+		{
+			"name": "final_edge",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "final_edge",
+			"Order": "71"
+		},
+		{
+			"name": "uv_lamp",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "uv_lamp",
+			"Order": "72"
 		}
 	]
 }
