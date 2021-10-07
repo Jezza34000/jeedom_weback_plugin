@@ -73,29 +73,6 @@
 			"Order": "12"
 		},
 		{
-		  "name": "Nettoyer spot",
-		  "type": "action",
-		  "subtype": "message",
-		  "isVisible": 0,
-		  "logicalId": "cleanspot",
-		  "Display": {
-			"message_placeholder": "Coordonnées X,Y"
-		  },
-		  "Order": "13"
-		},
-		{
-		  "name": "Nettoyer pièce",
-		  "type": "action",
-		  "subtype": "message",
-		  "isVisible": 0,
-		  "logicalId": "cleanroom",
-		  "Display": {
-			"title_placeholder": "planning_rect_x",
-			"message_placeholder": "planning_rect_y"
-		  },
-		  "Order": "14"
-		},
-		{
 			"name": "Nettoyage bordure",
 			"type": "action",
 			"subtype": "other",
@@ -182,15 +159,6 @@
 			"Order": "51"
 		},
 		{
-			"name": "Mode ne pas deranger",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "undistrub_mode",
-			"Order": "60"
-		},
-		{
 			"name": "Haut parleur",
 			"type": "info",
 			"subtype": "string",
@@ -207,51 +175,6 @@
 			"isVisible": 0,
 			"logicalId": "voice_volume",
 			"Order": "62"
-		},
-		{
-			"name": "carpet_pressurization",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "carpet_pressurization",
-			"Order": "63"
-		},
-		{
-			"name": "continue_clean",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "continue_clean",
-			"Order": "64"
-		},
-		{
-			"name": "planning_rect_x",
-			"type": "info",
-			"subtype": "string",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "planning_rect_x",
-			"Order": "65"
-		},
-		{
-			"name": "planning_rect_y",
-			"type": "info",
-			"subtype": "string",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "planning_rect_y",
-			"Order": "66"
-		},
-		{
-			"name": "goto_point",
-			"type": "info",
-			"subtype": "string",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "goto_point",
-			"Order": "67"
 		},
 		{
 			"name": "optical_flow",
@@ -288,15 +211,6 @@
 			"isVisible": 0,
 			"logicalId": "final_edge",
 			"Order": "71"
-		},
-		{
-			"name": "uv_lamp",
-			"type": "info",
-			"subtype": "string",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "uv_lamp",
-			"Order": "72"
 		}
 	]
 }
