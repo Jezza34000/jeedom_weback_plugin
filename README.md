@@ -4,7 +4,10 @@
 Via l'application WeBack/Tesvor. 
 L'API utilisée est non officielle, et basée sur le reverse engineering trouvé sur ce dépôt : https://github.com/opravdin/weback-unofficial
 
-* Pleinement fonctionnel avec le modèle Neatsvor X600 
+* Fonctionnel avec les modèles : 
+* Neatsvor X600 
+* Neatsvor X520
+* Orfeld X503
 (non testé avec les autres)
 
 * Contrôle du robot disponible :
