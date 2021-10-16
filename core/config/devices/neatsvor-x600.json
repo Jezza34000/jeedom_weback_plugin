@@ -175,12 +175,24 @@
 			"Order": "51"
 		},
 		{
-			"name": "Mode ne pas deranger",
+			"name": "Etat ne pas deranger",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "undistrub_mode",
+			"Order": "59"
+		},
+		{
+			"name": "Mode ne pas déranger",
+			"type": "action",
+			"subtype": "select",
+			"configuration": {
+				"option": "select",
+				"listValue": "1|Activé;2|Désactivé"
+			},
+			"isVisible": 1,
+			"logicalId": "setundistrub",
 			"Order": "60"
 		},
 		{
