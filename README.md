@@ -1,13 +1,18 @@
-# Plugin pour utiliser les robots Neatsvor & Tesvor sur Jeedom
+# Plugin pour utiliser les robots Neatsvor / Tesvor / Orfeld sur Jeedom
 
-* Permet le contrôle des robots aspirateur de marque Neatsvor & Tesvor
+* Permet le contrôle des robots aspirateur de marque Neatsvor / Tesvor / Orfeld
 Via l'application WeBack/Tesvor. 
 L'API utilisée est non officielle, et basée sur le reverse engineering trouvé sur ce dépôt : https://github.com/opravdin/weback-unofficial
 
-Fonctionnel avec les modèles : 
-* Neatsvor X600 
+Fonctionnel avec les modèles suivant : 
+* Neatsvor X600
+* Neatsvor X500
 * Neatsvor X520
 * Orfeld X503
+* Tesvor M1
+* Tesvor S6
+* Tesvor T8
+* Tesvor V300
 
 (non testé avec les autres)
 
@@ -19,16 +24,11 @@ Fonctionnel avec les modèles :
 
 -Réglage du débit d'eau
 
-Certains paramètres sont remontés par le robot mais je n'ai pas compris leur usage
-
-Robot Neatsvor X600 :
+Certains paramètres sont remontés par le robot mais je n'ai pas compris leur usage (en fonction des modèles) :
 
 -carpet_pressurization (true/false)
 
 -continue_clean (true/false)
-
-
-Robot Neatsvor X520 & Orfeld X503
 
 -cliff_detect (enable/disable)
 
