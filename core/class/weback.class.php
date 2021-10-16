@@ -200,6 +200,7 @@ class weback extends eqLogic {
         $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type']);
       } else {
         log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
+        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type']);
       }
     }
 
@@ -482,12 +483,14 @@ class weback extends eqLogic {
             break;
           }
         }
-        log::add('weback', 'debug', 'Ajout de : '.$command['name']);
         if ($cmd == null || !is_object($cmd)) {
+          log::add('weback', 'debug', '-> Ajout de : '.$command['name']);
           $cmd = new webackCmd();
           $cmd->setEqLogic_id($this->getId());
           utils::a2o($cmd, $command);
           $cmd->save();
+        } else {
+          log::add('weback', 'debug', 'Commande déjà présente : '.$command['name']);
         }
       }
 
