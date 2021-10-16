@@ -177,7 +177,7 @@
 		{
 			"name": "Mode ne pas deranger",
 			"type": "info",
-			"subtype": "binary",
+			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "undistrub_mode",
