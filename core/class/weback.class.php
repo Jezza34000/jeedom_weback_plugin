@@ -312,8 +312,7 @@ class weback extends eqLogic {
       }
     }
 
-
-    public static function SendAction($calledLogicalID, $action, $param) {
+    public static function SendAction($calledLogicalID, $action) {
       log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandée : '.$action);
 
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
