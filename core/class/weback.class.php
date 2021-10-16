@@ -608,18 +608,6 @@ class webackCmd extends cmd {
               $actionToSend = array("fan_status" => $action);
               weback::SendAction($eqToSendAction, $actionToSend);
               break;
-          case 'setundistrub':
-              log::add('weback', 'debug', 'Set Undisturb='.$_options['select']);
-              if ($_options['select'] == "1") {
-                $action = "on";
-              } elseif ($_options['select'] == "2") {
-                $action = "off";
-              } else {
-                log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-              }
-              $actionToSend = array("undistrub_mode" => $action);
-              weback::SendAction($eqToSendAction, $actionToSend);
-              break;
           case 'setwaterlevel':
             log::add('weback', 'debug', 'SetWater='.$_options['select']);
             if ($_options['select'] == "1") {
