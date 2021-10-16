@@ -230,15 +230,16 @@ class weback extends eqLogic {
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
 
       $wstatus = $shadowJson->state->reported->working_status;
-      $umod = $shadowJson->state->reported->undistrub_mode;
       log::add('weback', 'debug', 'SaveMap : '.$shadowJson->state->reported->save_map);
+      log::add('weback', 'debug', 'VoicePack : '.$shadowJson->state->reported->voice_pack);
+      log::add('weback', 'debug', 'Undisturb Mode : '.$shadowJson->state->reported->undisturb_mode);
 
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $wstatus);
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
       $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
-      $wback->checkAndUpdateCmd('undistrub_mode', $umod);
+      $wback->checkAndUpdateCmd('undistrub', $shadowJson->state->reported->undistrub_mode);
       $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
       $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
       $wback->checkAndUpdateCmd('error_info', $shadowJson->state->reported->error_info);
