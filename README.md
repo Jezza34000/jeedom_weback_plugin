@@ -12,17 +12,36 @@ Fonctionnel avec les modèles :
 (non testé avec les autres)
 
 * Contrôle du robot disponible :
+
 -Nettoyage Auto / Pause / Retour à la base
 
 -Réglage de la vitesse d'aspiration 
 
 -Réglage du débit d'eau
 
-Certains paramètres sont remontés par le robot mais je n'ai pas compris leur usage :
+Certains paramètres sont remontés par le robot mais je n'ai pas compris leur usage
+
+Robot Neatsvor X600 :
+
 -carpet_pressurization (true/false)
+
 -continue_clean (true/false)
 
+
+Robot Neatsvor X520 & Orfeld X503
+
+-cliff_detect (enable/disable)
+
+-left_water (-1)
+
+-optical_flow (on/off)
+
+-final_edge (on/off)
+
+
 * Sur la branche beta (mais non fonctionnel complètement)
-Nettoyage coin (spot)
-Nettoyage pièce (rectangle)
+
+-Nettoyage coin (spot)
+
+-Nettoyage pièce (rectangle)
 
