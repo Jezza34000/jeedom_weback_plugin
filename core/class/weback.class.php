@@ -231,7 +231,7 @@ class weback extends eqLogic {
 
       $wstatus = $shadowJson->state->reported->working_status;
       $umod = $shadowJson->state->reported->undistrub_mode;
-      log::add('weback', 'debug', 'UMOD : '.$shadowJson->state->reported->undistrub_mode);
+      log::add('weback', 'debug', 'UMOD : '.strval($shadowJson->state->reported->undistrub_mode));
 
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $wstatus);
