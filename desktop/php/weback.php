@@ -122,26 +122,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
 								</div>
 							</div>
-
-							<legend><i class="fas fa-cogs"></i> {{Informations}}</legend>
-							<div class="form-group">
-								<label class="col-sm-3 control-label"> {{Nom du robot}}</label>
-								<div class="col-sm-7">
-									<span class="eqLogicAttr" data-l1key="configuration" data-l2key="Thing_Nick_Name"></span>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Adresse MAC}}</label>
-								<div class="col-sm-7">
-	                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="Mac_Adress"></span>
-	              </div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label"> {{Modèle}}</label>
-								<div class="col-sm-7">
-	                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="Sub_type"></span>
-	              </div>
-							</div>
 						</div>
 
 						<!-- Partie droite de l'onglet "Équipement" -->
@@ -151,6 +131,24 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<div class="form-group">
 								<div class="text-center">
 									<img name="icon_visu" src="<?= $plugin->getPathImgIcon(); ?>" style="max-width:160px;"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> {{Nom du robot}}</label>
+								<div class="col-sm-7">
+									<span class="eqLogicAttr" data-l1key="configuration" data-l2key="Thing_Nick_Name"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Adresse MAC}}</label>
+								<div class="col-sm-7">
+									<span class="eqLogicAttr" data-l1key="configuration" data-l2key="Mac_Adress"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> {{Modèle}}</label>
+								<div class="col-sm-7">
+									<span class="eqLogicAttr" data-l1key="configuration" data-l2key="Sub_type"></span>
 								</div>
 							</div>
 						</div>

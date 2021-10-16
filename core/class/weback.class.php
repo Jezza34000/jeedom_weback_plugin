@@ -100,13 +100,14 @@ class weback extends eqLogic {
 
      public static function getAWScredential() {
        log::add('weback', 'debug', 'Connexion à AWS Cognito...');
+         $region = config::byKey('Region_Info', 'weback');
          $ch = curl_init();
          $data = array("IdentityId" => config::byKey('Identity_Id', 'weback'), "Logins" => array("cognito-identity.amazonaws.com" => config::byKey('Token', 'weback')));
          $data_string = json_encode($data);
 
          log::add('weback', 'debug', 'JSON AWS to send = ' . print_r($data_string, true));
 
-         curl_setopt($ch, CURLOPT_URL, "https://cognito-identity.eu-central-1.amazonaws.com");
+         curl_setopt($ch, CURLOPT_URL, "https://cognito-identity.".$region.".amazonaws.com");
          curl_setopt($ch, CURLOPT_POST, 1);
          curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -196,6 +197,7 @@ class weback extends eqLogic {
         $robot->setConfiguration('Thing_Name', $device['Request_Cotent'][0]['Thing_Name']);
         $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['Request_Cotent'][0]['Thing_Name'],-17)));
         $robot->save();
+        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type']);
       } else {
         log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
       }
@@ -246,6 +248,18 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
+
+      $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
+      $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
+      $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
+      // X520 spécific parametres
+      $wback->checkAndUpdateCmd('optical_flow', $shadowJson->state->reported->optical_flow);
+      $wback->checkAndUpdateCmd('left_water', $shadowJson->state->reported->left_water);
+      $wback->checkAndUpdateCmd('cliff_detect', $shadowJson->state->reported->cliff_detect);
+      $wback->checkAndUpdateCmd('final_edge', $shadowJson->state->reported->final_edge);
+      $wback->checkAndUpdateCmd('uv_lamp', $shadowJson->state->reported->uv_lamp);
+      //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
+      //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
 
       $result = weback::DeterminateSimpleState($wstatus, $shadowJson->state->reported->error_info);
         if ($result == "docked") {
@@ -300,8 +314,10 @@ class weback extends eqLogic {
       }
     }
 
+
     public static function SendAction($calledLogicalID, $action, $param) {
       log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandée : '.$action);
+
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
           'endpointType' => 'iot:Data-ATS',
@@ -319,10 +335,8 @@ class weback extends eqLogic {
       $data = array (
           "state" => array (
               "desired" =>
-                       array(
-                        $action => $param
-                       ),
-              )
+                    $action,
+            )
           );
       $payload = json_encode($data);
 
@@ -367,7 +381,6 @@ class weback extends eqLogic {
       }
       return null;
     }
-
 
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
@@ -439,233 +452,45 @@ class weback extends eqLogic {
  // Fonction exécutée automatiquement après la création de l'équipement
     public function postInsert() {
 
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Rafraichir', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('refresh');
-      $webackcmd->setOrder(1);
-      $webackcmd->save();
 
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Connecté', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('connected');
-      $webackcmd->setOrder(2);
-      $webackcmd->save();
+    }
 
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Batterie', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setUnite('%');
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('numeric');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('battery_level');
-      $webackcmd->setOrder(3);
-      $webackcmd->save();
+    public function loadCmdFromConf($_type) {
+      log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON : '.$_type);
+      if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
+        log::add('weback', 'error', 'Fichier de configuration du robot introuvable !');
+        return;
+      }
+      $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
+      //log::add('weback', 'error', 'Content : '.$content);
+      if (!is_json($content)) {
+        log::add('weback', 'error', 'Format du fichier de configuration n\'est pas du JSON valide !');
+        return;
+      }
+      $device = json_decode($content, true);
+      if (!is_array($device) || !isset($device['commands'])) {
+        log::add('weback', 'error', 'Pas de configuration valide trouvé dans le fichier');
+        return true;
+      }
+      log::add('weback', 'debug', 'Nombre de commandes à ajouter : '.count($device['commands']));
+      foreach ($device['commands'] as $command) {
+        $cmd = null;
+        foreach ($this->getCmd() as $liste_cmd) {
+          if ((isset($command['logicalId']) && $liste_cmd->getLogicalId() == $command['logicalId'])
+          || (isset($command['name']) && $liste_cmd->getName() == $command['name'])) {
+            $cmd = $liste_cmd;
+            break;
+          }
+        }
+        log::add('weback', 'debug', 'Ajout de : '.$command['name']);
+        if ($cmd == null || !is_object($cmd)) {
+          $cmd = new webackCmd();
+          $cmd->setEqLogic_id($this->getId());
+          utils::a2o($cmd, $command);
+          $cmd->save();
+        }
+      }
 
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Durée ménage', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setUnite('min');
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('numeric');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('clean_time');
-      $webackcmd->setOrder(4);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Superficie nettoyé', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setUnite('m²');
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('numeric');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('clean_area');
-      $webackcmd->setOrder(5);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Nettoyage auto', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('autoclean');
-      $webackcmd->setOrder(6);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Pause', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('standby');
-      $webackcmd->setOrder(7);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Retour à la base', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('backcharging');
-      $webackcmd->setOrder(8);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Aspiration', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('fan_status');
-      $webackcmd->setOrder(9);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Silencieux', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_quiet');
-      $webackcmd->setOrder(10);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Normal', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_normal');
-      $webackcmd->setOrder(11);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Fort', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('fan_strong');
-      $webackcmd->setOrder(12);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Debit eau', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('water_level');
-      $webackcmd->setOrder(13);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Faible', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_low');
-      $webackcmd->setOrder(14);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Defaut', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_normal');
-      $webackcmd->setOrder(15);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Elevé', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('action');
-      $webackcmd->setSubType('other');
-      $webackcmd->setLogicalId('water_high');
-      $webackcmd->setOrder(16);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setLogicalId('working_status');
-      $webackcmd->setName(__('Etat', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setOrder(17);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Erreur', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setLogicalId('error_info');
-      $webackcmd->setOrder(18);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('En fonction', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(1);
-      $webackcmd->setLogicalId('isworking');
-      $webackcmd->setOrder(19);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Sur la base', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(1);
-      $webackcmd->setLogicalId('isdocked');
-      $webackcmd->setOrder(20);
-      $webackcmd->save();
-
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Mode ne pas deranger', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('binary');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('undistrub_mode');
-      $webackcmd->setOrder(21);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Haut parleur', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('voice_switch');
-      $webackcmd->setOrder(22);
-      $webackcmd->save();
-
-      $webackcmd = new webackCmd();
-      $webackcmd->setName(__('Volume haut parleur', __FILE__));
-      $webackcmd->setEqLogic_id($this->id);
-      $webackcmd->setUnite('%');
-      $webackcmd->setType('info');
-      $webackcmd->setSubType('string');
-      $webackcmd->setIsHistorized(0);
-      $webackcmd->setIsVisible(0);
-      $webackcmd->setLogicalId('voice_volume');
-      $webackcmd->setOrder(23);
-      $webackcmd->save();
     }
 
  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
@@ -741,31 +566,10 @@ class webackCmd extends cmd {
 
   // Exécution d'une commande
      public function execute($_options = array()) {
-
-       /*ROBOT_CTRL_CLEAN_STOP("Standby"),
-        ROBOT_CTRL_CLEAN_CHARGE("BackCharging"),
-        ROBOT_CTRL_CLEAN_STOP2("Stop"),
-        ROBOT_CTRL_MODE_SPOT("SpotClean"),
-        ROBOT_CTRL_MODE_PLAN("PlanClean"),
-        ROBOT_CTRL_MODE_ROOM("RoomClean"),
-        ROBOT_CTRL_MODE_AUTO("AutoClean"),
-        ROBOT_CTRL_MODE_EDGE("EdgeClean"),
-        ROBOT_CTRL_MODE_FIXED("StrongClean"),
-        ROBOT_CTRL_MODE_Z("ZmodeClean"),
-        ROBOT_CTRL_MODE_MOPPING("MopClean"),
-        ROBOT_CTRL_VACUUM("VacuumClean"),
-        PLANNING_RECT("PlanningRect"),
-        ROBOT_CTRL_MODE_PLAN2("SmartClean"),
-        ROBOT_CTRL_SPEED_NORMAL("Normal"),
-        ROBOT_CTRL_SPEED_STRONG("Strong"),
-        ROBOT_CTRL_SPEED_STOP("Pause"),
-        ROBOT_CTRL_SPEED_SOUND_STOP("Quite"),
-        ROBOT_CTRL_SPEED_SOUND_STOP_2("Quiet"),
-        ROBOT_CTRL_SPEED_MAX("Max"),
-        */
-
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
+
+      //log::add('weback', 'debug', 'Execute '.$this->getLogicalId());
 
        switch ($this->getLogicalId()) {
           case 'refresh':
@@ -773,31 +577,66 @@ class webackCmd extends cmd {
             weback::updateStatusDevices($eqToSendAction);
             break;
           case 'autoclean':
-            weback::SendAction($eqToSendAction, "working_status", "AutoClean");
+            $actionToSend = array("working_status" => "AutoClean");
+            weback::SendAction($eqToSendAction, $actionToSend);
+            break;
+          case 'edgeclean': // Not supported by X600
+            $actionToSend = array("working_status" => "EdgeClean");
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'standby':
-            weback::SendAction($eqToSendAction, "working_status", "Standby");
+            $actionToSend = array("working_status" => "Standby");
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'backcharging':
-            weback::SendAction($eqToSendAction, "working_status","BackCharging");
+            $actionToSend = array("working_status" => "BackCharging");
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
-          case 'fan_quiet':
-            weback::SendAction($eqToSendAction, "fan_status", "Quiet");
+          case 'setaspiration':
+              log::add('weback', 'debug', 'SetAspiration='.$_options['select']);
+              if ($_options['select'] == "1") {
+                $action = "Quiet";
+              } elseif ($_options['select'] == "2") {
+                $action = "Normal";
+              } elseif ($_options['select'] == "3") {
+                $action = "Strong";
+              } elseif ($_options['select'] == "4") {
+                $action = "Max";
+              } else {
+                log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
+              }
+              $actionToSend = array("fan_status" => $action);
+              weback::SendAction($eqToSendAction, $actionToSend);
+              break;
+          case 'setwaterlevel':
+            log::add('weback', 'debug', 'SetWater='.$_options['select']);
+            if ($_options['select'] == "1") {
+              $action = "Low";
+            } elseif ($_options['select'] == "2") {
+              $action = "Default";
+            } elseif ($_options['select'] == "3") {
+              $action = "High";
+            } else {
+              log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
+            }
+            $actionToSend = array("water_level" => $action);
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
-          case 'fan_normal':
-            weback::SendAction($eqToSendAction, "fan_status", "Normal");
+          case 'cleanspot':
+            log::add('weback', 'debug', 'Spot info :'.$_options['message']);
+            $coordinates = explode(",", $_options['message']);
+            $actionToSend = array("working_status" => "PlanningLocation");
+            $actionToSend["goto_point"] = "[".$coordinates[0].",".$coordinates[1]."]";
+            $actionToSend["laser_goto_path_x"] = "[".$coordinates[0]."]";
+            $actionToSend["laser_goto_path_y"] = "[".$coordinates[1]."]";
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
-          case 'fan_strong':
-            weback::SendAction($eqToSendAction, "fan_status", "Strong");
-            break;
-          case 'water_low':
-            weback::SendAction($eqToSendAction, "water_level", "Low");
-            break;
-          case 'water_normal':
-            weback::SendAction($eqToSendAction, "water_level", "Default");
-            break;
-          case 'water_high':
-            weback::SendAction($eqToSendAction, "water_level", "High");
+          case 'cleanroom':
+            log::add('weback', 'debug', 'Room info X:'.$_options['message']." Y:".$_options['title']);
+            $actionToSend = array("working_status" => "PlanningRect");
+            $actionToSend["planning_rect_x"] = "[".$_options['title']."]";
+            $actionToSend["planning_rect_y"] = "[".$_options['message']."]";
+            weback::SendAction($eqToSendAction, $actionToSend);
             break;
         }
 
