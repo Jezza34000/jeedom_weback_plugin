@@ -196,7 +196,7 @@
 			"Order": "60"
 		},
 		{
-			"name": "Haut parleur",
+			"name": "Etat haut parleur",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
@@ -205,13 +205,36 @@
 			"Order": "61"
 		},
 		{
+			"name": "Mode haut parleur",
+			"type": "action",
+			"subtype": "select",
+			"configuration": {
+				"option": "select",
+				"listValue": "1|Activé;2|Désactivé"
+			},
+			"isVisible": 1,
+			"logicalId": "setvoiceswitch",
+			"Order": "62"
+		},
+		{
 			"name": "Volume haut parleur",
 			"type": "info",
 			"subtype": "numeric",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "voice_volume",
-			"Order": "62"
+			"Order": "63"
+		},
+		{
+			"name": "Régalge volume hp",
+			"type": "action",
+			"subtype": "message",
+			"isVisible": 0,
+			"logicalId": "setvolume",
+			"Display": {
+				"message_placeholder": "Volume (0-100)"
+			},
+			"Order": "64"
 		},
 		{
 			"name": "Carpet pressurization",
@@ -220,7 +243,7 @@
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "carpet_pressurization",
-			"Order": "63"
+			"Order": "70"
 		},
 		{
 			"name": "Continue clean",
@@ -229,7 +252,7 @@
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "continue_clean",
-			"Order": "64"
+			"Order": "71"
 		},
 		{
 			"name": "Planning_rect_x",
@@ -238,7 +261,7 @@
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "planning_rect_x",
-			"Order": "65"
+			"Order": "72"
 		},
 		{
 			"name": "Planning_rect_y",
@@ -247,7 +270,7 @@
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "planning_rect_y",
-			"Order": "66"
+			"Order": "73"
 		},
 		{
 			"name": "Goto_point",
@@ -256,7 +279,7 @@
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "goto_point",
-			"Order": "67"
+			"Order": "74"
 		}
 	]
 }
