@@ -202,25 +202,25 @@
 			"Order": "62"
 		},
 		{
-			"name": "carpet_pressurization",
+			"name": "Carpet pressurization",
 			"type": "info",
-			"subtype": "binary",
+			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "carpet_pressurization",
 			"Order": "63"
 		},
 		{
-			"name": "continue_clean",
+			"name": "Continue clean",
 			"type": "info",
-			"subtype": "binary",
+			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "continue_clean",
 			"Order": "64"
 		},
 		{
-			"name": "planning_rect_x",
+			"name": "Planning_rect_x",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
@@ -229,7 +229,7 @@
 			"Order": "65"
 		},
 		{
-			"name": "planning_rect_y",
+			"name": "Planning_rect_y",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
@@ -238,7 +238,7 @@
 			"Order": "66"
 		},
 		{
-			"name": "goto_point",
+			"name": "Goto_point",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
