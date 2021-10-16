@@ -248,8 +248,8 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
 
       // Listes de commandes
-      $wback->checkAndUpdateCmd('setaspiration', "Silencieux");
-      $wback->checkAndUpdateCmd('setwaterlevel', "2");
+      $wback->checkAndUpdateCmd('setaspiration', 'Silencieux');
+      $wback->checkAndUpdateCmd('setwaterlevel', '2');
 
       $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
       $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
