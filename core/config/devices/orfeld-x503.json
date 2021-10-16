@@ -1,5 +1,5 @@
 {
-	"name": "neatsvor-x600",
+	"name": "orfeld-x503",
 	"commands": [
 		{
 			"name": "Rafraichir",
@@ -72,30 +72,14 @@
 			"logicalId": "backcharging",
 			"Order": "12"
 		},
-    {
-      "name": "Nettoyer spot",
-      "type": "action",
-      "subtype": "message",
-      "isVisible": 0,
-      "logicalId": "cleanspot",
-      "Display": {
-        "message_placeholder": "Coordonnées X,Y"
-      },
-      "Order": "13"
-    },
-    {
-      "name": "Nettoyer pièce",
-      "type": "action",
-      "subtype": "message",
-      "isVisible": 0,
-      "logicalId": "cleanroom",
-      "Display": {
-        "title_placeholder": "planning_rect_x",
-        "message_placeholder": "planning_rect_y"
-      },
-      "Order": "14"
-    },
-
+		{
+			"name": "Nettoyage bordure",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"logicalId": "edgeclean",
+			"Order": "15"
+		},
 		{
 			"name": "Aspiration",
 			"type": "info",
@@ -111,7 +95,7 @@
 			"subtype": "select",
 			"configuration": {
 				"option": "select",
-				"listValue": "1|Silencieux;2|Normal;3|Fort"
+				"listValue": "1|Silencieux;2|Normal;3|Fort;4|Max"
 			},
 			"isVisible": 1,
 			"logicalId": "setaspiration",
@@ -175,15 +159,6 @@
 			"Order": "51"
 		},
 		{
-			"name": "Mode ne pas deranger",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "undistrub_mode",
-			"Order": "60"
-		},
-		{
 			"name": "Haut parleur",
 			"type": "info",
 			"subtype": "string",
@@ -202,49 +177,40 @@
 			"Order": "62"
 		},
 		{
-			"name": "carpet_pressurization",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "carpet_pressurization",
-			"Order": "63"
-		},
-		{
-			"name": "continue_clean",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "continue_clean",
-			"Order": "64"
-		},
-		{
-			"name": "planning_rect_x",
+			"name": "optical_flow",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "planning_rect_x",
-			"Order": "65"
+			"logicalId": "optical_flow",
+			"Order": "68"
 		},
 		{
-			"name": "planning_rect_y",
+			"name": "left_water",
+			"type": "info",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "left_water",
+			"Order": "69"
+		},
+		{
+			"name": "cliff_detect",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "planning_rect_y",
-			"Order": "66"
+			"logicalId": "cliff_detect",
+			"Order": "70"
 		},
 		{
-			"name": "goto_point",
+			"name": "final_edge",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "goto_point",
-			"Order": "67"
+			"logicalId": "final_edge",
+			"Order": "71"
 		}
 	]
 }
