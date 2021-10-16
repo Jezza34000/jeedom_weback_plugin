@@ -607,6 +607,10 @@ class webackCmd extends cmd {
             $actionToSend = array("working_status" => "ClearMap");
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
+          case 'powersleep':
+            $actionToSend = array("working_status" => "PowerSleep");
+            weback::SendAction($eqToSendAction, $actionToSend);
+            break;
           case 'setaspiration':
               log::add('weback', 'debug', 'SetAspiration='.$_options['select']);
               if ($_options['select'] == "1") {
