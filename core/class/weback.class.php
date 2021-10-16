@@ -649,6 +649,23 @@ class webackCmd extends cmd {
             $actionToSend = array("undisturb_mode" => $action);
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
+          case 'setvoiceswitch':
+            log::add('weback', 'debug', 'Set voiceswitch='.$_options['select']);
+            if ($_options['select'] == "1") {
+              $action = "on";
+            } elseif ($_options['select'] == "2") {
+              $action = "off";
+            } else {
+              log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
+            }
+            $actionToSend = array("voice_switch" => $action);
+            weback::SendAction($eqToSendAction, $actionToSend);
+            break;
+          case 'setvolume':
+            log::add('weback', 'debug', 'Set volume='.$_options['message']);
+            $actionToSend = array("volume" => $_options['message']);
+            weback::SendAction($eqToSendAction, $actionToSend);
+            break;
         }
 
      }
