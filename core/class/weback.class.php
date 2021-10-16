@@ -591,6 +591,14 @@ class webackCmd extends cmd {
             $actionToSend = array("working_status" => "BackCharging");
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
+          case 'locationalarm':
+            $actionToSend = array("working_status" => "ClearMap");
+            weback::SendAction($eqToSendAction, $actionToSend);
+            break;
+          case 'clearmap':
+            $actionToSend = array("working_status" => "LocationAlarm");
+            weback::SendAction($eqToSendAction, $actionToSend);
+            break;
           case 'setaspiration':
               log::add('weback', 'debug', 'SetAspiration='.$_options['select']);
               if ($_options['select'] == "1") {

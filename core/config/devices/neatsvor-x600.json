@@ -95,7 +95,22 @@
       },
       "Order": "14"
     },
-
+		{
+			"name": "Localiser le robot",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"logicalId": "locationalarm",
+			"Order": "15"
+		},
+		{
+			"name": "Effacer la carte",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"logicalId": "clearmap",
+			"Order": "16"
+		},
 		{
 			"name": "Aspiration",
 			"type": "info",
