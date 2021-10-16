@@ -592,11 +592,11 @@ class webackCmd extends cmd {
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'locationalarm':
-            $actionToSend = array("working_status" => "ClearMap");
+            $actionToSend = array("working_status" => "LocationAlarm");
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'clearmap':
-            $actionToSend = array("working_status" => "LocationAlarm");
+            $actionToSend = array("working_status" => "ClearMap");
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'setaspiration':
