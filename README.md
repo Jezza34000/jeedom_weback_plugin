@@ -39,9 +39,11 @@ Certains paramètres sont remontés par le robot mais je n'ai pas compris leur u
 -final_edge (on/off)
 
 
-* Sur la branche beta (mais non fonctionnel complètement)
+* Fonction partiellement supporté 
 
 -Nettoyage coin (spot)
+Pour utiliser cette fonction, vous devez lancer le robot en nettoyage spot depuis votre application, ensuite récupérer les coordonnées qui apparaissent dans l'info "goto_point". Ensuite utiliser la fonction "Nettoyer spot" avec ces coordonnées là.
 
 -Nettoyage pièce (rectangle)
+Pour utiliser cette fonction, vous devez lancer le robot en nettoyage rectangle depuis votre application, ensuite récupérer les coordonnées qui apparaissent dans les informations "planning_rect_x" & "planning_rect_y". Ensuite utiliser la fonction "Nettoyer pièce" avec ces coordonnées là.
 
