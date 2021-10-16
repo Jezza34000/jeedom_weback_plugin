@@ -230,8 +230,8 @@ class weback extends eqLogic {
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
 
       $wstatus = $shadowJson->state->reported->working_status;
-      log::add('weback', 'debug', 'SaveMap : '.$shadowJson->state->reported->save_map);
-      log::add('weback', 'debug', 'VoicePack : '.$shadowJson->state->reported->voice_pack);
+      /*log::add('weback', 'debug', 'SaveMap : '.$shadowJson->state->reported->save_map);
+      log::add('weback', 'debug', 'VoicePack : '.$shadowJson->state->reported->voice_pack);*/
 
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $wstatus);
