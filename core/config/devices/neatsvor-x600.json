@@ -112,6 +112,22 @@
 			"Order": "16"
 		},
 		{
+			"name": "Nettoyage mode Z",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"logicalId": "zmodeclean",
+			"Order": "17"
+		},
+		{
+			"name": "Nettoyage renforcée",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"logicalId": "strongclean",
+			"Order": "18"
+		},
+		{
 			"name": "Aspiration",
 			"type": "info",
 			"subtype": "string",
