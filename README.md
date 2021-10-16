@@ -39,7 +39,7 @@ Certains paramètres sont remontés par le robot mais je n'ai pas compris leur u
 -final_edge (on/off)
 
 
-* Fonction partiellement supporté 
+* Fonctions partiellement supportées : 
 
 -Nettoyage coin (spot/emplacement spécifique) :
 Pour utiliser cette fonction, vous devez lancer le robot en nettoyage spot/emplacement spécifique depuis votre application, une fois que le robot démarre, récupérer les coordonnées qui apparaissent dans l'info "goto_point". Ensuite utiliser la fonction "Nettoyer spot" avec ces coordonnées là.
