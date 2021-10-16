@@ -646,7 +646,7 @@ class webackCmd extends cmd {
             } else {
               log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
             }
-            $actionToSend = array("undistrub_mode" => $action);
+            $actionToSend = array("undisturb_mode" => $action);
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
         }
