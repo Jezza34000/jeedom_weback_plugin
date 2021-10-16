@@ -26,7 +26,7 @@ if (!isConnect()) {
   <fieldset>
     <div class="form-group">
       <label class="col-md-4 control-label">{{Utilisateur/Téléphone}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Email ou numéro de téléphone avec lequel vous avez enregistrer votre compte WeBack}}"></i></sup>
+        <sup><i class="fas fa-question-circle tooltips" title="{{Email ou numéro de téléphone avec lequel vous avez enregistré votre compte WeBack}}"></i></sup>
       </label>
       <div class="col-md-4">
         <input class="configKey form-control" data-l1key="user"/>

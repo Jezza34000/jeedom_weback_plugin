@@ -38,7 +38,7 @@ class weback extends eqLogic {
          if (weback::getToken() == true) {
                if (weback::getAWScredential() == true) {
                        if (weback::getDeviceList() == true) {
-                         log::add('weback', 'debug', '### Recherche robot terminé avec succès!', true);
+                         log::add('weback', 'debug', '### Recherche robot terminée avec succès!', true);
                          return null;
                        } else {
                          log::add('weback', 'debug', 'Recherche des robots KO > Echec GetDeviceList', true);
@@ -76,7 +76,6 @@ class weback extends eqLogic {
          log::add('weback', 'debug', 'WeBack answer = ' . print_r($json, true));
 
          if ($json['Request_Result'] == 'success') {
-           //config::save("token", $json['LoginData']['ContextKey'], 'mitsubishi');
            log::add('weback', 'debug', 'Identifiant/mot de passe WeBack-Login OK');
            // Enregistrement des informations de connexion
            config::save("Identity_Pool_Id", $json['Identity_Pool_Id'], 'weback');
@@ -86,11 +85,6 @@ class weback extends eqLogic {
            config::save("Token", $json['Token'], 'weback');
            config::save("Token_Duration", $json['Token_Duration'], 'weback');
            config::save("Region_Info", $json['Region_Info'], 'weback');
-           config::save("Configuration_Page_URL", $json['Configuration_Page_URL'], 'weback');
-           config::save("Discovery_Page_URL", $json['Discovery_Page_URL'], 'weback');
-           config::save("Customer_Service_Card_URL", $json['Customer_Service_Card_URL'], 'weback');
-           config::save("Thing_Register_URL", $json['Thing_Register_URL'], 'weback');
-           config::save("Thing_Register_URL_Signature", $json['Thing_Register_URL_Signature'], 'weback');
            return true;
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
@@ -99,7 +93,7 @@ class weback extends eqLogic {
          }
          curl_close($ch);
        } else {
-         log::add('weback', 'info', 'Information de connexion à WeBack manquantes');
+         log::add('weback', 'info', 'Informations de connexion à WeBack manquantes');
          return false;
        }
      }
@@ -128,7 +122,6 @@ class weback extends eqLogic {
          log::add('weback', 'debug', 'AWS Cognito answer = ' . print_r($json, true));
 
          if ($json['Credentials'] != NULL) {
-           //config::save("token", $json['LoginData']['ContextKey'], 'mitsubishi');
            log::add('weback', 'debug', 'Information de connexion AWS Cognito OK');
            // Enregistrement des informations de connexion
            config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
@@ -172,10 +165,8 @@ class weback extends eqLogic {
       ), true));
 
       $return = (string)$result['Payload']->getContents();
-      //var_dump((string)$result->get('Payload')); => OK!
       log::add('weback', 'debug', 'AWS Lambda answer : ' . $return);
       $json = json_decode($return, true);
-      //var_dump($json);
 
        if ($json['Request_Result'] == 'success') {
            log::add('weback', 'info', 'Robot trouvé : ' .$json['Request_Cotent'][0]['Thing_Name']);
@@ -235,7 +226,6 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
       log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
-      //$weback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
       // Update INFO plugin
       if ($shadowJson->state->reported->undistrub_mode == 'on') {
@@ -258,6 +248,7 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
+
       $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
       $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
       $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
@@ -280,7 +271,7 @@ class weback extends eqLogic {
         } else {
           $wback->checkAndUpdateCmd('isdocked', 0);
           $wback->checkAndUpdateCmd('isworking', 0);
-          log::add('weback', 'debug', 'Aucune equivalence Docked/Working trouvé pour l\'état : '.$wstatus);
+          log::add('weback', 'debug', 'Aucune équivalence Docked/Working trouvée pour l\'état : '.$wstatus);
         }
       }
 
@@ -323,8 +314,10 @@ class weback extends eqLogic {
       }
     }
 
-    public static function SendAction($calledLogicalID, $action) {
-      log::add('weback', 'debug', 'Envoi d\'une commande au robot: '.$calledLogicalID.' Action demandé : '.print_r($action, true));
+
+    public static function SendAction($calledLogicalID, $action, $param) {
+      log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandée : '.$action);
+
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
           'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
           'endpointType' => 'iot:Data-ATS',
@@ -404,7 +397,7 @@ class weback extends eqLogic {
         if (count($eqLogics) > 0) {
           log::add('weback', 'debug', 'Refresh (CRON) démarré pour actualiser : '.count($eqLogics).' robot(s)');
           foreach ($eqLogics as $webackrbt) {
-            log::add('weback', 'debug', 'Process d\'acutalisation démarré pour : '.$webackrbt->getHumanName());
+            log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName());
             weback::updateStatusDevices($webackrbt->getLogicalId());
           }
         } else {
@@ -459,6 +452,7 @@ class weback extends eqLogic {
  // Fonction exécutée automatiquement après la création de l'équipement
     public function postInsert() {
 
+
     }
 
     public function loadCmdFromConf($_type) {
@@ -496,6 +490,7 @@ class weback extends eqLogic {
           $cmd->save();
         }
       }
+
     }
 
  // Fonction exécutée automatiquement avant la mise à jour de l'équipement
