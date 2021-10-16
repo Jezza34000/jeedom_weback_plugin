@@ -14,7 +14,7 @@ Fonctionnel avec les modèles suivant :
 * Tesvor T8
 * Tesvor V300
 
-(non testé avec les autres)
+(Si votre modèle n'est pas listé n'hésitez pas à ouvrir une issue)
 
 * Contrôle du robot disponible :
 
