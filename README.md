@@ -12,6 +12,7 @@ Fonctionnel avec les modèles :
 (non testé avec les autres)
 
 * Contrôle du robot disponible :
+* 
 -Nettoyage Auto / Pause / Retour à la base
 -Réglage de la vitesse d'aspiration 
 -Réglage du débit d'eau
