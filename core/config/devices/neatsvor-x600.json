@@ -128,12 +128,12 @@
 			"Order": "18"
 		},
 		{
-			"name": "PowerSleep",
+			"name": "Mise en veille forcée",
 			"type": "action",
 			"subtype": "other",
 			"isVisible": 0,
 			"logicalId": "powersleep",
-			"Order": "18"
+			"Order": "19"
 		},
 		{
 			"name": "Aspiration",
