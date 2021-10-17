@@ -615,6 +615,12 @@ class webackCmd extends cmd {
             if ($this->getSubType() == 'other') {
               $stateRequest = $this->getLogicalId();
               log::add('weback', 'debug', '>Value (from logicalID) : '.$stateRequest);
+            } elseif ($this->getSubType() == 'select') {
+              $stateRequest = $_options['select'];
+              log::add('weback', 'debug', '>Value (from select) : '.$stateRequest);
+            } elseif ($this->getSubType() == 'slider') {
+              $stateRequest = $_options['slider'];
+              log::add('weback', 'debug', '>Value (from slider) : '.$stateRequest);
             } else {
               $stateRequest = $_options['message'];
               log::add('weback', 'debug', '>Value (from message) : '.$stateRequest);
