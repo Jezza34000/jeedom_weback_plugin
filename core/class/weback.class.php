@@ -499,7 +499,7 @@ class weback extends eqLogic {
             if (is_object($cmdlogic)) {
         			$cmd->setValue($cmdlogic->getId());
               $cmd->save();
-              log::add('weback', 'debug', '-> Valeur lier depuis : '.$valueLink." (".$valueLink->getId().")");
+              log::add('weback', 'debug', '-> Valeur lier depuis : '.$valueLink." (".$cmdlogic->getId().")");
         		} else {
               log::add('weback', 'debug', '-> Valeur non lier n\'est pas un objet : '.$valueLink);
             }
