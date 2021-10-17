@@ -197,10 +197,10 @@ class weback extends eqLogic {
         $robot->setConfiguration('Thing_Name', $device['Request_Cotent'][0]['Thing_Name']);
         $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['Request_Cotent'][0]['Thing_Name'],-17)));
         $robot->save();
-        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type']);
+        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type'], $device['Request_Cotent'][0]['Thing_Name']);
       } else {
         log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
-        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type']);
+        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type'], $device['Request_Cotent'][0]['Thing_Name']);
       }
     }
 
@@ -456,7 +456,7 @@ class weback extends eqLogic {
 
     }
 
-    public function loadCmdFromConf($_type) {
+    public function loadCmdFromConf($_type, $roboteqId) {
       log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON : '.$_type);
       if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
         log::add('weback', 'error', 'Fichier de configuration du robot introuvable !');
@@ -493,15 +493,14 @@ class weback extends eqLogic {
           $cmd->save();
           if ($cmd->getConfiguration('valueFrom') != "") {
             $valueLink = $cmd->getConfiguration('valueFrom');
-            $robot=weback::byLogicalId('neatsvor-x600-20-4e-f6-9e-f2-a1', 'weback');
+            $robot=weback::byLogicalId($roboteqId, 'weback');
             $cmdlogic = webackCmd::byEqLogicIdAndLogicalId($robot->getId(), $valueLink);
-
             if (is_object($cmdlogic)) {
         			$cmd->setValue($cmdlogic->getId());
               $cmd->save();
               log::add('weback', 'debug', '-> Valeur lier depuis : '.$valueLink." (".$cmdlogic->getId().")");
         		} else {
-              log::add('weback', 'debug', '-> Valeur non lier n\'est pas un objet : '.$valueLink);
+              log::add('weback', 'debug', '-> Liaison impossible objet introuvable : '.$valueLink);
             }
           }
           $cmd_order++;
