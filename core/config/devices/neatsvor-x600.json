@@ -165,7 +165,7 @@
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
-			"isVisible": 1,
+			"isVisible": 0,
 			"logicalId": "fan_status"
 		},
 		{
@@ -186,7 +186,7 @@
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
-			"isVisible": 1,
+			"isVisible": 0,
 			"logicalId": "water_level"
 		},
 		{

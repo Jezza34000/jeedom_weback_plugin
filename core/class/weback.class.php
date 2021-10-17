@@ -611,7 +611,11 @@ class webackCmd extends cmd {
             break;
           default:
             $actRequest = $this->getConfiguration('actionrequest');
-            $stateRequest = $this->getLogicalId();
+            if ($this->getSubType() == 'other') {
+              $stateRequest = $this->getLogicalId();
+            } else {
+              $stateRequest = $_options['message'];
+            }
             weback::SendAction($eqToSendAction, array($actRequest => $stateRequest));
             break;
         }
