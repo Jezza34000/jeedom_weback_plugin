@@ -297,7 +297,8 @@
 				"minValue": 0,
 				"maxValue": 100,
 				"setUnite":"%",
-				"valueFrom" : "voice_volume"
+				"valueFrom" : "voice_volume",
+				"actionrequest" : "volume"
 			},
 			"logicalId": "setvolume"
 		},
