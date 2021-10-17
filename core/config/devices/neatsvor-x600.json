@@ -175,7 +175,8 @@
 			"configuration": {
 				"option": "select",
 				"listValue": "Quiet|Silencieux;Normal|Normal;Strong|Fort",
-				"actionrequest" : "fan_status"
+				"actionrequest" : "fan_status",
+				"valueFrom" : "fan_status"
 			},
 			"isVisible": 1,
 			"logicalId": "set_fan_status"
@@ -195,7 +196,8 @@
 			"configuration": {
 				"option": "select",
 				"listValue": "Low|Faible;Default|Defaut;High|Elevé",
-				"actionrequest" : "fan_status"
+				"actionrequest" : "fan_status",
+				"valueFrom" : "water_level"
 			},
 			"isVisible": 1,
 			"logicalId": "set_water_level"
@@ -247,7 +249,8 @@
 			"configuration": {
 				"option": "select",
 				"listValue": "on|Activé;off|Désactivé",
-				"actionrequest" : "undisturb_mode"
+				"actionrequest" : "undisturb_mode",
+				"valueFrom" : "undistrub_mode"
 			},
 			"isVisible": 1,
 			"logicalId": "set_undisturb_mode"
@@ -267,7 +270,8 @@
 			"configuration": {
 				"option": "select",
 				"listValue": "on|Activé;off|Désactivé",
-				"actionrequest" : "voice_switch"
+				"actionrequest" : "voice_switch",
+				"valueFrom" : "voice_switch"
 			},
 			"isVisible": 1,
 			"logicalId": "set_voice_switch"
@@ -291,7 +295,8 @@
 			"isVisible": 0,
 			"configuration": {
 				"minValue": 0,
-				"maxValue": 100
+				"maxValue": 100,
+				"valueFrom" : "voice_volume"
 			},
 			"logicalId": "setvolume"
 		},
