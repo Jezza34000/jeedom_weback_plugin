@@ -229,15 +229,19 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
 
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
+
+      $wstatus = $shadowJson->state->reported->working_status;
+      $errnfo = $shadowJson->state->reported->error_info;
+
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
-      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
+      $wback->checkAndUpdateCmd('working_status', $wstatus);
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
       $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
       $wback->checkAndUpdateCmd('undistrub_mode', $shadowJson->state->reported->undisturb_mode);
       $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
       $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
-      $wback->checkAndUpdateCmd('error_info', $shadowJson->state->reported->error_info);
+      $wback->checkAndUpdateCmd('error_info', $errnfo);
       $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
@@ -253,7 +257,7 @@ class weback extends eqLogic {
       //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
       //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
 
-      $result = weback::DeterminateSimpleState($wstatus, $shadowJson->state->reported->error_info);
+      $result = weback::DeterminateSimpleState($wstatus, $errnfo);
         if ($result == "docked") {
           $wback->checkAndUpdateCmd('isworking', 0);
           $wback->checkAndUpdateCmd('isdocked', 1);
