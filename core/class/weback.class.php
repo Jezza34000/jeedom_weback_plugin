@@ -254,6 +254,7 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('cliff_detect', $shadowJson->state->reported->cliff_detect);
       $wback->checkAndUpdateCmd('final_edge', $shadowJson->state->reported->final_edge);
       $wback->checkAndUpdateCmd('uv_lamp', $shadowJson->state->reported->uv_lamp);
+      $wback->checkAndUpdateCmd('laser_wall_line_point_num', ($shadowJson->state->reported->laser_wall_line_point_num)/2);
       //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
       //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
 
