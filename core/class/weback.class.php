@@ -490,10 +490,6 @@ class weback extends eqLogic {
           $cmd->setOrder($cmd_order);
           $cmd->setEqLogic_id($this->getId());
           utils::a2o($cmd, $command);
-          // Link ListAction
-          if $cmd->getLogicalId() == "setaspiration" {
-
-          }
           $cmd->save();
           $cmd_order++;
         } else {
@@ -578,8 +574,8 @@ class webackCmd extends cmd {
      public function execute($_options = array()) {
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
-
       log::add('weback', 'debug', '-> Execute : '.$this->getLogicalId());
+      
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
@@ -601,7 +597,7 @@ class webackCmd extends cmd {
             $actionToSend["planning_rect_y"] = "[".$_options['message']."]";
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
-          case else:
+          default:
             $actRequest = $this->getConfiguration('actionrequest');
             $stateRequest = $this->getLogicalId();
             weback::SendAction($eqToSendAction, array($actRequest => $stateRequest));
