@@ -341,6 +341,14 @@
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "goto_point"
+		},
+		{
+			"name": "Nombre de mur virtuel",
+			"type": "info",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "laser_wall_line_point_num"
 		}
 	]
 }
