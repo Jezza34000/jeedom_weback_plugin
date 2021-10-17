@@ -305,7 +305,7 @@
 		{
 			"name": "Carpet pressurization",
 			"type": "info",
-			"subtype": "string",
+			"subtype": "binary",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "carpet_pressurization"
@@ -313,7 +313,7 @@
 		{
 			"name": "Continue clean",
 			"type": "info",
-			"subtype": "string",
+			"subtype": "binary",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "continue_clean"
