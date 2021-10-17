@@ -2,7 +2,7 @@
 	"id" : "weback",
 	"name" : "WeBack",
 	"description" : {
-		"fr_FR": "Plugin pour controler les robots aspirateur des marques : Neatsvor / Tesvor / Orfeld qui utilisent les applications Weback / Tesvor. La liste complète des modèles supportés est disponible sur le page github."
+		"fr_FR": "Plugin pour controler les robots aspirateur des marques : Neatsvor / Tesvor / Orfeld qui utilisent les applications Weback / Tesvor.<br/>La liste complète des modèles supportés est disponible sur le page github."
 	},
 	"licence" : "AGPL",
 	"author" : "Jezza",
