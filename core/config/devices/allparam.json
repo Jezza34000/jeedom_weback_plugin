@@ -1,5 +1,5 @@
 {
-	"name": "teasvor-s6",
+	"name": "allparam",
 	"commands": [
 		{
 			"name": "Rafraichir",
@@ -121,6 +121,26 @@
 			"logicalId": "ClearMap"
 		},
 		{
+			"name": "Nettoyage mode Z",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "ZmodeClean"
+		},
+		{
+			"name": "Nettoyage renforcée",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "StrongClean"
+		},
+		{
 			"name": "Mise en veille forcée",
 			"type": "action",
 			"subtype": "other",
@@ -129,6 +149,16 @@
 				"actionrequest" : "working_status"
 			},
 			"logicalId": "PowerSleep"
+		},
+		{
+			"name": "Sortie mode veille",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "PowerAwake"
 		},
 		{
 			"name": "Aspiration",
