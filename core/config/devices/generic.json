@@ -1,5 +1,5 @@
 {
-	"name": "tesvor-t8",
+	"name": "generic",
 	"commands": [
 		{
 			"name": "Rafraichir",
@@ -54,16 +54,6 @@
 			"logicalId": "AutoClean"
 		},
 		{
-			"name": "Nettoyage bordure",
-			"type": "action",
-			"subtype": "other",
-			"isVisible": 1,
-			"configuration" : {
-				"actionrequest" : "working_status"
-			},
-			"logicalId": "EdgeClean"
-		},
-		{
 			"name": "Pause",
 			"type": "action",
 			"subtype": "other",
@@ -84,36 +74,6 @@
 			"logicalId": "BackCharging"
 		},
 		{
-			"name": "Localiser le robot",
-			"type": "action",
-			"subtype": "other",
-			"isVisible": 0,
-			"configuration" : {
-				"actionrequest" : "working_status"
-			},
-			"logicalId": "LocationAlarm"
-		},
-		{
-			"name": "Effacer la carte",
-			"type": "action",
-			"subtype": "other",
-			"isVisible": 0,
-			"configuration" : {
-				"actionrequest" : "working_status"
-			},
-			"logicalId": "ClearMap"
-		},
-		{
-			"name": "Mise en veille forcée",
-			"type": "action",
-			"subtype": "other",
-			"isVisible": 0,
-			"configuration" : {
-				"actionrequest" : "working_status"
-			},
-			"logicalId": "PowerSleep"
-		},
-		{
 			"name": "Aspiration",
 			"type": "info",
 			"subtype": "string",
@@ -122,38 +82,12 @@
 			"logicalId": "fan_status"
 		},
 		{
-			"name": "Réglage aspiration",
-			"type": "action",
-			"subtype": "select",
-			"configuration": {
-				"option": "select",
-				"listValue": "Quiet|Silencieux;Normal|Normal;Strong|Fort;Max|Max",
-				"actionrequest" : "fan_status",
-				"valueFrom" : "fan_status"
-			},
-			"isVisible": 1,
-			"logicalId": "set_fan_status"
-		},
-		{
 			"name": "Débit lavage",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
 			"logicalId": "water_level"
-		},
-		{
-			"name": "Réglage lavage",
-			"type": "action",
-			"subtype": "select",
-			"configuration": {
-				"option": "select",
-				"listValue": "Low|Faible;Default|Defaut;High|Elevé",
-				"actionrequest" : "fan_status",
-				"valueFrom" : "water_level"
-			},
-			"isVisible": 1,
-			"logicalId": "set_water_level"
 		},
 		{
 			"name": "Etat",
@@ -170,22 +104,6 @@
 			"IsHistorized": 0,
 			"isVisible": 1,
 			"logicalId": "error_info"
-		},
-		{
-			"name": "En fonction",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 1,
-			"logicalId": "isworking"
-		},
-		{
-			"name": "Sur la base",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 1,
-			"logicalId": "isdocked"
 		}
 	]
 }

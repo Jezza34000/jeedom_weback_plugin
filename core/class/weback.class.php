@@ -41,15 +41,15 @@ class weback extends eqLogic {
                          log::add('weback', 'debug', '### Recherche robot terminée avec succès!', true);
                          return null;
                        } else {
-                         log::add('weback', 'debug', 'Recherche des robots KO > Echec GetDeviceList', true);
+                         log::add('weback', 'error', 'Recherche des robots KO > Echec GetDeviceList', true);
                          return "impossible de trouver un robot sur le compte.";
                        }
                  } else {
-                   log::add('weback', 'debug', 'Recherche des robots KO > Echec AWS Credentials', true);
+                   log::add('weback', 'error', 'Recherche des robots KO > Echec AWS Credentials', true);
                    return "impossible de se connecter.";
                  }
            } else {
-             log::add('weback', 'debug', 'Recherche des robots KO > Echec WeBack login', true);
+             log::add('weback', 'error', 'Recherche des robots KO > Echec WeBack login', true);
              return "impossible de se connecter à WeBack.";
            }
      }
@@ -197,9 +197,10 @@ class weback extends eqLogic {
         $robot->setConfiguration('Thing_Name', $device['Request_Cotent'][0]['Thing_Name']);
         $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['Request_Cotent'][0]['Thing_Name'],-17)));
         $robot->save();
-        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type']);
+        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type'], $device['Request_Cotent'][0]['Thing_Name']);
       } else {
         log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
+        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type'], $device['Request_Cotent'][0]['Thing_Name']);
       }
     }
 
@@ -226,42 +227,50 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
       log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
+
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
-      // Update INFO plugin
-      if ($shadowJson->state->reported->undistrub_mode == 'on') {
-        $undistrub = true;
-      } else {
-        $undistrub = false;
-      }
 
       $wstatus = $shadowJson->state->reported->working_status;
+      $errnfo = $shadowJson->state->reported->error_info;
+
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
       $wback->checkAndUpdateCmd('working_status', $wstatus);
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
-      $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
-      $wback->checkAndUpdateCmd('undistrub_mode', $undistrub);
+
+      $wback->checkAndUpdateCmd('undistrub_mode', $shadowJson->state->reported->undisturb_mode);
       $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
       $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
-      $wback->checkAndUpdateCmd('error_info', $shadowJson->state->reported->error_info);
+      $wback->checkAndUpdateCmd('error_info', $errnfo);
       $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
-      $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
+
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
-
       $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
       $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
       $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
-      // X520 spécific parametres
       $wback->checkAndUpdateCmd('optical_flow', $shadowJson->state->reported->optical_flow);
       $wback->checkAndUpdateCmd('left_water', $shadowJson->state->reported->left_water);
       $wback->checkAndUpdateCmd('cliff_detect', $shadowJson->state->reported->cliff_detect);
       $wback->checkAndUpdateCmd('final_edge', $shadowJson->state->reported->final_edge);
       $wback->checkAndUpdateCmd('uv_lamp', $shadowJson->state->reported->uv_lamp);
+      $wback->checkAndUpdateCmd('laser_wall_line_point_num', ($shadowJson->state->reported->laser_wall_line_point_num)/2);
       //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
       //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
 
-      $result = weback::DeterminateSimpleState($wstatus, $shadowJson->state->reported->error_info);
+      // BOOLEAN
+      if ($shadowJson->state->reported->continue_clean) {
+        $wback->checkAndUpdateCmd('continue_clean', 1);
+      } else {
+        $wback->checkAndUpdateCmd('continue_clean', 0);
+      }
+      if ($shadowJson->state->reported->carpet_pressurization) {
+        $wback->checkAndUpdateCmd('carpet_pressurization', 1);
+      } else {
+        $wback->checkAndUpdateCmd('carpet_pressurization', 0);
+      }
+
+      $result = weback::DeterminateSimpleState($wstatus, $errnfo);
         if ($result == "docked") {
           $wback->checkAndUpdateCmd('isworking', 0);
           $wback->checkAndUpdateCmd('isdocked', 1);
@@ -308,14 +317,13 @@ class weback extends eqLogic {
                     weback::getAWScredential();
                     weback::getDeviceShadow($calledLogicalID);
                   } else {
-                    log::add('weback', 'debug', 'CRON > Impossible de mettre à jour connexion echouée à WeBack');
+                    log::add('weback', 'error', 'CRON > Impossible de mettre à jour connexion echouée à WeBack');
                   }
             }
       }
     }
 
-
-    public static function SendAction($calledLogicalID, $action, $param) {
+    public static function SendAction($calledLogicalID, $action) {
       log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandée : '.$action);
 
       $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
@@ -346,8 +354,9 @@ class weback extends eqLogic {
       ]);
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
-      $shadowJson = json_decode($return, false);
-      //log::add('weback', 'debug', 'OK> Mise à jours des INFO de ');
+
+      /* Controle si l'action s'est éxécuté correctement.
+      $shadowJson = json_decode($return, false); */
     }
 
     public static function DeterminateSimpleState($working_status, $error){
@@ -455,11 +464,11 @@ class weback extends eqLogic {
 
     }
 
-    public function loadCmdFromConf($_type) {
+    public function loadCmdFromConf($_type, $roboteqId) {
       log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON : '.$_type);
       if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
-        log::add('weback', 'error', 'Fichier de configuration du robot introuvable !');
-        return;
+        log::add('weback', 'error', 'Fichier de configuration du robot introuvable! Utilisation du type "générique" seules les commandes basiques seront disponible.');
+        $_type = "generic";
       }
       $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
       //log::add('weback', 'error', 'Content : '.$content);
@@ -473,6 +482,7 @@ class weback extends eqLogic {
         return true;
       }
       log::add('weback', 'debug', 'Nombre de commandes à ajouter : '.count($device['commands']));
+      $cmd_order = 0;
       foreach ($device['commands'] as $command) {
         $cmd = null;
         foreach ($this->getCmd() as $liste_cmd) {
@@ -482,12 +492,28 @@ class weback extends eqLogic {
             break;
           }
         }
-        log::add('weback', 'debug', 'Ajout de : '.$command['name']);
         if ($cmd == null || !is_object($cmd)) {
+          log::add('weback', 'debug', '+ Ajout de : '.$command['name']);
           $cmd = new webackCmd();
+          $cmd->setOrder($cmd_order);
           $cmd->setEqLogic_id($this->getId());
           utils::a2o($cmd, $command);
           $cmd->save();
+          if ($cmd->getConfiguration('valueFrom') != "") {
+            $valueLink = $cmd->getConfiguration('valueFrom');
+            $robot=weback::byLogicalId($roboteqId, 'weback');
+            $cmdlogic = webackCmd::byEqLogicIdAndLogicalId($robot->getId(), $valueLink);
+            if (is_object($cmdlogic)) {
+        			$cmd->setValue($cmdlogic->getId());
+              $cmd->save();
+              log::add('weback', 'debug', '-> Valeur lier depuis : '.$valueLink." (".$cmdlogic->getId().")");
+        		} else {
+              log::add('weback', 'debug', '-> Liaison impossible objet introuvable : '.$valueLink);
+            }
+          }
+          $cmd_order++;
+        } else {
+          log::add('weback', 'debug', 'Commande déjà présente : '.$command['name']);
         }
       }
 
@@ -568,59 +594,12 @@ class webackCmd extends cmd {
      public function execute($_options = array()) {
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
-
-      //log::add('weback', 'debug', 'Execute '.$this->getLogicalId());
+      log::add('weback', 'debug', '-> Execute : '.$this->getLogicalId());
 
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
             weback::updateStatusDevices($eqToSendAction);
-            break;
-          case 'autoclean':
-            $actionToSend = array("working_status" => "AutoClean");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'edgeclean': // Not supported by X600
-            $actionToSend = array("working_status" => "EdgeClean");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'standby':
-            $actionToSend = array("working_status" => "Standby");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'backcharging':
-            $actionToSend = array("working_status" => "BackCharging");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'setaspiration':
-              log::add('weback', 'debug', 'SetAspiration='.$_options['select']);
-              if ($_options['select'] == "1") {
-                $action = "Quiet";
-              } elseif ($_options['select'] == "2") {
-                $action = "Normal";
-              } elseif ($_options['select'] == "3") {
-                $action = "Strong";
-              } elseif ($_options['select'] == "4") {
-                $action = "Max";
-              } else {
-                log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-              }
-              $actionToSend = array("fan_status" => $action);
-              weback::SendAction($eqToSendAction, $actionToSend);
-              break;
-          case 'setwaterlevel':
-            log::add('weback', 'debug', 'SetWater='.$_options['select']);
-            if ($_options['select'] == "1") {
-              $action = "Low";
-            } elseif ($_options['select'] == "2") {
-              $action = "Default";
-            } elseif ($_options['select'] == "3") {
-              $action = "High";
-            } else {
-              log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-            }
-            $actionToSend = array("water_level" => $action);
-            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'cleanspot':
             log::add('weback', 'debug', 'Spot info :'.$_options['message']);
@@ -637,6 +616,24 @@ class webackCmd extends cmd {
             $actionToSend["planning_rect_x"] = "[".$_options['title']."]";
             $actionToSend["planning_rect_y"] = "[".$_options['message']."]";
             weback::SendAction($eqToSendAction, $actionToSend);
+            break;
+          default:
+            $actRequest = $this->getConfiguration('actionrequest');
+            log::add('weback', 'debug', '>ActionRequest : '.$actRequest);
+            if ($this->getSubType() == 'other') {
+              $stateRequest = $this->getLogicalId();
+              log::add('weback', 'debug', '>Value (from logicalID) : '.$stateRequest);
+            } elseif ($this->getSubType() == 'select') {
+              $stateRequest = $_options['select'];
+              log::add('weback', 'debug', '>Value (from select) : '.$stateRequest);
+            } elseif ($this->getSubType() == 'slider') {
+              $stateRequest = $_options['slider'];
+              log::add('weback', 'debug', '>Value (from slider) : '.$stateRequest);
+            } else {
+              $stateRequest = $_options['message'];
+              log::add('weback', 'debug', '>Value (from message) : '.$stateRequest);
+            }
+            weback::SendAction($eqToSendAction, array($actRequest => $stateRequest));
             break;
         }
 

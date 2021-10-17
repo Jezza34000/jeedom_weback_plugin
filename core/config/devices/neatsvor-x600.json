@@ -6,8 +6,7 @@
 			"type": "action",
 			"subtype": "other",
 			"isVisible": 1,
-			"logicalId": "refresh",
-			"Order": "1"
+			"logicalId": "refresh"
 		},
 		{
 			"name": "Connecté",
@@ -15,8 +14,7 @@
 			"subtype": "binary",
 			"IsHistorized": 0,
 			"isVisible": 1,
-			"logicalId": "connected",
-			"Order": "2"
+			"logicalId": "connected"
 		},
 		{
 			"name": "Batterie",
@@ -25,8 +23,7 @@
 			"subtype": "numeric",
 			"IsHistorized": 0,
 			"isVisible": 1,
-			"logicalId": "battery_level",
-			"Order": "3"
+			"logicalId": "battery_level"
 		},
 		{
 			"name": "Durée ménage",
@@ -35,8 +32,7 @@
 			"subtype": "numeric",
 			"IsHistorized": 0,
 			"isVisible": 1,
-			"logicalId": "clean_time",
-			"Order": "4"
+			"logicalId": "clean_time"
 		},
 		{
 			"name": "Superficie nettoyé",
@@ -45,65 +41,132 @@
 			"subtype": "numeric",
 			"IsHistorized": 0,
 			"isVisible": 1,
-			"logicalId": "clean_area",
-			"Order": "5"
+			"logicalId": "clean_area"
 		},
 		{
 			"name": "Nettoyage auto",
 			"type": "action",
 			"subtype": "other",
 			"isVisible": 1,
-			"logicalId": "autoclean",
-			"Order": "10"
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "AutoClean"
 		},
 		{
 			"name": "Pause",
 			"type": "action",
 			"subtype": "other",
 			"isVisible": 1,
-			"logicalId": "standby",
-			"Order": "11"
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "Standby"
 		},
 		{
 			"name": "Retour à la base",
 			"type": "action",
 			"subtype": "other",
 			"isVisible": 1,
-			"logicalId": "backcharging",
-			"Order": "12"
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "BackCharging"
 		},
     {
       "name": "Nettoyer spot",
       "type": "action",
       "subtype": "message",
       "isVisible": 0,
-      "logicalId": "cleanspot",
       "Display": {
         "message_placeholder": "Coordonnées X,Y"
       },
-      "Order": "13"
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "PlanningLocation"
     },
     {
       "name": "Nettoyer pièce",
       "type": "action",
       "subtype": "message",
       "isVisible": 0,
-      "logicalId": "cleanroom",
       "Display": {
-        "title_placeholder": "planning_rect_x",
-        "message_placeholder": "planning_rect_y"
+        "title_placeholder": "Planning_rect_x",
+        "message_placeholder": "Planning_rect_y"
       },
-      "Order": "14"
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "PlanningRect"
     },
-
+		{
+			"name": "Localiser le robot",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "LocationAlarm"
+		},
+		{
+			"name": "Effacer la carte",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "ClearMap"
+		},
+		{
+			"name": "Nettoyage mode Z",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "ZmodeClean"
+		},
+		{
+			"name": "Nettoyage renforcée",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "StrongClean"
+		},
+		{
+			"name": "Mise en veille forcée",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "PowerSleep"
+		},
+		{
+			"name": "Sortie mode veille",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 0,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "PowerAwake"
+		},
 		{
 			"name": "Aspiration",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
-			"isVisible": 1,
-			"logicalId": "fan_status",
-			"Order": "20"
+			"isVisible": 0,
+			"logicalId": "fan_status"
 		},
 		{
 			"name": "Réglage aspiration",
@@ -111,20 +174,20 @@
 			"subtype": "select",
 			"configuration": {
 				"option": "select",
-				"listValue": "1|Silencieux;2|Normal;3|Fort"
+				"listValue": "Quiet|Silencieux;Normal|Normal;Strong|Fort",
+				"actionrequest" : "fan_status",
+				"valueFrom" : "fan_status"
 			},
 			"isVisible": 1,
-			"logicalId": "setaspiration",
-			"Order": "21"
+			"logicalId": "set_fan_status"
 		},
 		{
 			"name": "Débit lavage",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
-			"isVisible": 1,
-			"logicalId": "water_level",
-			"Order": "30"
+			"isVisible": 0,
+			"logicalId": "water_level"
 		},
 		{
 			"name": "Réglage lavage",
@@ -132,11 +195,12 @@
 			"subtype": "select",
 			"configuration": {
 				"option": "select",
-				"listValue": "1|Faible;2|Defaut;3|Elevé"
+				"listValue": "Low|Faible;Default|Defaut;High|Elevé",
+				"actionrequest" : "fan_status",
+				"valueFrom" : "water_level"
 			},
 			"isVisible": 1,
-			"logicalId": "setwaterlevel",
-			"Order": "31"
+			"logicalId": "set_water_level"
 		},
 		{
 			"name": "Etat",
@@ -144,8 +208,7 @@
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 1,
-			"logicalId": "working_status",
-			"Order": "40"
+			"logicalId": "working_status"
 		},
 		{
 			"name": "Erreur",
@@ -153,8 +216,7 @@
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 1,
-			"logicalId": "error_info",
-			"Order": "41"
+			"logicalId": "error_info"
 		},
 		{
 			"name": "En fonction",
@@ -162,8 +224,7 @@
 			"subtype": "binary",
 			"IsHistorized": 0,
 			"isVisible": 1,
-			"logicalId": "isworking",
-			"Order": "50"
+			"logicalId": "isworking"
 		},
 		{
 			"name": "Sur la base",
@@ -171,26 +232,49 @@
 			"subtype": "binary",
 			"IsHistorized": 0,
 			"isVisible": 1,
-			"logicalId": "isdocked",
-			"Order": "51"
+			"logicalId": "isdocked"
 		},
 		{
-			"name": "Mode ne pas deranger",
-			"type": "info",
-			"subtype": "binary",
-			"IsHistorized": 0,
-			"isVisible": 0,
-			"logicalId": "undistrub_mode",
-			"Order": "60"
-		},
-		{
-			"name": "Haut parleur",
+			"name": "Etat ne pas deranger",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "voice_switch",
-			"Order": "61"
+			"logicalId": "undistrub_mode"
+		},
+		{
+			"name": "Mode ne pas déranger",
+			"type": "action",
+			"subtype": "select",
+			"configuration": {
+				"option": "select",
+				"listValue": "on|Activé;off|Désactivé",
+				"actionrequest" : "undisturb_mode",
+				"valueFrom" : "undistrub_mode"
+			},
+			"isVisible": 0,
+			"logicalId": "set_undisturb_mode"
+		},
+		{
+			"name": "Etat haut parleur",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "voice_switch"
+		},
+		{
+			"name": "Mode haut parleur",
+			"type": "action",
+			"subtype": "select",
+			"configuration": {
+				"option": "select",
+				"listValue": "on|Activé;off|Désactivé",
+				"actionrequest" : "voice_switch",
+				"valueFrom" : "voice_switch"
+			},
+			"isVisible": 0,
+			"logicalId": "set_voice_switch"
 		},
 		{
 			"name": "Volume haut parleur",
@@ -198,53 +282,73 @@
 			"subtype": "numeric",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "voice_volume",
-			"Order": "62"
+			"configuration": {
+				"minValue": 0,
+				"maxValue": 100
+			},
+			"logicalId": "voice_volume"
 		},
 		{
-			"name": "carpet_pressurization",
+			"name": "Réglage volume hp",
+			"type": "action",
+			"subtype": "slider",
+			"isVisible": 0,
+			"configuration": {
+				"minValue": 0,
+				"maxValue": 100,
+				"setUnite":"%",
+				"valueFrom" : "voice_volume",
+				"actionrequest" : "volume"
+			},
+			"logicalId": "setvolume"
+		},
+		{
+			"name": "Carpet pressurization",
 			"type": "info",
 			"subtype": "binary",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "carpet_pressurization",
-			"Order": "63"
+			"logicalId": "carpet_pressurization"
 		},
 		{
-			"name": "continue_clean",
+			"name": "Continue clean",
 			"type": "info",
 			"subtype": "binary",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "continue_clean",
-			"Order": "64"
+			"logicalId": "continue_clean"
 		},
 		{
-			"name": "planning_rect_x",
+			"name": "Planning_rect_x",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "planning_rect_x",
-			"Order": "65"
+			"logicalId": "planning_rect_x"
 		},
 		{
-			"name": "planning_rect_y",
+			"name": "Planning_rect_y",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "planning_rect_y",
-			"Order": "66"
+			"logicalId": "planning_rect_y"
 		},
 		{
-			"name": "goto_point",
+			"name": "Goto_point",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
 			"isVisible": 0,
-			"logicalId": "goto_point",
-			"Order": "67"
+			"logicalId": "goto_point"
+		},
+		{
+			"name": "Nombre de mur virtuel",
+			"type": "info",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "laser_wall_line_point_num"
 		}
 	]
 }
