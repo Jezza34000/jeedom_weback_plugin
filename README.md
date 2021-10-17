@@ -14,7 +14,7 @@ Fonctionnel avec les modèles suivant :
 * Tesvor T8
 * Tesvor V300
 
-(Ne connaissant pas toutes les fonctionnalités/options disponible pour chaque modèle, il est possible que les options ne soient pas remontés dans Jeedom, n'hésitez pas à ouvrir une issue pour que fasse les modifications nécéssaire)
+(Ne connaissant pas toutes les fonctionnalités/options disponible pour chaque modèle, il est possible que les options ne soient pas remontés dans Jeedom, n'hésitez pas à ouvrir une issue pour que fasse je les modifications nécéssaire)
 
 Les modèles de robot présent sur le cloud WeBack mais non reconnu sont désormais ajouté en mode "générique" avec les fonctions basiques.
 
