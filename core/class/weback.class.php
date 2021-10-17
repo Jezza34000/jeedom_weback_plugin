@@ -491,6 +491,9 @@ class weback extends eqLogic {
           $cmd->setEqLogic_id($this->getId());
           utils::a2o($cmd, $command);
           $cmd->save();
+          if ($cmd->getConfiguration('valueFrom') != "") {
+            log::add('weback', 'debug', 'Linked cmd = '.$command['name']." to ".$cmd->getConfiguration('valueFrom'));
+          }
           $cmd_order++;
         } else {
           log::add('weback', 'debug', 'Commande déjà présente : '.$command['name']);
@@ -575,7 +578,7 @@ class webackCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
       log::add('weback', 'debug', '-> Execute : '.$this->getLogicalId());
-      
+
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
