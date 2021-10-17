@@ -296,6 +296,7 @@
 			"configuration": {
 				"minValue": 0,
 				"maxValue": 100,
+				"setUnite":"%",
 				"valueFrom" : "voice_volume"
 			},
 			"logicalId": "setvolume"
