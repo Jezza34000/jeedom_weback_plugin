@@ -293,7 +293,7 @@
 				"minValue": 0,
 				"maxValue": 100
 			},
-			"logicalId": "setvolume",
+			"logicalId": "setvolume"
 		},
 		{
 			"name": "Carpet pressurization",
