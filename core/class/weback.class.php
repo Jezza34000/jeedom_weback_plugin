@@ -493,7 +493,7 @@ class weback extends eqLogic {
           $cmd->save();
           if ($cmd->getConfiguration('valueFrom') != "") {
             $valueLink = $cmd->getConfiguration('valueFrom');
-            $robot=weback::byLogicalId($this->getId(), 'weback');
+            $robot=weback::byLogicalId('neatsvor-x600-20-4e-f6-9e-f2-a1', 'weback');
             $cmdlogic = webackCmd::byEqLogicIdAndLogicalId($robot->getId(), $valueLink);
 
             if (is_object($cmdlogic)) {
