@@ -252,7 +252,7 @@
 				"actionrequest" : "undisturb_mode",
 				"valueFrom" : "undistrub_mode"
 			},
-			"isVisible": 1,
+			"isVisible": 0,
 			"logicalId": "set_undisturb_mode"
 		},
 		{
@@ -273,7 +273,7 @@
 				"actionrequest" : "voice_switch",
 				"valueFrom" : "voice_switch"
 			},
-			"isVisible": 1,
+			"isVisible": 0,
 			"logicalId": "set_voice_switch"
 		},
 		{

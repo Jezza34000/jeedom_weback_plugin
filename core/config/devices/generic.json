@@ -1,0 +1,109 @@
+{
+	"name": "generic",
+	"commands": [
+		{
+			"name": "Rafraichir",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"logicalId": "refresh"
+		},
+		{
+			"name": "Connecté",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "connected"
+		},
+		{
+			"name": "Batterie",
+			"type": "info",
+			"Unite": "%",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "battery_level"
+		},
+		{
+			"name": "Durée ménage",
+			"type": "info",
+			"Unite": "min",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "clean_time"
+		},
+		{
+			"name": "Superficie nettoyé",
+			"type": "info",
+			"Unite": "m²",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "clean_area"
+		},
+		{
+			"name": "Nettoyage auto",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "AutoClean"
+		},
+		{
+			"name": "Pause",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "Standby"
+		},
+		{
+			"name": "Retour à la base",
+			"type": "action",
+			"subtype": "other",
+			"isVisible": 1,
+			"configuration" : {
+				"actionrequest" : "working_status"
+			},
+			"logicalId": "BackCharging"
+		},
+		{
+			"name": "Aspiration",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "fan_status"
+		},
+		{
+			"name": "Débit lavage",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "water_level"
+		},
+		{
+			"name": "Etat",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "working_status"
+		},
+		{
+			"name": "Erreur",
+			"type": "info",
+			"subtype": "string",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "error_info"
+		}
+	]
+}

@@ -41,15 +41,15 @@ class weback extends eqLogic {
                          log::add('weback', 'debug', '### Recherche robot terminée avec succès!', true);
                          return null;
                        } else {
-                         log::add('weback', 'debug', 'Recherche des robots KO > Echec GetDeviceList', true);
+                         log::add('weback', 'error', 'Recherche des robots KO > Echec GetDeviceList', true);
                          return "impossible de trouver un robot sur le compte.";
                        }
                  } else {
-                   log::add('weback', 'debug', 'Recherche des robots KO > Echec AWS Credentials', true);
+                   log::add('weback', 'error', 'Recherche des robots KO > Echec AWS Credentials', true);
                    return "impossible de se connecter.";
                  }
            } else {
-             log::add('weback', 'debug', 'Recherche des robots KO > Echec WeBack login', true);
+             log::add('weback', 'error', 'Recherche des robots KO > Echec WeBack login', true);
              return "impossible de se connecter à WeBack.";
            }
      }
@@ -227,14 +227,10 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
       log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
+
       $wback=weback::byLogicalId($calledLogicalID, 'weback');
-
-      $wstatus = $shadowJson->state->reported->working_status;
-      /*log::add('weback', 'debug', 'SaveMap : '.$shadowJson->state->reported->save_map);
-      log::add('weback', 'debug', 'VoicePack : '.$shadowJson->state->reported->voice_pack);*/
-
       $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
-      $wback->checkAndUpdateCmd('working_status', $wstatus);
+      $wback->checkAndUpdateCmd('working_status', $shadowJson->state->reported->working_status);
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
       $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
@@ -246,15 +242,9 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
-
-      // Listes de commandes
-      $wback->checkAndUpdateCmd('setaspiration', 'Silencieux');
-      $wback->checkAndUpdateCmd('setwaterlevel', '2');
-
       $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
       $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
       $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
-      // X520 spécific parametres
       $wback->checkAndUpdateCmd('optical_flow', $shadowJson->state->reported->optical_flow);
       $wback->checkAndUpdateCmd('left_water', $shadowJson->state->reported->left_water);
       $wback->checkAndUpdateCmd('cliff_detect', $shadowJson->state->reported->cliff_detect);
@@ -310,7 +300,7 @@ class weback extends eqLogic {
                     weback::getAWScredential();
                     weback::getDeviceShadow($calledLogicalID);
                   } else {
-                    log::add('weback', 'debug', 'CRON > Impossible de mettre à jour connexion echouée à WeBack');
+                    log::add('weback', 'error', 'CRON > Impossible de mettre à jour connexion echouée à WeBack');
                   }
             }
       }
@@ -347,8 +337,9 @@ class weback extends eqLogic {
       ]);
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
-      $shadowJson = json_decode($return, false);
-      //log::add('weback', 'debug', 'OK> Mise à jours des INFO de ');
+
+      /* Controle si l'action s'est éxécuté correctement.
+      $shadowJson = json_decode($return, false); */
     }
 
     public static function DeterminateSimpleState($working_status, $error){
@@ -459,8 +450,8 @@ class weback extends eqLogic {
     public function loadCmdFromConf($_type, $roboteqId) {
       log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON : '.$_type);
       if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
-        log::add('weback', 'error', 'Fichier de configuration du robot introuvable !');
-        return;
+        log::add('weback', 'error', 'Fichier de configuration du robot introuvable! Utilisation du type "générique" seules les commandes basiques seront disponible.');
+        $_type = "generic";
       }
       $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
       //log::add('weback', 'error', 'Content : '.$content);
