@@ -14,15 +14,28 @@ Fonctionnel avec les modèles suivant :
 * Tesvor T8
 * Tesvor V300
 
-(Si votre modèle n'est pas listé n'hésitez pas à ouvrir une issue)
+(Ne connaissant pas toutes les fonctionnalités/options disponible pour chaque modèle, il est possible que les options ne soient pas remontés dans Jeedom, n'hésitez pas à ouvrir une issue pour que fasse les modifications nécéssaire)
+
 
 * Contrôle du robot disponible :
 
--Nettoyage Auto / Pause / Retour à la base
+-Mode ménage possible ( Automatique / Spot / Bordure / Zmode / Renforcée )
 
--Réglage de la vitesse d'aspiration 
+-Réglage de la vitesse d'aspiration ( 4 modes en fonction des modèles )
 
--Réglage du débit d'eau
+-Réglage du débit d'eau (3 modes )
+
+-Localiser le robot
+
+-Effacer la carte
+
+-Activer/Désactiver le SON 
+
+-Activer/Desactiver le mode "Ne pas déranger"
+
+-Régler le volume du robot
+
+
 
 Certains paramètres sont remontés par le robot mais je n'ai pas compris leur usage (en fonction des modèles) :
 
@@ -37,6 +50,7 @@ Certains paramètres sont remontés par le robot mais je n'ai pas compris leur u
 -optical_flow (on/off)
 
 -final_edge (on/off)
+
 
 
 * Fonctions partiellement supportées : 
