@@ -474,6 +474,7 @@ class weback extends eqLogic {
         return true;
       }
       log::add('weback', 'debug', 'Nombre de commandes à ajouter : '.count($device['commands']));
+      $cmd_order = 0;
       foreach ($device['commands'] as $command) {
         $cmd = null;
         foreach ($this->getCmd() as $liste_cmd) {
@@ -486,9 +487,15 @@ class weback extends eqLogic {
         if ($cmd == null || !is_object($cmd)) {
           log::add('weback', 'debug', '-> Ajout de : '.$command['name']);
           $cmd = new webackCmd();
+          $cmd->setOrder($cmd_order);
           $cmd->setEqLogic_id($this->getId());
           utils::a2o($cmd, $command);
+          // Link ListAction
+          if $cmd->getLogicalId() == "setaspiration" {
+
+          }
           $cmd->save();
+          $cmd_order++;
         } else {
           log::add('weback', 'debug', 'Commande déjà présente : '.$command['name']);
         }
@@ -572,82 +579,11 @@ class webackCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
 
-      //log::add('weback', 'debug', 'Execute '.$this->getLogicalId());
-
+      log::add('weback', 'debug', '-> Execute : '.$this->getLogicalId());
        switch ($this->getLogicalId()) {
           case 'refresh':
             log::add('weback', 'debug', 'Refresh (MANUEL) demandé sur : '.$eqToSendAction);
             weback::updateStatusDevices($eqToSendAction);
-            break;
-          case 'autoclean':
-            $actionToSend = array("working_status" => "AutoClean");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'edgeclean':
-            $actionToSend = array("working_status" => "EdgeClean");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'zmodeclean':
-            $actionToSend = array("working_status" => "ZmodeClean");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'strongclean':
-            $actionToSend = array("working_status" => "StrongClean");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'standby':
-            $actionToSend = array("working_status" => "Standby");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'backcharging':
-            $actionToSend = array("working_status" => "BackCharging");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'locationalarm':
-            $actionToSend = array("working_status" => "LocationAlarm");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'clearmap':
-            $actionToSend = array("working_status" => "ClearMap");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'powersleep':
-            $actionToSend = array("working_status" => "PowerSleep");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'powerawake':
-            $actionToSend = array("working_status" => "PowerAwake");
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'setaspiration':
-              log::add('weback', 'debug', 'SetAspiration='.$_options['select']);
-              if ($_options['select'] == "1") {
-                $action = "Quiet";
-              } elseif ($_options['select'] == "2") {
-                $action = "Normal";
-              } elseif ($_options['select'] == "3") {
-                $action = "Strong";
-              } elseif ($_options['select'] == "4") {
-                $action = "Max";
-              } else {
-                log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-              }
-              $actionToSend = array("fan_status" => $action);
-              weback::SendAction($eqToSendAction, $actionToSend);
-              break;
-          case 'setwaterlevel':
-            log::add('weback', 'debug', 'SetWater='.$_options['select']);
-            if ($_options['select'] == "1") {
-              $action = "Low";
-            } elseif ($_options['select'] == "2") {
-              $action = "Default";
-            } elseif ($_options['select'] == "3") {
-              $action = "High";
-            } else {
-              log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-            }
-            $actionToSend = array("water_level" => $action);
-            weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'cleanspot':
             log::add('weback', 'debug', 'Spot info :'.$_options['message']);
@@ -665,34 +601,10 @@ class webackCmd extends cmd {
             $actionToSend["planning_rect_y"] = "[".$_options['message']."]";
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
-          case 'setundistrub':
-            log::add('weback', 'debug', 'Set Undisturb='.$_options['select']);
-            if ($_options['select'] == "1") {
-              $action = "on";
-            } elseif ($_options['select'] == "2") {
-              $action = "off";
-            } else {
-              log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-            }
-            $actionToSend = array("undisturb_mode" => $action);
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'setvoiceswitch':
-            log::add('weback', 'debug', 'Set voiceswitch='.$_options['select']);
-            if ($_options['select'] == "1") {
-              $action = "on";
-            } elseif ($_options['select'] == "2") {
-              $action = "off";
-            } else {
-              log::add('weback', 'debug', 'Impossible de déterminer l\'action demandé par la liste N° action:'.$_options['select']);
-            }
-            $actionToSend = array("voice_switch" => $action);
-            weback::SendAction($eqToSendAction, $actionToSend);
-            break;
-          case 'setvolume':
-            log::add('weback', 'debug', 'Set volume='.$_options['message']);
-            $actionToSend = array("volume" => $_options['message']);
-            weback::SendAction($eqToSendAction, $actionToSend);
+          case else:
+            $actRequest = $this->getConfiguration('actionrequest');
+            $stateRequest = $this->getLogicalId();
+            weback::SendAction($eqToSendAction, array($actRequest => $stateRequest));
             break;
         }
 
