@@ -485,14 +485,17 @@ class weback extends eqLogic {
           }
         }
         if ($cmd == null || !is_object($cmd)) {
-          log::add('weback', 'debug', '-> Ajout de : '.$command['name']);
+          log::add('weback', 'debug', '+ Ajout de : '.$command['name']);
           $cmd = new webackCmd();
           $cmd->setOrder($cmd_order);
           $cmd->setEqLogic_id($this->getId());
           utils::a2o($cmd, $command);
           $cmd->save();
           if ($cmd->getConfiguration('valueFrom') != "") {
-            log::add('weback', 'debug', 'Linked cmd = '.$command['name']." to ".$cmd->getConfiguration('valueFrom'));
+            $valueLink = $cmd->getConfiguration('valueFrom');
+            $cmd->setValue($valueLink->getId());
+            $cmd->save();
+            log::add('weback', 'debug', '-> Valeur lier depuis : '.$valueLink." (".$valueLink->getId().")");
           }
           $cmd_order++;
         } else {
