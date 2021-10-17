@@ -237,13 +237,13 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('working_status', $wstatus);
       $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
       $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
-      $wback->checkAndUpdateCmd('carpet_pressurization', $shadowJson->state->reported->carpet_pressurization);
+
       $wback->checkAndUpdateCmd('undistrub_mode', $shadowJson->state->reported->undisturb_mode);
       $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
       $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
       $wback->checkAndUpdateCmd('error_info', $errnfo);
       $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
-      $wback->checkAndUpdateCmd('continue_clean', $shadowJson->state->reported->continue_clean);
+
       $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
       $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
       $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
@@ -256,6 +256,18 @@ class weback extends eqLogic {
       $wback->checkAndUpdateCmd('uv_lamp', $shadowJson->state->reported->uv_lamp);
       //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
       //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
+
+      // BOOLEAN
+      if ($shadowJson->state->reported->continue_clean) {
+        $wback->checkAndUpdateCmd('continue_clean', 1);
+      } else {
+        $wback->checkAndUpdateCmd('continue_clean', 0);
+      }
+      if ($shadowJson->state->reported->carpet_pressurization) {
+        $wback->checkAndUpdateCmd('carpet_pressurization', 1);
+      } else {
+        $wback->checkAndUpdateCmd('carpet_pressurization', 0);
+      }
 
       $result = weback::DeterminateSimpleState($wstatus, $errnfo);
         if ($result == "docked") {
