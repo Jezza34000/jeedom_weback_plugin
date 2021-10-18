@@ -227,6 +227,7 @@ class weback extends eqLogic {
         ]);
       } catch (Exception $e) {
           log::add('weback', 'error', 'Erreur sur la fonction GetThingShadow'. $e->getMessage());
+          return false;
       }
 
       // Status code
@@ -374,6 +375,7 @@ class weback extends eqLogic {
         ]);
       } catch (Exception $e) {
           log::add('weback', 'error', 'Erreur sur la fonction updateThingShadow'. $e->getMessage());
+          return false;
       }
 
       // Status code
