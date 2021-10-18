@@ -226,73 +226,81 @@ class weback extends eqLogic {
             'thingName' => $calledLogicalID,
         ]);
       } catch (Exception $e) {
-          log::add('weback', 'error', 'Erreur sur la fonction GetThingShadow');
+          log::add('weback', 'error', 'Erreur sur la fonction GetThingShadow'. $e->getMessage());
       }
 
       // Status code
       $statuscode = (string)$result['@metadata']['statusCode'];
       log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
 
-      // Data
-      $return = (string)$result['payload']->getContents();
-      log::add('weback', 'debug', 'IOT Return : ' . $return);
-      $shadowJson = json_decode($return, false);
-      log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
+      if ($statuscode == 200) {
+        // Data
+        $return = (string)$result['payload']->getContents();
+        log::add('weback', 'debug', 'IOT Return : ' . $return);
+        $shadowJson = json_decode($return, false);
+        log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
 
-      $wback=weback::byLogicalId($calledLogicalID, 'weback');
+        $wback=weback::byLogicalId($calledLogicalID, 'weback');
 
-      $wstatus = $shadowJson->state->reported->working_status;
-      $errnfo = $shadowJson->state->reported->error_info;
+        $wstatus = $shadowJson->state->reported->working_status;
+        $errnfo = $shadowJson->state->reported->error_info;
 
-      $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
-      $wback->checkAndUpdateCmd('working_status', $wstatus);
-      $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
-      $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
+        $wback->checkAndUpdateCmd('connected', $shadowJson->state->reported->connected);
+        $wback->checkAndUpdateCmd('working_status', $wstatus);
+        $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
+        $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
 
-      $wback->checkAndUpdateCmd('undistrub_mode', $shadowJson->state->reported->undisturb_mode);
-      $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
-      $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
-      $wback->checkAndUpdateCmd('error_info', $errnfo);
-      $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
+        $wback->checkAndUpdateCmd('undistrub_mode', $shadowJson->state->reported->undisturb_mode);
+        $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
+        $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
+        $wback->checkAndUpdateCmd('error_info', $errnfo);
+        $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
 
-      $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
-      $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
-      $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
-      $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
-      $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
-      $wback->checkAndUpdateCmd('optical_flow', $shadowJson->state->reported->optical_flow);
-      $wback->checkAndUpdateCmd('left_water', $shadowJson->state->reported->left_water);
-      $wback->checkAndUpdateCmd('cliff_detect', $shadowJson->state->reported->cliff_detect);
-      $wback->checkAndUpdateCmd('final_edge', $shadowJson->state->reported->final_edge);
-      $wback->checkAndUpdateCmd('uv_lamp', $shadowJson->state->reported->uv_lamp);
-      $wback->checkAndUpdateCmd('laser_wall_line_point_num', ($shadowJson->state->reported->laser_wall_line_point_num)/2);
-      //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
-      //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
+        $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
+        $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
+        $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
+        $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
+        $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
+        $wback->checkAndUpdateCmd('optical_flow', $shadowJson->state->reported->optical_flow);
+        $wback->checkAndUpdateCmd('left_water', $shadowJson->state->reported->left_water);
+        $wback->checkAndUpdateCmd('cliff_detect', $shadowJson->state->reported->cliff_detect);
+        $wback->checkAndUpdateCmd('final_edge', $shadowJson->state->reported->final_edge);
+        $wback->checkAndUpdateCmd('uv_lamp', $shadowJson->state->reported->uv_lamp);
+        $wback->checkAndUpdateCmd('laser_wall_line_point_num', ($shadowJson->state->reported->laser_wall_line_point_num)/2);
+        //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
+        //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
 
-      // BOOLEAN
-      if ($shadowJson->state->reported->continue_clean) {
-        $wback->checkAndUpdateCmd('continue_clean', 1);
-      } else {
-        $wback->checkAndUpdateCmd('continue_clean', 0);
-      }
-      if ($shadowJson->state->reported->carpet_pressurization) {
-        $wback->checkAndUpdateCmd('carpet_pressurization', 1);
-      } else {
-        $wback->checkAndUpdateCmd('carpet_pressurization', 0);
-      }
-
-      $result = weback::DeterminateSimpleState($wstatus, $errnfo);
-        if ($result == "docked") {
-          $wback->checkAndUpdateCmd('isworking', 0);
-          $wback->checkAndUpdateCmd('isdocked', 1);
-        } elseif ($result == "working") {
-          $wback->checkAndUpdateCmd('isdocked', 0);
-          $wback->checkAndUpdateCmd('isworking', 1);
+        // BOOLEAN
+        if ($shadowJson->state->reported->continue_clean) {
+          $wback->checkAndUpdateCmd('continue_clean', 1);
         } else {
-          $wback->checkAndUpdateCmd('isdocked', 0);
-          $wback->checkAndUpdateCmd('isworking', 0);
-          log::add('weback', 'debug', 'Aucune équivalence Docked/Working trouvée pour l\'état : '.$wstatus);
+          $wback->checkAndUpdateCmd('continue_clean', 0);
         }
+        if ($shadowJson->state->reported->carpet_pressurization) {
+          $wback->checkAndUpdateCmd('carpet_pressurization', 1);
+        } else {
+          $wback->checkAndUpdateCmd('carpet_pressurization', 0);
+        }
+
+        $result = weback::DeterminateSimpleState($wstatus, $errnfo);
+          if ($result == "docked") {
+            $wback->checkAndUpdateCmd('isworking', 0);
+            $wback->checkAndUpdateCmd('isdocked', 1);
+          } elseif ($result == "working") {
+            $wback->checkAndUpdateCmd('isdocked', 0);
+            $wback->checkAndUpdateCmd('isworking', 1);
+          } else {
+            $wback->checkAndUpdateCmd('isdocked', 0);
+            $wback->checkAndUpdateCmd('isworking', 0);
+            log::add('weback', 'debug', 'Aucune équivalence Docked/Working trouvée pour l\'état : '.$wstatus);
+          }
+        return true;
+      } else {
+        // HTTP Error code
+        return false;
+      }
+
+
       }
 
     public static function IsRenewlRequired(){
@@ -337,32 +345,36 @@ class weback extends eqLogic {
     public static function SendAction($calledLogicalID, $action) {
       log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandée : '.$action);
 
-      $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
-          'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
-          'endpointType' => 'iot:Data-ATS',
-          'http'    => [
-            'verify' => false
-            ],
-          'version' => 'latest',
-          'region'  => config::byKey('Region_Info', 'weback'),
-          'credentials' => [
-               'key'    => config::byKey('AccessKeyId', 'weback'),
-               'secret' => config::byKey('SecretKey', 'weback'),
-               'token' => config::byKey('SessionToken', 'weback'),]
-      ]);
-      // Formatage du Payload
-      $data = array (
-          "state" => array (
-              "desired" =>
-                    $action,
-            )
-          );
-      $payload = json_encode($data);
+      try {
+        $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
+            'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
+            'endpointType' => 'iot:Data-ATS',
+            'http'    => [
+              'verify' => false
+              ],
+            'version' => 'latest',
+            'region'  => config::byKey('Region_Info', 'weback'),
+            'credentials' => [
+                 'key'    => config::byKey('AccessKeyId', 'weback'),
+                 'secret' => config::byKey('SecretKey', 'weback'),
+                 'token' => config::byKey('SessionToken', 'weback'),]
+        ]);
+        // Formatage du Payload
+        $data = array (
+            "state" => array (
+                "desired" =>
+                      $action,
+              )
+            );
+        $payload = json_encode($data);
 
-      $result = $IoT->updateThingShadow([
-          'payload' => $payload,
-          'thingName' => $calledLogicalID,
-      ]);
+        $result = $IoT->updateThingShadow([
+            'payload' => $payload,
+            'thingName' => $calledLogicalID,
+        ]);
+      } catch (Exception $e) {
+          log::add('weback', 'error', 'Erreur sur la fonction updateThingShadow'. $e->getMessage());
+      }
 
       // Status code
       $statuscode = (string)$result['@metadata']['statusCode'];
