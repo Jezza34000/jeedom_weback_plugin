@@ -223,6 +223,11 @@ class weback extends eqLogic {
       $result = $IoT->getThingShadow([
           'thingName' => $calledLogicalID,
       ]);
+      // Status code
+      $code = (string)$result['@metadata']->getContents();
+      log::add('weback', 'debug', 'HTTP Code return : ' . $code);
+
+      // Data
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
       $shadowJson = json_decode($return, false);
