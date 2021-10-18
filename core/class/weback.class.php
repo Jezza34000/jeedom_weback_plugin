@@ -225,7 +225,7 @@ class weback extends eqLogic {
       ]);
       // Status code
       $statuscode = (string)$result['@metadata']['statusCode'];
-      log::add('weback', 'debug', 'HTTP Code return : ' . $statuscode);
+      log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
 
       // Data
       $return = (string)$result['payload']->getContents();
@@ -357,6 +357,11 @@ class weback extends eqLogic {
           'payload' => $payload,
           'thingName' => $calledLogicalID,
       ]);
+
+      // Status code
+      $statuscode = (string)$result['@metadata']['statusCode'];
+      log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
+
       $return = (string)$result['payload']->getContents();
       log::add('weback', 'debug', 'IOT Return : ' . $return);
 
