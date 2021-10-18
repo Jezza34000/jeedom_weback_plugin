@@ -224,7 +224,7 @@ class weback extends eqLogic {
           'thingName' => $calledLogicalID,
       ]);
       // Status code
-      $code = (string)$result['@metadata']->getContents();
+      $code = (string)$result['@metadata'];
       log::add('weback', 'debug', 'HTTP Code return : ' . $code);
 
       // Data
