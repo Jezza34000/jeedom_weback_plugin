@@ -306,7 +306,7 @@ class weback extends eqLogic {
     public static function updateStatusDevices($calledLogicalID){
       log::add('weback', 'debug', 'UpdateStatus de '.$calledLogicalID.' demandé');
       // Vérification si le TOKEN AWS IOT est toujours valable
-      if (weback::IsRenewlRequired() == false){
+      if (weback::IsRenewlRequired() == false) {
         weback::getDeviceShadow($calledLogicalID);
       } else {
             log::add('weback', 'debug', 'Renouvellement du jeton requis...');
@@ -362,11 +362,14 @@ class weback extends eqLogic {
       $statuscode = (string)$result['@metadata']['statusCode'];
       log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
 
-      $return = (string)$result['payload']->getContents();
-      log::add('weback', 'debug', 'IOT Return : ' . $return);
-
-      /* Controle si l'action s'est éxécuté correctement.
-      $shadowJson = json_decode($return, false); */
+      if ($statuscode == 200) {
+        $return = (string)$result['payload']->getContents();
+        log::add('weback', 'debug', 'IOT Return : ' . $return);
+        return true;
+      } else {
+        // HTTP Error code
+        return false;
+      }
     }
 
     public static function DeterminateSimpleState($working_status, $error){
@@ -602,6 +605,7 @@ class webackCmd extends cmd {
 
   // Exécution d'une commande
      public function execute($_options = array()) {
+      $retry = 0;
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
       log::add('weback', 'debug', '-> Execute : '.$this->getLogicalId());
@@ -643,7 +647,18 @@ class webackCmd extends cmd {
               $stateRequest = $_options['message'];
               log::add('weback', 'debug', '>Value (from message) : '.$stateRequest);
             }
-            weback::SendAction($eqToSendAction, array($actRequest => $stateRequest));
+
+            // Vérification si le TOKEN AWS IOT est toujours valable avant envoi CMD
+            if (weback::IsRenewlRequired() == false) {
+              if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
+                if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
+                  log::add('weback', 'error', 'Echec d\'envoi de la commande au robot.');
+                }
+              }
+            } else {
+              // JETON expiré renouvellement requis
+              log::add('weback', 'error', 'Jeton expiré echec envoi commande');
+            }
             break;
         }
 
