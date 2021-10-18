@@ -207,22 +207,28 @@ class weback extends eqLogic {
     public static function getDeviceShadow($calledLogicalID){
       log::add('weback', 'debug', 'Mise à jour Shadow Device depuis IOT-Data...');
       log::add('weback', 'debug', 'End_Point='.config::byKey('End_Point', 'weback').' / Region_Info='.config::byKey('Region_Info', 'weback'));
-      $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
-          'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
-          'endpointType' => 'iot:Data-ATS',
-          'http'    => [
-            'verify' => false
-            ],
-          'version' => 'latest',
-          'region'  => config::byKey('Region_Info', 'weback'),
-          'credentials' => [
-               'key'    => config::byKey('AccessKeyId', 'weback'),
-               'secret' => config::byKey('SecretKey', 'weback'),
-               'token' => config::byKey('SessionToken', 'weback'),]
-      ]);
-      $result = $IoT->getThingShadow([
-          'thingName' => $calledLogicalID,
-      ]);
+
+      try {
+        $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
+            'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
+            'endpointType' => 'iot:Data-ATS',
+            'http'    => [
+              'verify' => false
+              ],
+            'version' => 'latest',
+            'region'  => config::byKey('Region_Info', 'weback'),
+            'credentials' => [
+                 'key'    => config::byKey('AccessKeyId', 'weback'),
+                 'secret' => config::byKey('SecretKey', 'weback'),
+                 'token' => config::byKey('SessionToken', 'weback'),]
+        ]);
+        $result = $IoT->getThingShadow([
+            'thingName' => $calledLogicalID,
+        ]);
+      } catch (Exception $e) {
+          log::add('weback', 'error', 'Erreur sur la fonction GetThingShadow');
+      }
+
       // Status code
       $statuscode = (string)$result['@metadata']['statusCode'];
       log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
