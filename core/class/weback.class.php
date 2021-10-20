@@ -246,7 +246,7 @@ class weback extends eqLogic {
         $wstatus = $shadowJson->state->reported->working_status;
         $errnfo = $shadowJson->state->reported->error_info;
 
-        if ($shadowJson->state->reported->connected) {
+        if ($shadowJson->state->reported->connected == "true") {
           $wback->checkAndUpdateCmd('connected', true);
           $wback->checkAndUpdateCmd('working_status', $wstatus);
           $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
