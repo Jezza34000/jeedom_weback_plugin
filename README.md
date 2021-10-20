@@ -1,8 +1,9 @@
 # Plugin Jeedom pour utiliser les robots aspirateur : Neatsvor / Tesvor / Orfeld / Abir 
 
-* Permet le contrôle des robots aspirateur de marque Neatsvor, Tesvor, Orfeld, Abir, et surement d'autre qui viennent du même fabricant...
-Via l'application WeBack/Tesvor. 
-L'API utilisée est non officielle, et basée sur le reverse engineering trouvé sur ce dépôt : https://github.com/opravdin/weback-unofficial
+* Permet le contrôle des robots aspirateur de marque Neatsvor, Tesvor, Orfeld, Abir, et surement d'autres qui viennent du même fabricant...
+
+Via les applications : WeBack/Tesvor. 
+(L'API utilisée est non officielle, et basée sur le reverse engineering trouvé sur ce dépôt : https://github.com/opravdin/weback-unofficial)
 
 Fonctionnel avec les modèles suivant : 
 * Neatsvor X600
