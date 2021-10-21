@@ -246,6 +246,13 @@ class weback extends eqLogic {
         $wstatus = $shadowJson->state->reported->working_status;
         $errnfo = $shadowJson->state->reported->error_info;
 
+        if ($errnfo == "NoError" || $errnfo == NULL) {
+          $wback->checkAndUpdateCmd('haserror', 0);
+        } else {
+          $wback->checkAndUpdateCmd('haserror', 1);
+        }
+
+
         if ($shadowJson->state->reported->connected == "true") {
           $wback->checkAndUpdateCmd('connected', true);
           $wback->checkAndUpdateCmd('working_status', $wstatus);
@@ -305,7 +312,7 @@ class weback extends eqLogic {
           $wback->checkAndUpdateCmd('continue_clean', 0);
         }
 
-        $result = weback::DeterminateSimpleState($wstatus, $errnfo);
+        $result = weback::DeterminateSimpleState($wstatus);
           if ($result == "docked") {
             $wback->checkAndUpdateCmd('isworking', 0);
             $wback->checkAndUpdateCmd('isdocked', 1);
@@ -414,7 +421,7 @@ class weback extends eqLogic {
       }
     }
 
-    public static function DeterminateSimpleState($working_status, $error){
+    public static function DeterminateSimpleState($working_status){
       /*
       ==================WORKING
       ROBOT_WORK_STATUS_STOP("Hibernating"),
