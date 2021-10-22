@@ -252,7 +252,6 @@ class weback extends eqLogic {
           $wback->checkAndUpdateCmd('haserror', 1);
         }
 
-
         if ($shadowJson->state->reported->connected == "true") {
           $wback->checkAndUpdateCmd('connected', true);
           $wback->checkAndUpdateCmd('working_status', $wstatus);
@@ -319,6 +318,15 @@ class weback extends eqLogic {
           } elseif ($result == "working") {
             $wback->checkAndUpdateCmd('isdocked', 0);
             $wback->checkAndUpdateCmd('isworking', 1);
+          } elseif ($result == "hibernating") {
+            if ($wback->isworking->getValue() == 1) {
+              $wback->checkAndUpdateCmd('isdocked', 0);
+              $wback->checkAndUpdateCmd('isworking', 0);
+            }
+            if ($wback->isdocked->getValue() == 1) {
+              $wback->checkAndUpdateCmd('isdocked', 1);
+              $wback->checkAndUpdateCmd('isworking', 0);
+            }
           } else {
             $wback->checkAndUpdateCmd('isdocked', 0);
             $wback->checkAndUpdateCmd('isworking', 0);
@@ -337,7 +345,7 @@ class weback extends eqLogic {
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
       $tsnow = $date_utc->getTimestamp();
       $tsexpiration = config::byKey('Expiration', 'weback');
-      log::add('weback', 'debug', 'Vérification validité TOKAN AWS ('.$tsexpiration.')');
+      log::add('weback', 'debug', 'Vérification validité TOKEN AWS ('.$tsexpiration.')');
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'debug', '> Expired');
         return true;
@@ -423,8 +431,7 @@ class weback extends eqLogic {
 
     public static function DeterminateSimpleState($working_status){
       /*
-      ==================WORKING
-      ROBOT_WORK_STATUS_STOP("Hibernating"),
+      ==================ROBOT_WORK_STATUS_CHARGING_3
       ROBOT_WORK_STATUS_STANDBY("Standby"),
       ROBOT_WORK_STATUS_CTRL("DirectionControl"),
       ROBOT_WORK_STATUS_ERROR("Malfunction"),
@@ -437,11 +444,13 @@ class weback extends eqLogic {
       ROBOT_WORK_STATUS_CHARGING("Pilecharging"),
       ROBOT_WORK_STATUS_CHARGE_OVER("Chargedone"),
       ROBOT_WORK_STATUS_CHARGING2("DirCharging"),
+      ==================NOT WORKING and MAY NOT DOCKED
+      ROBOT_WORK_STATUS_STOP("Hibernating"),
       */
 
       $dockedStatus = array("Charging", "PileCharging", "DirCharging", "ChargeDone");
       $workingStatus = array("Relocation", "AutoClean", "SmartClean", "EdgeClean", "SpotClean", "RoomClean",
-      "MopClean", "Standby", "PlanningLocation", "StrongClean", "PlanningRect", "ZmodeClean", "BackCharging");
+      "MopClean", "Standby", "PlanningLocation", "StrongClean", "PlanningRect", "ZmodeClean", "BackCharging", "VacuumClean");
       // Docked Status
       if (in_array($working_status, $dockedStatus)) {
           return "docked";
@@ -449,6 +458,10 @@ class weback extends eqLogic {
       // Working Status
       if (in_array($working_status, $workingStatus)) {
           return "working";
+      }
+      // Working Status
+      if ($working_status == "Hibernating") {
+          return "hibernating";
       }
       return null;
     }
