@@ -225,7 +225,7 @@ class weback extends eqLogic {
             'thingName' => $calledLogicalID,
         ]);
       } catch (Exception $e) {
-          log::add('weback', 'error', 'Erreur sur la fonction GetThingShadow '. $e->getMessage());
+          log::add('weback', 'error', 'Erreur sur la fonction AWS GetThingShadow, détail :'. $e->getMessage());
           return false;
       }
 
@@ -318,14 +318,14 @@ class weback extends eqLogic {
             $wback->checkAndUpdateCmd('isdocked', 0);
             $wback->checkAndUpdateCmd('isworking', 1);
           } elseif ($result == "hibernating") {
-            if ($wback->isworking->getValue() == 1) {
+            /*if ($wback->isworking->getValue() == 1) {
               $wback->checkAndUpdateCmd('isdocked', 0);
               $wback->checkAndUpdateCmd('isworking', 0);
             }
             if ($wback->isdocked->getValue() == 1) {
               $wback->checkAndUpdateCmd('isdocked', 1);
               $wback->checkAndUpdateCmd('isworking', 0);
-            }
+            }*/
           } else {
             $wback->checkAndUpdateCmd('isdocked', 0);
             $wback->checkAndUpdateCmd('isworking', 0);
@@ -343,7 +343,7 @@ class weback extends eqLogic {
     public static function IsRenewlRequired(){
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
       $tsnow = $date_utc->getTimestamp();
-      $tsexpiration = (config::byKey('Expiration', 'weback')) - 15;
+      $tsexpiration =  (config::byKey('Expiration', 'weback')) -15;
 
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'debug', 'Vérification validité TOKEN AWS ('.$tsexpiration.') => Expiré !');
@@ -683,7 +683,6 @@ class webackCmd extends cmd {
             $actionToSend["goto_point"] = "[".$coordinates[0].",".$coordinates[1]."]";
             $actionToSend["laser_goto_path_x"] = "[".$coordinates[0]."]";
             $actionToSend["laser_goto_path_y"] = "[".$coordinates[1]."]";
-            If ( )
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'cleanroom':
