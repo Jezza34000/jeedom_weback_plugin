@@ -318,14 +318,14 @@ class weback extends eqLogic {
             $wback->checkAndUpdateCmd('isdocked', 0);
             $wback->checkAndUpdateCmd('isworking', 1);
           } elseif ($result == "hibernating") {
-            /*if ($wback->isworking->getValue() == 1) {
+            if ($wback->isworking->getValue() == 1) {
               $wback->checkAndUpdateCmd('isdocked', 0);
               $wback->checkAndUpdateCmd('isworking', 0);
             }
             if ($wback->isdocked->getValue() == 1) {
               $wback->checkAndUpdateCmd('isdocked', 1);
               $wback->checkAndUpdateCmd('isworking', 0);
-            }*/
+            }
           } else {
             $wback->checkAndUpdateCmd('isdocked', 0);
             $wback->checkAndUpdateCmd('isworking', 0);
