@@ -105,8 +105,6 @@ class weback extends eqLogic {
          $data = array("IdentityId" => config::byKey('Identity_Id', 'weback'), "Logins" => array("cognito-identity.amazonaws.com" => config::byKey('Token', 'weback')));
          $data_string = json_encode($data);
 
-         log::add('weback', 'debug', 'JSON AWS to send = ' . print_r($data_string, true));
-
          curl_setopt($ch, CURLOPT_URL, "https://cognito-identity.".$region.".amazonaws.com");
          curl_setopt($ch, CURLOPT_POST, 1);
          curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
@@ -225,15 +223,15 @@ class weback extends eqLogic {
             'thingName' => $calledLogicalID,
         ]);
       } catch (Exception $e) {
-          log::add('weback', 'error', 'Erreur sur la fonction AWS GetThingShadow, détail :'. $e->getMessage());
+          log::add('weback', 'error', 'Erreur sur la fonction AWS GetThingShadow, détail : '. $e->getMessage());
           return false;
       }
 
       // Status code
       $statuscode = (string)$result['@metadata']['statusCode'];
       log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
-
       if ($statuscode == 200) {
+
         // Data
         $return = (string)$result['payload']->getContents();
         log::add('weback', 'debug', 'IOT Return : ' . $return);
@@ -334,6 +332,7 @@ class weback extends eqLogic {
         return true;
       } else {
         // HTTP Error code
+        log::add('weback', 'warning', 'Erreur HTTP code : ' . $statuscode);
         return false;
       }
 
@@ -346,10 +345,10 @@ class weback extends eqLogic {
       $tsexpiration =  (config::byKey('Expiration', 'weback')) -15;
 
       if ($tsexpiration < $tsnow) {
-        log::add('weback', 'debug', 'Vérification validité TOKEN AWS ('.$tsexpiration.') => Expiré !');
+        log::add('weback', 'warning', 'Token AWS iot-data (ts '.$tsexpiration.') => Expiré !');
         return true;
       } else {
-        log::add('weback', 'debug', 'TOKEN AWS ('.$tsexpiration.') => OK Valide');
+        log::add('weback', 'debug', 'Token AWS iot-data (ts '.$tsexpiration.') => OK Valide');
         return false;
       }
     }
@@ -410,7 +409,7 @@ class weback extends eqLogic {
             'thingName' => $calledLogicalID,
         ]);
       } catch (Exception $e) {
-          log::add('weback', 'error', 'Erreur sur la fonction updateThingShadow '. $e->getMessage());
+          log::add('weback', 'error', 'Erreur sur la fonction updateThingShadow, détail : '. $e->getMessage());
           return false;
       }
 
@@ -424,6 +423,7 @@ class weback extends eqLogic {
         return true;
       } else {
         // HTTP Error code
+        log::add('weback', 'warning', 'Erreur HTTP code : ' . $statuscode);
         return false;
       }
     }
@@ -555,7 +555,7 @@ class weback extends eqLogic {
         log::add('weback', 'error', 'Pas de configuration valide trouvé dans le fichier');
         return true;
       }
-      log::add('weback', 'debug', 'Nombre de commandes à ajouter : '.count($device['commands']));
+      log::add('weback', 'info', 'Nombre de commandes à ajouter : '.count($device['commands']));
       $cmd_order = 0;
       foreach ($device['commands'] as $command) {
         $cmd = null;
@@ -567,7 +567,7 @@ class weback extends eqLogic {
           }
         }
         if ($cmd == null || !is_object($cmd)) {
-          log::add('weback', 'debug', '+ Ajout de : '.$command['name']);
+          log::add('weback', 'info', '+ Ajout de : '.$command['name']);
           $cmd = new webackCmd();
           $cmd->setOrder($cmd_order);
           $cmd->setEqLogic_id($this->getId());
@@ -582,7 +582,7 @@ class weback extends eqLogic {
               $cmd->save();
               log::add('weback', 'debug', '-> Valeur lier depuis : '.$valueLink." (".$cmdlogic->getId().")");
         		} else {
-              log::add('weback', 'debug', '-> Liaison impossible objet introuvable : '.$valueLink);
+              log::add('weback', 'warning', '-> Liaison impossible objet introuvable : '.$valueLink);
             }
           }
           $cmd_order++;
@@ -666,7 +666,7 @@ class webackCmd extends cmd {
 
   // Exécution d'une commande
      public function execute($_options = array()) {
-      $retry = 0;
+      $retry = 1;
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
       log::add('weback', 'debug', '-> Execute : '.$this->getLogicalId());
@@ -709,31 +709,31 @@ class webackCmd extends cmd {
               log::add('weback', 'debug', '>Value (from message) : '.$stateRequest);
             }
 
-            // Vérification si le TOKEN AWS IOT est toujours valable avant envoi CMD
-            if (weback::IsRenewlRequired() == false) {
-              if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
-                if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
-                  log::add('weback', 'error', 'Echec d\'envoi de la commande au robot. (2x)');
-                }
-              }
-            } else {
+            // Vérification du jeton avant envoie de la commande
+            if (weback::IsRenewlRequired() == true) {
               // JETON expiré renouvellement requis
               if (weback::getAWScredential()) {
-                // TOKEN AWS OK
+                // Token AWS à jour
                 log::add('weback', 'debug', 'Renouvellement OK poursuite de l\'envoie de la commande');
-                if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
-                  if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
-                    log::add('weback', 'error', 'Echec d\'envoi de la commande au robot. (2x)');
-                  }
-                }
               } else {
-                log::add('weback', 'error', 'Jeton expiré echec renouvellement, envoi commande NOK');
+                log::add('weback', 'error', 'Envoi commande NOK (Jeton AWS expiré, renouvellement echoué)');
+                break;
               }
             }
-            break;
+
+            while ($retry < 4) {
+                if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == true) {
+                  break;
+                }
+                if ($retry > 1) {
+                  log::add('weback', 'warning', 'Echec d\'envoi de la commande au robot. Nouvel essai... ('.$retry.'x)');
+                }
+                $retry++;
+            }
+            if ($retry == 4) {
+                log::add('weback', 'error', 'Echec d\'envoi de la commande au robot. (4x)');
+            }
         }
-
      }
-
     /*     * **********************Getteur Setteur*************************** */
 }
