@@ -205,9 +205,7 @@ class weback extends eqLogic {
     }
 
     public static function getDeviceShadow($calledLogicalID){
-      log::add('weback', 'debug', 'Mise à jour Shadow Device depuis IOT-Data...');
-      log::add('weback', 'debug', 'End_Point='.config::byKey('End_Point', 'weback').' / Region_Info='.config::byKey('Region_Info', 'weback'));
-
+      log::add('weback', 'debug', 'Mise à jour GetThingShadow depuis IOT-Data (end-point: '.config::byKey('End_Point', 'weback').')...');
       try {
         $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
             'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
@@ -226,7 +224,7 @@ class weback extends eqLogic {
             'thingName' => $calledLogicalID,
         ]);
       } catch (Exception $e) {
-          log::add('weback', 'error', 'Erreur sur la fonction GetThingShadow'. $e->getMessage());
+          log::add('weback', 'error', 'Erreur sur la fonction GetThingShadow '. $e->getMessage());
           return false;
       }
 
@@ -344,13 +342,13 @@ class weback extends eqLogic {
     public static function IsRenewlRequired(){
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
       $tsnow = $date_utc->getTimestamp();
-      $tsexpiration = config::byKey('Expiration', 'weback');
-      log::add('weback', 'debug', 'Vérification validité TOKEN AWS ('.$tsexpiration.')');
+      $tsexpiration = (config::byKey('Expiration', 'weback')) - 15;
+
       if ($tsexpiration < $tsnow) {
-        log::add('weback', 'debug', '> Expired');
+        log::add('weback', 'debug', 'Vérification validité TOKEN AWS ('.$tsexpiration.') => Expiré !');
         return true;
       } else {
-        log::add('weback', 'debug', '> OK, valid');
+        log::add('weback', 'debug', 'TOKEN AWS ('.$tsexpiration.') => OK Valide');
         return false;
       }
     }
