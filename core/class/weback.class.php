@@ -205,10 +205,11 @@ class weback extends eqLogic {
     }
 
     public static function getDeviceShadow($calledLogicalID){
-      log::add('weback', 'debug', 'Mise à jour GetThingShadow depuis IOT-Data (end-point: '.config::byKey('End_Point', 'weback').')...');
+      $endpointSRV = config::byKey('End_Point', 'weback');
+      log::add('weback', 'debug', 'Mise à jour GetThingShadow depuis IOT-Data (end-point: '.$endpointSRV.')...');
       try {
         $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
-            'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
+            'endpointAddress' => 'https://'.$endpointSRV,
             'endpointType' => 'iot:Data-ATS',
             'http'    => [
               'verify' => false
@@ -409,7 +410,7 @@ class weback extends eqLogic {
             'thingName' => $calledLogicalID,
         ]);
       } catch (Exception $e) {
-          log::add('weback', 'error', 'Erreur sur la fonction updateThingShadow'. $e->getMessage());
+          log::add('weback', 'error', 'Erreur sur la fonction updateThingShadow '. $e->getMessage());
           return false;
       }
 
