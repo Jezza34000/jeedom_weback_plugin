@@ -682,6 +682,7 @@ class webackCmd extends cmd {
             $actionToSend["goto_point"] = "[".$coordinates[0].",".$coordinates[1]."]";
             $actionToSend["laser_goto_path_x"] = "[".$coordinates[0]."]";
             $actionToSend["laser_goto_path_y"] = "[".$coordinates[1]."]";
+            If ( )
             weback::SendAction($eqToSendAction, $actionToSend);
             break;
           case 'cleanroom':
@@ -712,12 +713,22 @@ class webackCmd extends cmd {
             if (weback::IsRenewlRequired() == false) {
               if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
                 if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
-                  log::add('weback', 'error', 'Echec d\'envoi de la commande au robot.');
+                  log::add('weback', 'error', 'Echec d\'envoi de la commande au robot. (2x)');
                 }
               }
             } else {
               // JETON expiré renouvellement requis
-              log::add('weback', 'error', 'Jeton expiré echec envoi commande');
+              if (weback::getAWScredential()) {
+                // TOKEN AWS OK
+                log::add('weback', 'debug', 'Renouvellement OK poursuite de l\'envoie de la commande');
+                if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
+                  if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == false) {
+                    log::add('weback', 'error', 'Echec d\'envoi de la commande au robot. (2x)');
+                  }
+                }
+              } else {
+                log::add('weback', 'error', 'Jeton expiré echec renouvellement, envoi commande NOK');
+              }
             }
             break;
         }
