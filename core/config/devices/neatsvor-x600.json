@@ -211,7 +211,7 @@
 			"logicalId": "working_status"
 		},
 		{
-			"name": "Erreur",
+			"name": "Detail erreur",
 			"type": "info",
 			"subtype": "string",
 			"IsHistorized": 0,
@@ -233,6 +233,14 @@
 			"IsHistorized": 0,
 			"isVisible": 1,
 			"logicalId": "isdocked"
+		},
+		{
+			"name": "Erreur",
+			"type": "info",
+			"subtype": "binary",
+			"IsHistorized": 0,
+			"isVisible": 1,
+			"logicalId": "haserror"
 		},
 		{
 			"name": "Etat ne pas deranger",
