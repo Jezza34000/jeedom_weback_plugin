@@ -219,6 +219,14 @@
 			"logicalId": "error_info"
 		},
 		{
+			"name": "Ordre en attente",
+			"type": "info",
+			"subtype": "numeric",
+			"IsHistorized": 0,
+			"isVisible": 0,
+			"logicalId": "awaiting_order"
+		},
+		{
 			"name": "En fonction",
 			"type": "info",
 			"subtype": "binary",
