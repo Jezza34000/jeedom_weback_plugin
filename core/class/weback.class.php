@@ -128,8 +128,7 @@ class weback extends eqLogic {
            config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');
            return true;
          } else {
-           log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
-           log::add('weback', 'error', 'Echec d\'obtention des informations de connexion depuis AWS Cognito');
+           log::add('weback', 'error', 'Echec d\'obtention des informations de connexion depuis AWS Cognito. Erreur Curl : '. curl_error($ch));
            return false;
          }
          curl_close($ch);
@@ -329,7 +328,15 @@ class weback extends eqLogic {
             $wback->checkAndUpdateCmd('isworking', 0);
             log::add('weback', 'debug', 'Aucune équivalence Docked/Working trouvée pour l\'état : '.$wstatus);
           }
+
+          // Check for unreported item
+          $awaitingOrder = count($shadowJson->state->delta);
+          $wback->checkAndUpdateCmd('awaiting_order', $awaitingOrder);
+          if ($awaitingOrder > 0 ) {
+            log::add('weback', 'warning', 'Attention présence d\'ordre transmis au serveur, mais en en attentes d\'execution par le robot x'.$awaitingOrder);
+          }
         return true;
+
       } else {
         // HTTP Error code
         log::add('weback', 'warning', 'Erreur HTTP code : ' . $statuscode);
@@ -541,7 +548,7 @@ class weback extends eqLogic {
     public function loadCmdFromConf($_type, $roboteqId) {
       log::add('weback', 'debug', 'Chargement des commandes du robots depuis le fichiers JSON : '.$_type);
       if (!is_file(dirname(__FILE__) . '/../config/devices/' . $_type . '.json')) {
-        log::add('weback', 'error', 'Fichier de configuration du robot introuvable! Utilisation du type "générique" seules les commandes basiques seront disponible.');
+        log::add('weback', 'warning', 'Fichier de configuration du robot introuvable! Utilisation du type "générique" seules les commandes basiques seront disponible.');
         $_type = "generic";
       }
       $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $_type . '.json');
@@ -622,48 +629,9 @@ class weback extends eqLogic {
     public function postRemove() {
 
     }
-
-    /*
-     * Non obligatoire : permet de modifier l'affichage du widget (également utilisable par les commandes)
-      public function toHtml($_version = 'dashboard') {
-
-      }
-     */
-
-    /*
-     * Non obligatoire : permet de déclencher une action après modification de variable de configuration
-    public static function postConfig_<Variable>() {
-    }
-     */
-
-    /*
-     * Non obligatoire : permet de déclencher une action avant modification de variable de configuration
-    public static function preConfig_<Variable>() {
-    }
-     */
-
-    /*     * **********************Getteur Setteur*************************** */
 }
 
 class webackCmd extends cmd {
-    /*     * *************************Attributs****************************** */
-
-    /*
-      public static $_widgetPossibility = array();
-    */
-
-    /*     * ***********************Methode static*************************** */
-
-
-    /*     * *********************Methode d'instance************************* */
-
-    /*
-     * Non obligatoire permet de demander de ne pas supprimer les commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
-      public function dontRemoveCmd() {
-      return true;
-      }
-     */
-
   // Exécution d'une commande
      public function execute($_options = array()) {
       $retry = 1;
