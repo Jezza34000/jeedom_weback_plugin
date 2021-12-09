@@ -35,7 +35,7 @@ class weback extends eqLogic {
      public static function discoverRobot()
      {
          log::add('weback', 'debug', 'Démarrage de la recherche des robots...', true);
-         if (weback::getToken() == true) {
+         if (weback::getWebackToken() == true) {
                if (weback::getAWScredential() == true) {
                        if (weback::getDeviceList() == true) {
                          log::add('weback', 'debug', '### Recherche robot terminée avec succès!', true);
@@ -55,7 +55,7 @@ class weback extends eqLogic {
      }
 
 
-     public static function getToken() {
+     public static function getWebackToken() {
        log::add('weback', 'debug', 'Connexion à WeBack-login...');
        if (config::byKey('password', 'weback') != '' && config::byKey('user', 'weback') != '' && config::byKey('country', 'weback') != '') {
          $ch = curl_init();
@@ -83,7 +83,9 @@ class weback extends eqLogic {
            config::save("End_Point", $json['End_Point'], 'weback');
            config::save("Identity_Id", $json['Identity_Id'], 'weback');
            config::save("Token", $json['Token'], 'weback');
-           config::save("Token_Duration", $json['Token_Duration'], 'weback');
+           $date_utc = new DateTime("now", new DateTimeZone("UTC"));
+           $wbtsexpiration = $json['Token_Duration']+$date_utc->getTimestamp();
+           config::save("Token_Expiration", $wbtsexpiration, 'weback');
            config::save("Region_Info", $json['Region_Info'], 'weback');
            return true;
          } else {
@@ -346,10 +348,25 @@ class weback extends eqLogic {
 
       }
 
-    public static function IsRenewlRequired(){
+
+    public static function webackTokenValidity(){
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
       $tsnow = $date_utc->getTimestamp();
-      $tsexpiration =  (config::byKey('Expiration', 'weback')) -15;
+      $tsexpiration =  (config::byKey('Token_Expiration', 'weback')) -30;
+
+      if ($tsexpiration < $tsnow) {
+        log::add('weback', 'warning', 'Token WeBack (ts '.$tsexpiration.') => Expiré !');
+        return true;
+      } else {
+        log::add('weback', 'debug', 'Token WeBack (ts '.$tsexpiration.') => OK Valide');
+        return false;
+      }
+    }
+
+    public static function awsTokenValidity(){
+      $date_utc = new DateTime("now", new DateTimeZone("UTC"));
+      $tsnow = $date_utc->getTimestamp();
+      $tsexpiration =  (config::byKey('Expiration', 'weback')) -30;
 
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'warning', 'Token AWS iot-data (ts '.$tsexpiration.') => Expiré !');
@@ -363,25 +380,24 @@ class weback extends eqLogic {
     public static function updateStatusDevices($calledLogicalID){
       log::add('weback', 'debug', 'UpdateStatus de '.$calledLogicalID.' demandé');
       // Vérification si le TOKEN AWS IOT est toujours valable
-      if (weback::IsRenewlRequired() == false) {
-        weback::getDeviceShadow($calledLogicalID);
-      } else {
-            log::add('weback', 'debug', 'Renouvellement du jeton requis...');
-            // Renouvellement du TOKEN
-            if (weback::getAWScredential()) {
-              // TOKEN AWS OK
-              log::add('weback', 'debug', 'Renouvellement OK poursuite de la MAJ');
-              weback::getDeviceShadow($calledLogicalID);
-            } else {
-                  // Renouvellement de la connexion à WeBack
-                  if (weback::getToken()) {
-                    // Connexion WeBackOK
-                    weback::getAWScredential();
-                    weback::getDeviceShadow($calledLogicalID);
-                  } else {
-                    log::add('weback', 'error', 'CRON > Impossible de mettre à jour connexion echouée à WeBack');
-                  }
-            }
+
+      if (weback::webackTokenValidity() == true) {
+        if (weback::getWebackToken() == true) {
+          log::add('weback', 'debug', 'CRON > Mise à jour WeBack token OK ');
+        } else {
+          log::add('weback', 'error', 'CRON > Echec de mise à jour WeBack token');
+        }
+      }
+      if (weback::awsTokenValidity() == true) {
+        if (weback::getAWScredential() == true) {
+          log::add('weback', 'debug', 'CRON > Mise à jour AWS token OK ');
+        } else {
+          log::add('weback', 'error', 'CRON > Echec de mise à jour AWS token');
+        }
+      }
+
+      if (weback::getDeviceShadow($calledLogicalID) == false) {
+        log::add('weback', 'error', 'CRON > Echec de mise à jour ');
       }
     }
 
@@ -678,7 +694,7 @@ class webackCmd extends cmd {
             }
 
             // Vérification du jeton avant envoie de la commande
-            if (weback::IsRenewlRequired() == true) {
+            if (weback::awsTokenValidity() == true) {
               // JETON expiré renouvellement requis
               if (weback::getAWScredential()) {
                 // Token AWS à jour
