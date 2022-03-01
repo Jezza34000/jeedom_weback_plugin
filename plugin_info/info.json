@@ -8,15 +8,11 @@
 	"author" : "Jezza",
 	"require" : "3.3.39",
 	"category" : "devicecommunication",
-	"hasDependency" : false,
-	"hasOwnDeamon" : false,
+	"hasDependency" : true,
+	"hasOwnDeamon" : true,
 	"maxDependancyInstallTime" : 10,
 	"changelog" : "https://github.com/Jezza34000/weback",
 	"documentation" : "https://github.com/Jezza34000/weback",
-	"link" : {
-		"forum":"",
-		"video" : ""
-	},
 	"language": [
 		"fr_FR"
 	],
