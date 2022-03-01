@@ -20,9 +20,6 @@
 
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
-require_once __DIR__ . '/../../resources/vendor/aws-autoloader.php';
-
-use Aws\Lambda\LambdaClient;
 
 class weback extends eqLogic {
     /*     * *************************Attributs****************************** */
@@ -56,14 +53,35 @@ class weback extends eqLogic {
 
 
      public static function getWebackToken() {
-       log::add('weback', 'debug', 'Connexion à WeBack-login...');
+       log::add('weback', 'debug', 'Connexion à grit-cloud...');
        if (config::byKey('password', 'weback') != '' && config::byKey('user', 'weback') != '' && config::byKey('country', 'weback') != '') {
          $ch = curl_init();
-
-         $data = array("App_Version" => "android_5.1.9", "Password" => md5(config::byKey('password', 'weback')), "User_Account" => "+".config::byKey('country', 'weback')."-".config::byKey('user', 'weback'));
+         /*{"payload":{
+                "opt":"login",
+                "pwd":"66f7a4d78be2accaf520079d0445f5b3"
+            },
+            "header":{
+                "language":"fr",
+                "app_name":"WeBack",
+                "calling_code":"0033",
+                "api_version":"1.0",
+                "account":"tekv3frm@gmail.com",
+                "client_id":"yugong_app"}
+            }*/
+        $data = array("payload" => array("opt":"login",
+                                        "pwd":md5(config::byKey('password', 'weback'))
+                                        ),
+                      "header" => array("language":"fr",
+                                        "app_name":"WeBack",
+                                        "calling_code":"00".config::byKey('country', 'weback'),
+                                        "api_version":"1.0",
+                                        "account":config::byKey('user', 'weback'),
+                                        "client_id":"yugong_app"
+                                      )
+                      );
          $data_string = json_encode($data);
 
-         curl_setopt($ch, CURLOPT_URL, "https://www.weback-login.com/WeBack/WeBack_Login_Ats_V3");
+         curl_setopt($ch, CURLOPT_URL, "https://user.grit-cloud.com/oauth");
          curl_setopt($ch, CURLOPT_POST, 1);
          curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -73,24 +91,22 @@ class weback extends eqLogic {
           );
          $server_output = curl_exec($ch);
          $json = json_decode($server_output, true);
-         log::add('weback', 'debug', 'WeBack answer = ' . print_r($json, true));
+         log::add('weback', 'debug', 'grit-cloud answer = ' . print_r($json, true));
 
-         if ($json['Request_Result'] == 'success') {
-           log::add('weback', 'debug', 'Identifiant/mot de passe WeBack-Login OK');
+         if ($json['msg'] == 'success') {
+           log::add('weback', 'debug', 'Identifiant/mot de passe grit-cloud OK');
            // Enregistrement des informations de connexion
-           config::save("Identity_Pool_Id", $json['Identity_Pool_Id'], 'weback');
-           config::save("Developer_Provider_Name", $json['Developer_Provider_Name'], 'weback');
-           config::save("End_Point", $json['End_Point'], 'weback');
-           config::save("Identity_Id", $json['Identity_Id'], 'weback');
-           config::save("Token", $json['Token'], 'weback');
+           config::save("jwt_token", $json['data']['jwt_token'], 'weback');
+           config::save("region_name", $json['region_name'], 'weback');
+           config::save("api_url", $json['api_url'], 'weback');
+           config::save("wss_url", $json['wss_url'], 'weback');
            $date_utc = new DateTime("now", new DateTimeZone("UTC"));
-           $wbtsexpiration = $json['Token_Duration']+$date_utc->getTimestamp();
-           config::save("Token_Expiration", $wbtsexpiration, 'weback');
-           config::save("Region_Info", $json['Region_Info'], 'weback');
+           $wbtsexpiration = $json['expired_time']+$date_utc->getTimestamp();
+           config::save("token_expiration", $wbtsexpiration, 'weback');
            return true;
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
-           log::add('weback', 'error', 'Echec de connexion à WeBack-Login : '.$json['Fail_Reason']);
+           log::add('weback', 'error', 'Echec de connexion à grit-cloud : '.$json['msg']);
            return false;
          }
          curl_close($ch);
@@ -100,106 +116,59 @@ class weback extends eqLogic {
        }
      }
 
-     public static function getAWScredential() {
-       log::add('weback', 'debug', 'Connexion à AWS Cognito...');
-         $region = config::byKey('Region_Info', 'weback');
-         $ch = curl_init();
-         $data = array("IdentityId" => config::byKey('Identity_Id', 'weback'), "Logins" => array("cognito-identity.amazonaws.com" => config::byKey('Token', 'weback')));
+     public static function getDeviceList() {
+        log::add('weback', 'debug', 'Récupération des informations depuis grit-cloud API...');
+        $ch = curl_init();
+        $data = array("opt" => "user_thing_list_get");
          $data_string = json_encode($data);
 
-         curl_setopt($ch, CURLOPT_URL, "https://cognito-identity.".$region.".amazonaws.com");
+         curl_setopt($ch, CURLOPT_URL, config::byKey("api_url", 'weback'));
          curl_setopt($ch, CURLOPT_POST, 1);
          curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
          curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/x-amz-json-1.1',
-            'X-Amz-Target: com.amazonaws.cognito.identity.model.AWSCognitoIdentityService.GetCredentialsForIdentity',
+            'Content-Type: application/json',
+            'Token:'.config::byKey("jwt_token", 'weback'),
+            'Region:'.config::byKey("region_name", 'weback'),
             'Content-Length: ' . strlen($data_string))
           );
          $server_output = curl_exec($ch);
-
          $json = json_decode($server_output, true);
-         log::add('weback', 'debug', 'AWS Cognito answer = ' . print_r($json, true));
+         log::add('weback', 'debug', 'grit-cloud answer = ' . print_r($json, true));
 
-         if ($json['Credentials'] != NULL) {
-           log::add('weback', 'debug', 'Information de connexion AWS Cognito OK');
-           // Enregistrement des informations de connexion
-           config::save("AccessKeyId", $json['Credentials']['AccessKeyId'], 'weback');
-           config::save("Expiration", $json['Credentials']['Expiration'], 'weback');
-           config::save("SecretKey", $json['Credentials']['SecretKey'], 'weback');
-           config::save("SessionToken", $json['Credentials']['SessionToken'], 'weback');
+         if ($json['msg'] == 'success') {
+           log::add('weback', 'info', 'Robot trouvé : ' .$json['data']['thing_list'][0]['thing_name']);
+           weback::addNewRobot($json);
            return true;
          } else {
-           log::add('weback', 'error', 'Echec d\'obtention des informations de connexion depuis AWS Cognito. Erreur Curl : '. curl_error($ch));
+           log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
+           log::add('weback', 'error', 'Echec de connexion à grit-cloud : '.$json['msg']);
+           event::add('jeedom::alert', array(
+             'level' => 'alert',
+             'page' => 'weback',
+             'message' => __('Aucun robot trouvé', __FILE__)));
+            log::add('weback', 'info', 'Aucun robot trouvé');
            return false;
          }
          curl_close($ch);
      }
 
-     public static function getDeviceList() {
-       log::add('weback', 'debug', 'Récupération des informations depuis AWS Lambda Device_Manager_V2...');
-       $client = LambdaClient::factory([
-           'version' => 'latest',
-           'region'  => config::byKey('Region_Info', 'weback'),
-           'credentials' => [
-                'key'    => config::byKey('AccessKeyId', 'weback'),
-                'secret' => config::byKey('SecretKey', 'weback'),
-                'token' => config::byKey('SessionToken', 'weback'),]
-       ]);
-
-       $payload = array('Device_Manager_Request' => 'query',
-            'Identity_Id' => config::byKey('Identity_Id', 'weback'),
-            'Region_Info' => config::byKey('Region_Info', 'weback'));
-
-       $result = $client->invoke(array(
-           'FunctionName' => 'Device_Manager_V2',
-           'InvocationType' => 'RequestResponse',
-           'Payload' => json_encode($payload),
-       ));
-
-      log::add('weback', 'debug', 'Payload=' . print_r(array(
-          'FunctionName' => 'Device_Manager_V2',
-          'InvocationType' => 'RequestResponse',
-          'Payload' => json_encode($payload),
-      ), true));
-
-      $return = (string)$result['Payload']->getContents();
-      log::add('weback', 'debug', 'AWS Lambda answer : ' . $return);
-      $json = json_decode($return, true);
-
-       if ($json['Request_Result'] == 'success') {
-           log::add('weback', 'info', 'Robot trouvé : ' .$json['Request_Cotent'][0]['Thing_Name']);
-           weback::addNewRobot($json);
-           return true;
-       } else {
-         event::add('jeedom::alert', array(
-           'level' => 'alert',
-           'page' => 'weback',
-           'message' => __('Aucun robot trouvé', __FILE__)));
-          log::add('weback', 'info', 'Aucun robot trouvé');
-          return false;
-       }
-     }
-
     public static function addNewRobot($device) {
-      $robot=weback::byLogicalId($device['Request_Cotent'][0]['Thing_Name'], 'weback');
+      $robot=weback::byLogicalId($device['data']['thing_list'][0]['thing_name'], 'weback');
       if (!is_object($robot)) {
-        log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
+        log::add('weback', 'info', $device['data']['thing_list'][0]['thing_nickname']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
         $robot = new weback();
         $robot->setEqType_name('weback');
-        $robot->setLogicalId($device['Request_Cotent'][0]['Thing_Name']);
+        $robot->setLogicalId($device['data']['thing_list'][0]['thing_name']);
         $robot->setIsEnable(1);
         $robot->setIsVisible(1);
-        $robot->setName($device['Request_Cotent'][0]['Thing_Nick_Name']." ".$device['Request_Cotent'][0]['Sub_type']);
-        $robot->setConfiguration('Thing_Nick_Name', $device['Request_Cotent'][0]['Thing_Nick_Name']);
-        $robot->setConfiguration('Sub_type', $device['Request_Cotent'][0]['Sub_type']);
-        $robot->setConfiguration('Thing_Name', $device['Request_Cotent'][0]['Thing_Name']);
-        $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['Request_Cotent'][0]['Thing_Name'],-17)));
+        $robot->setName($device['data']['thing_list'][0]['thing_nickname']." ".$device['data']['thing_list'][0]['sub_type']);
+        $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['data']['thing_list'][0]['thing_name'],-17)));
         $robot->save();
         $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type'], $device['Request_Cotent'][0]['Thing_Name']);
       } else {
         log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
-        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type'], $device['Request_Cotent'][0]['Thing_Name']);
+        $robot->loadCmdFromConf($device['data']['thing_list'][0]['sub_type'], $device['data']['thing_list'][0]['thing_name']);
       }
     }
 
