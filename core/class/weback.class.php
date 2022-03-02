@@ -68,16 +68,14 @@ class weback extends eqLogic {
                 "account":"tekv3frm@gmail.com",
                 "client_id":"yugong_app"}
             }*/
-        $data = array("payload" => array("opt":"login",
-                                        "pwd":md5(config::byKey('password', 'weback'))
-                                        ),
-                      "header" => array("language":"fr",
-                                        "app_name":"WeBack",
-                                        "calling_code":"00".config::byKey('country', 'weback'),
-                                        "api_version":"1.0",
-                                        "account":config::byKey('user', 'weback'),
-                                        "client_id":"yugong_app"
-                                      )
+        $data = array("payload" => array("opt" => "login",
+                                        "pwd" => md5(config::byKey('password', 'weback'))),
+                      "header" => array("language" => "fr",
+                                        "app_name" => "WeBack",
+                                        "calling_code" => "00".config::byKey('country', 'weback'),
+                                        "api_version" => "1.0",
+                                        "account" => config::byKey('user', 'weback'),
+                                        "client_id" => "yugong_app")
                       );
          $data_string = json_encode($data);
 
@@ -173,9 +171,9 @@ class weback extends eqLogic {
     }
 
     public static function getDeviceShadow($calledLogicalID){
-      $endpointSRV = config::byKey('End_Point', 'weback');
+      //$endpointSRV = config::byKey('End_Point', 'weback');
       log::add('weback', 'debug', 'Mise à jour GetThingShadow depuis IOT-Data (end-point: '.$endpointSRV.')...');
-      try {
+      /*try {
         $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
             'endpointAddress' => 'https://'.$endpointSRV,
             'endpointType' => 'iot:Data-ATS',
@@ -195,15 +193,15 @@ class weback extends eqLogic {
       } catch (Exception $e) {
           log::add('weback', 'error', 'Erreur sur la fonction AWS GetThingShadow, détail : '. $e->getMessage());
           return false;
-      }
+      }*/
 
       // Status code
-      $statuscode = (string)$result['@metadata']['statusCode'];
-      log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
+      /*$statuscode = (string)$result['@metadata']['statusCode'];
+      //log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
       if ($statuscode == 200) {
 
         // Data
-        $return = (string)$result['payload']->getContents();
+        $return = (string)$result['payload']->getContents();*/
         log::add('weback', 'debug', 'IOT Return : ' . $return);
         $shadowJson = json_decode($return, false);
         log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
@@ -307,12 +305,12 @@ class weback extends eqLogic {
             log::add('weback', 'warning', 'Attention présence d\'ordre transmis au serveur, mais en en attentes d\'execution par le robot x'.$awaitingOrder);
           }
         return true;
-
+      /*
       } else {
         // HTTP Error code
         log::add('weback', 'warning', 'Erreur HTTP code : ' . $statuscode);
         return false;
-      }
+      }*/
 
 
       }
@@ -321,27 +319,13 @@ class weback extends eqLogic {
     public static function webackTokenValidity(){
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
       $tsnow = $date_utc->getTimestamp();
-      $tsexpiration =  (config::byKey('Token_Expiration', 'weback')) -30;
+      $tsexpiration =  (config::byKey('token_expiration', 'weback')) -30;
 
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'warning', 'Token WeBack (ts '.$tsexpiration.') => Expiré !');
         return true;
       } else {
         log::add('weback', 'debug', 'Token WeBack (ts '.$tsexpiration.') => OK Valide');
-        return false;
-      }
-    }
-
-    public static function awsTokenValidity(){
-      $date_utc = new DateTime("now", new DateTimeZone("UTC"));
-      $tsnow = $date_utc->getTimestamp();
-      $tsexpiration =  (config::byKey('Expiration', 'weback')) -30;
-
-      if ($tsexpiration < $tsnow) {
-        log::add('weback', 'warning', 'Token AWS iot-data (ts '.$tsexpiration.') => Expiré !');
-        return true;
-      } else {
-        log::add('weback', 'debug', 'Token AWS iot-data (ts '.$tsexpiration.') => OK Valide');
         return false;
       }
     }
@@ -373,7 +357,7 @@ class weback extends eqLogic {
     public static function SendAction($calledLogicalID, $action) {
       log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandée : '.$action);
 
-      try {
+      /*try {
         $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
             'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
             'endpointType' => 'iot:Data-ATS',
@@ -417,7 +401,7 @@ class weback extends eqLogic {
         // HTTP Error code
         log::add('weback', 'warning', 'Erreur HTTP code : ' . $statuscode);
         return false;
-      }
+      }*/
     }
 
     public static function DeterminateSimpleState($working_status){
@@ -472,8 +456,8 @@ class weback extends eqLogic {
         if (count($eqLogics) > 0) {
           log::add('weback', 'debug', 'Refresh (CRON) démarré pour actualiser : '.count($eqLogics).' robot(s)');
           foreach ($eqLogics as $webackrbt) {
-            log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName());
-            weback::updateStatusDevices($webackrbt->getLogicalId());
+            //log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName());
+            //weback::updateStatusDevices($webackrbt->getLogicalId());
           }
         } else {
           log::add('weback', 'debug', 'Refresh (CRON) n\'a pas de robot à actualiser.');
@@ -516,7 +500,91 @@ class weback extends eqLogic {
       }
      */
 
+     public static function deamon_info() {
+        $return = array();
+        $return['log'] = __CLASS__;
+        $return['state'] = 'nok';
+        $pid_file = jeedom::getTmpFolder(__CLASS__) . '/deamon.pid';
+        if (file_exists($pid_file)) {
+            if (@posix_getsid(trim(file_get_contents($pid_file)))) {
+                $return['state'] = 'ok';
+            } else {
+                shell_exec(system::getCmdSudo() . 'rm -rf ' . $pid_file . ' 2>&1 > /dev/null');
+            }
+        }
+        $return['launchable'] = 'ok';
+        /*$user = config::byKey('user', __CLASS__); // exemple si votre démon à besoin de la config user,
+        $pswd = config::byKey('password', __CLASS__); // password,
+        $clientId = config::byKey('clientId', __CLASS__); // et clientId
+        if ($user == '') {
+            $return['launchable'] = 'nok';
+            $return['launchable_message'] = __('Le nom d\'utilisateur n\'est pas configuré', __FILE__);
+        } elseif ($pswd == '') {
+            $return['launchable'] = 'nok';
+            $return['launchable_message'] = __('Le mot de passe n\'est pas configuré', __FILE__);
+        } elseif ($clientId == '') {
+            $return['launchable'] = 'nok';
+            $return['launchable_message'] = __('La clé d\'application n\'est pas configurée', __FILE__);
+        }*/
+        return $return;
+    }
 
+    public static function deamon_start() {
+        self::deamon_stop();
+        $deamon_info = self::deamon_info();
+        if ($deamon_info['launchable'] != 'ok') {
+            throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
+        }
+
+        $path = realpath(dirname(__FILE__) . '/../../resources/demond');
+        $cmd = 'python3 ' . $path . '/webackd.py';
+        $cmd .= ' --loglevel ' . log::convertLogLevel(log::getLogLevel(__CLASS__));
+        $cmd .= ' --socketport ' . config::byKey('socketport', __CLASS__, '33009');
+        $cmd .= ' --callback ' . network::getNetworkAccess('internal', 'proto:127.0.0.1:port:comp') . '/plugins/template/core/php/jeeWeback.php';
+        $cmd .= ' --apikey ' . jeedom::getApiKey(__CLASS__);
+        $cmd .= ' --pid ' . jeedom::getTmpFolder(__CLASS__) . '/deamon.pid';
+        log::add(__CLASS__, 'info', 'Lancement démon');
+        $result = exec($cmd . ' >> ' . log::getPathToLog('weback_daemon') . ' 2>&1 &');
+        $i = 0;
+        while ($i < 20) {
+            $deamon_info = self::deamon_info();
+            if ($deamon_info['state'] == 'ok') {
+                break;
+            }
+            sleep(1);
+            $i++;
+        }
+        if ($i >= 30) {
+            log::add(__CLASS__, 'error', __('Impossible de lancer le démon, vérifiez le log', __FILE__), 'unableStartDeamon');
+            return false;
+        }
+        message::removeAll(__CLASS__, 'unableStartDeamon');
+        return true;
+    }
+
+
+    public static function deamon_stop() {
+        $pid_file = jeedom::getTmpFolder(__CLASS__) . '/deamon.pid';
+        if (file_exists($pid_file)) {
+            $pid = intval(trim(file_get_contents($pid_file)));
+            system::kill($pid);
+        }
+        system::kill('webackd.py');
+        sleep(1);
+    }
+
+    public static function sendToDaemon($params) {
+        $deamon_info = self::deamon_info();
+        if ($deamon_info['state'] != 'ok') {
+            throw new Exception("Le démon n'est pas démarré");
+        }
+        $params['apikey'] = jeedom::getApiKey(__CLASS__);
+        $payLoad = json_encode($params);
+        $socket = socket_create(AF_INET, SOCK_STREAM, 0);
+        socket_connect($socket, '127.0.0.1', config::byKey('socketport', __CLASS__, '33009'));
+        socket_write($socket, $payLoad, strlen($payLoad));
+        socket_close($socket);
+    }
 
     /*     * *********************Méthodes d'instance************************* */
 
