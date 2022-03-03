@@ -120,37 +120,38 @@ class weback extends eqLogic {
         log::add('weback', 'debug', 'Récupération des informations depuis grit-cloud API...');
         $ch = curl_init();
         $data = array("opt" => "user_thing_list_get");
-         $data_string = json_encode($data);
+        $data_string = json_encode($data);
 
-         curl_setopt($ch, CURLOPT_URL, config::byKey("api_url", 'weback'));
-         curl_setopt($ch, CURLOPT_POST, 1);
-         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_URL, config::byKey("api_url", 'weback'));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
             'Token:'.config::byKey("jwt_token", 'weback'),
             'Region:'.config::byKey("region_name", 'weback'),
             'Content-Length: ' . strlen($data_string))
-          );
-         $server_output = curl_exec($ch);
-         $json = json_decode($server_output, true);
-         log::add('weback', 'debug', 'grit-cloud answer = ' . print_r($json, true));
+            );
 
-         if ($json['msg'] == 'success') {
-           log::add('weback', 'info', 'Robot trouvé : ' .$json['data']['thing_list'][0]['thing_name']);
-           weback::addNewRobot($json);
-           return true;
-         } else {
-           log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
-           log::add('weback', 'error', 'Echec de connexion à grit-cloud : '.$json['msg']);
-           event::add('jeedom::alert', array(
-             'level' => 'alert',
-             'page' => 'weback',
-             'message' => __('Aucun robot trouvé', __FILE__)));
-            log::add('weback', 'info', 'Aucun robot trouvé');
-           return false;
-         }
-         curl_close($ch);
+        $server_output = curl_exec($ch);
+        $json = json_decode($server_output, true);
+        log::add('weback', 'debug', 'Réponse de Grit-cloud API = ' . print_r($json));
+
+        if ($json['msg'] == 'success') {
+          log::add('weback', 'info', 'Robot trouvé : ' .$json['data']['thing_list'][0]['thing_name']);
+          weback::addNewRobot($json);
+          return true;
+        } else {
+          log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
+          log::add('weback', 'error', 'Echec de connexion à grit-cloud : '.$json['msg']);
+          event::add('jeedom::alert', array(
+           'level' => 'alert',
+           'page' => 'weback',
+           'message' => __('Aucun robot trouvé', __FILE__)));
+          log::add('weback', 'info', 'Aucun robot trouvé');
+          return false;
+        }
+        curl_close($ch);
      }
 
     public static function addNewRobot($device) {
