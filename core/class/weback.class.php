@@ -53,14 +53,14 @@ class weback extends eqLogic {
          $ch = curl_init();
          /*{"payload":{
                 "opt":"login",
-                "pwd":"66f7a4d78be2accaf520079d0445f5b3"
+                "pwd":"pwdhash"
             },
             "header":{
                 "language":"fr",
                 "app_name":"WeBack",
                 "calling_code":"0033",
                 "api_version":"1.0",
-                "account":"tekv3frm@gmail.com",
+                "account":"email",
                 "client_id":"yugong_app"}
             }*/
         $data = array("payload" => array("opt" => "login",
