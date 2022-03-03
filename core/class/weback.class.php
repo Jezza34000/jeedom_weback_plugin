@@ -33,18 +33,13 @@ class weback extends eqLogic {
      {
          log::add('weback', 'debug', 'Démarrage de la recherche des robots...', true);
          if (weback::getWebackToken() == true) {
-               if (weback::getAWScredential() == true) {
-                       if (weback::getDeviceList() == true) {
-                         log::add('weback', 'debug', '### Recherche robot terminée avec succès!', true);
-                         return null;
-                       } else {
-                         log::add('weback', 'error', 'Recherche des robots KO > Echec GetDeviceList', true);
-                         return "impossible de trouver un robot sur le compte.";
-                       }
-                 } else {
-                   log::add('weback', 'error', 'Recherche des robots KO > Echec AWS Credentials', true);
-                   return "impossible de se connecter.";
-                 }
+               if (weback::getDeviceList() == true) {
+                 log::add('weback', 'debug', '### Recherche robot terminée avec succès!', true);
+                 return null;
+               } else {
+                 log::add('weback', 'error', 'Recherche des robots KO > Echec GetDeviceList', true);
+                 return "impossible de trouver un robot sur le compte.";
+               }
            } else {
              log::add('weback', 'error', 'Recherche des robots KO > Echec WeBack login', true);
              return "impossible de se connecter à WeBack.";
@@ -95,12 +90,19 @@ class weback extends eqLogic {
            log::add('weback', 'debug', 'Identifiant/mot de passe grit-cloud OK');
            // Enregistrement des informations de connexion
            config::save("jwt_token", $json['data']['jwt_token'], 'weback');
-           config::save("region_name", $json['region_name'], 'weback');
-           config::save("api_url", $json['api_url'], 'weback');
-           config::save("wss_url", $json['wss_url'], 'weback');
+           config::save("region_name", $json['data']['region_name'], 'weback');
+           config::save("api_url", $json['data']['api_url'], 'weback');
+           config::save("wss_url", $json['data']['wss_url'], 'weback');
            $date_utc = new DateTime("now", new DateTimeZone("UTC"));
            $wbtsexpiration = $json['expired_time']+$date_utc->getTimestamp();
            config::save("token_expiration", $wbtsexpiration, 'weback');
+
+           // Sending credentials to deamon
+           $params['jwt_token'] = $json['data']['jwt_token'];
+           $params['region_name'] = $json['data']['region_name'];
+           $params['wss_url'] = $json['data']['wss_url'];
+           weback::sendToDaemon($params);
+
            return true;
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
@@ -152,61 +154,86 @@ class weback extends eqLogic {
      }
 
     public static function addNewRobot($device) {
-      $robot=weback::byLogicalId($device['data']['thing_list'][0]['thing_name'], 'weback');
+      $nickname = $device['data']['thing_list'][0]['thing_nickname'];
+      $thingname = $device['data']['thing_list'][0]['thing_name'];
+      $subtype = $device['data']['thing_list'][0]['sub_type'];
+
+      $robot=weback::byLogicalId($thingname, 'weback');
+
       if (!is_object($robot)) {
-        log::add('weback', 'info', $device['data']['thing_list'][0]['thing_nickname']. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
+        log::add('weback', 'info', $nickname. ' > Ce robot est inconnu, ajout dans les nouveaux objets');
         $robot = new weback();
         $robot->setEqType_name('weback');
-        $robot->setLogicalId($device['data']['thing_list'][0]['thing_name']);
+        $robot->setLogicalId($thingname);
         $robot->setIsEnable(1);
         $robot->setIsVisible(1);
-        $robot->setName($device['data']['thing_list'][0]['thing_nickname']." ".$device['data']['thing_list'][0]['sub_type']);
-        $robot->setConfiguration('Mac_Adress', str_replace("-", ":", substr($device['data']['thing_list'][0]['thing_name'],-17)));
+        $robot->setName($nickname." ".$subtype);
+        $robot->setConfiguration('mac_address', str_replace("-", ":", substr($thingname,-17)));
+        $robot->setConfiguration('thing_name', $thingname);
+        $robot->setConfiguration('sub_type', $subtype);
+        $robot->setConfiguration('thing_nick_name', $nickname);
         $robot->save();
-        $robot->loadCmdFromConf($device['Request_Cotent'][0]['Sub_type'], $device['Request_Cotent'][0]['Thing_Name']);
       } else {
-        log::add('weback', 'info', $device['Request_Cotent'][0]['Thing_Nick_Name']. ' > Ce robot est déjà enregistré dans les objets!');
-        $robot->loadCmdFromConf($device['data']['thing_list'][0]['sub_type'], $device['data']['thing_list'][0]['thing_name']);
+        log::add('weback', 'info', $nickname. ' > Ce robot est déjà enregistré dans les objets!');
       }
+      $robot->loadCmdFromConf($subtype, $thingname);
     }
 
-    public static function getDeviceShadow($calledLogicalID){
-      //$endpointSRV = config::byKey('End_Point', 'weback');
-      log::add('weback', 'debug', 'Mise à jour GetThingShadow depuis IOT-Data (end-point: '.$endpointSRV.')...');
-      /*try {
-        $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
-            'endpointAddress' => 'https://'.$endpointSRV,
-            'endpointType' => 'iot:Data-ATS',
-            'http'    => [
-              'verify' => false
-              ],
-            'version' => 'latest',
-            'region'  => config::byKey('Region_Info', 'weback'),
-            'credentials' => [
-                 'key'    => config::byKey('AccessKeyId', 'weback'),
-                 'secret' => config::byKey('SecretKey', 'weback'),
-                 'token' => config::byKey('SessionToken', 'weback'),]
-        ]);
-        $result = $IoT->getThingShadow([
-            'thingName' => $calledLogicalID,
-        ]);
-      } catch (Exception $e) {
-          log::add('weback', 'error', 'Erreur sur la fonction AWS GetThingShadow, détail : '. $e->getMessage());
-          return false;
-      }*/
 
-      // Status code
-      /*$statuscode = (string)$result['@metadata']['statusCode'];
-      //log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
-      if ($statuscode == 200) {
+    public static function SendAction($calledLogicalID, $actiontype, $actionwf) {
+      log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' / Type : '.$actiontype.' / Payload : '.$actionwf);
+      $params = array();
 
-        // Data
-        $return = (string)$result['payload']->getContents();*/
-        log::add('weback', 'debug', 'IOT Return : ' . $return);
-        $shadowJson = json_decode($return, false);
-        log::add('weback', 'debug', 'Mise à jours OK pour : '.$calledLogicalID);
+      $robot=weback::byLogicalId($thingname, 'weback');
+      $subtype = $robot->getConfiguration('sub_type');
+      $thingname = $robot->getConfiguration('thing_name');
 
-        $wback=weback::byLogicalId($calledLogicalID, 'weback');
+      /*  ACTION payLoad
+          {
+            'topic_name': '$aws/things/'+ this.device.thing_name +'/shadow/update',
+            'opt': 'send_to_device',
+            'sub_type': this.device.sub_type,
+            'topic_payload': { 'state': { 'working_status': mode } },
+            'thing_name': this.device.thing_name,
+          }
+
+          UPDATE payload
+          {
+            'opt': 'thing_status_get',
+            'sub_type': device.sub_type,
+            'thing_name': device.thing_name,
+          }
+      */
+
+      if ($actiontype == "action") {
+          $payload = array(
+            'topic_name' => '$aws/things/'.$calledLogicalID.'/shadow/update',
+            'opt' => 'send_to_device',
+            'sub_type' => $subtype,
+            'topic_payload' => array('state' => $actionwf),
+            'thing_name' => $thingname,
+          );
+      } elseif ($actiontype == "update") {
+          $payload = array(
+            'opt' => 'thing_status_get',
+            'sub_type' => $subtype,
+            'thing_name' => $thingname,
+          );
+      } else {
+        log::add('weback', 'error', 'Action type : '.$actiontype.' non reconnu');
+        return false;
+      }
+
+      // Insert into tab to sent to deamon
+      $params['action'] = $actiontype;
+      $params['payload'] = $payload;
+      weback::sendToDaemon($params);
+    }
+
+
+    public static function updateDeviceInfo($robotinfo){
+        log::add('weback', 'debug', 'Update device info : ' . $robotinfo);
+        $shadowJson = json_decode($robotinfo, false);
 
         $wstatus = $shadowJson->state->reported->working_status;
         $errnfo = $shadowJson->state->reported->error_info;
@@ -299,22 +326,12 @@ class weback extends eqLogic {
           }
 
           // Check for unreported item
-          $awaitingOrder = count($shadowJson->state->delta);
+          /*$awaitingOrder = count($shadowJson->state->delta);
           $wback->checkAndUpdateCmd('awaiting_order', $awaitingOrder);
           if ($awaitingOrder > 0 ) {
             log::add('weback', 'warning', 'Attention présence d\'ordre transmis au serveur, mais en en attentes d\'execution par le robot x'.$awaitingOrder);
-          }
-        return true;
-      /*
-      } else {
-        // HTTP Error code
-        log::add('weback', 'warning', 'Erreur HTTP code : ' . $statuscode);
-        return false;
-      }*/
-
-
+          }*/
       }
-
 
     public static function webackTokenValidity(){
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
@@ -341,67 +358,8 @@ class weback extends eqLogic {
           log::add('weback', 'error', 'CRON > Echec de mise à jour WeBack token');
         }
       }
-      if (weback::awsTokenValidity() == true) {
-        if (weback::getAWScredential() == true) {
-          log::add('weback', 'debug', 'CRON > Mise à jour AWS token OK ');
-        } else {
-          log::add('weback', 'error', 'CRON > Echec de mise à jour AWS token');
-        }
-      }
 
-      if (weback::getDeviceShadow($calledLogicalID) == false) {
-        log::add('weback', 'error', 'CRON > Echec de mise à jour ');
-      }
-    }
-
-    public static function SendAction($calledLogicalID, $action) {
-      log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' Action demandée : '.$action);
-
-      /*try {
-        $IoT = new Aws\IotDataPlane\IotDataPlaneClient([
-            'endpointAddress' => 'https://'.config::byKey('End_Point', 'weback'),
-            'endpointType' => 'iot:Data-ATS',
-            'http'    => [
-              'verify' => false
-              ],
-            'version' => 'latest',
-            'region'  => config::byKey('Region_Info', 'weback'),
-            'credentials' => [
-                 'key'    => config::byKey('AccessKeyId', 'weback'),
-                 'secret' => config::byKey('SecretKey', 'weback'),
-                 'token' => config::byKey('SessionToken', 'weback'),]
-        ]);
-        // Formatage du Payload
-        $data = array (
-            "state" => array (
-                "desired" =>
-                      $action,
-              )
-            );
-        $payload = json_encode($data);
-
-        $result = $IoT->updateThingShadow([
-            'payload' => $payload,
-            'thingName' => $calledLogicalID,
-        ]);
-      } catch (Exception $e) {
-          log::add('weback', 'error', 'Erreur sur la fonction updateThingShadow, détail : '. $e->getMessage());
-          return false;
-      }
-
-      // Status code
-      $statuscode = (string)$result['@metadata']['statusCode'];
-      log::add('weback', 'debug', 'HTTP Status code : ' . $statuscode);
-
-      if ($statuscode == 200) {
-        $return = (string)$result['payload']->getContents();
-        log::add('weback', 'debug', 'IOT Return : ' . $return);
-        return true;
-      } else {
-        // HTTP Error code
-        log::add('weback', 'warning', 'Erreur HTTP code : ' . $statuscode);
-        return false;
-      }*/
+      weback::SendAction($calledLogicalID, "update", NULL);
     }
 
     public static function DeterminateSimpleState($working_status){
@@ -456,8 +414,8 @@ class weback extends eqLogic {
         if (count($eqLogics) > 0) {
           log::add('weback', 'debug', 'Refresh (CRON) démarré pour actualiser : '.count($eqLogics).' robot(s)');
           foreach ($eqLogics as $webackrbt) {
-            //log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName());
-            //weback::updateStatusDevices($webackrbt->getLogicalId());
+            log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName());
+            weback::updateStatusDevices($webackrbt->getLogicalId());
           }
         } else {
           log::add('weback', 'debug', 'Refresh (CRON) n\'a pas de robot à actualiser.');
@@ -574,6 +532,7 @@ class weback extends eqLogic {
     }
 
     public static function sendToDaemon($params) {
+        log::add('weback', 'debug', 'Envoi d\'une commande au deamon : '.print_r($params, true) );
         $deamon_info = self::deamon_info();
         if ($deamon_info['state'] != 'ok') {
             throw new Exception("Le démon n'est pas démarré");
@@ -584,6 +543,7 @@ class weback extends eqLogic {
         socket_connect($socket, '127.0.0.1', config::byKey('socketport', __CLASS__, '33009'));
         socket_write($socket, $payLoad, strlen($payLoad));
         socket_close($socket);
+        log::add('weback', 'debug', '> Envoyé');
     }
 
     /*     * *********************Méthodes d'instance************************* */
@@ -687,7 +647,6 @@ class weback extends eqLogic {
 class webackCmd extends cmd {
   // Exécution d'une commande
      public function execute($_options = array()) {
-      $retry = 1;
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
       log::add('weback', 'debug', '-> Execute : '.$this->getLogicalId());
@@ -704,14 +663,14 @@ class webackCmd extends cmd {
             $actionToSend["goto_point"] = "[".$coordinates[0].",".$coordinates[1]."]";
             $actionToSend["laser_goto_path_x"] = "[".$coordinates[0]."]";
             $actionToSend["laser_goto_path_y"] = "[".$coordinates[1]."]";
-            weback::SendAction($eqToSendAction, $actionToSend);
+            weback::SendAction($eqToSendAction, "action", $actionToSend);
             break;
           case 'cleanroom':
             log::add('weback', 'debug', 'Room info X:'.$_options['message']." Y:".$_options['title']);
             $actionToSend = array("working_status" => "PlanningRect");
             $actionToSend["planning_rect_x"] = "[".$_options['title']."]";
             $actionToSend["planning_rect_y"] = "[".$_options['message']."]";
-            weback::SendAction($eqToSendAction, $actionToSend);
+            weback::SendAction($eqToSendAction, "action", $actionToSend);
             break;
           default:
             $actRequest = $this->getConfiguration('actionrequest');
@@ -730,30 +689,7 @@ class webackCmd extends cmd {
               log::add('weback', 'debug', '>Value (from message) : '.$stateRequest);
             }
 
-            // Vérification du jeton avant envoie de la commande
-            if (weback::awsTokenValidity() == true) {
-              // JETON expiré renouvellement requis
-              if (weback::getAWScredential()) {
-                // Token AWS à jour
-                log::add('weback', 'debug', 'Renouvellement OK poursuite de l\'envoie de la commande');
-              } else {
-                log::add('weback', 'error', 'Envoi commande NOK (Jeton AWS expiré, renouvellement echoué)');
-                break;
-              }
-            }
-
-            while ($retry < 4) {
-                if (weback::SendAction($eqToSendAction, array($actRequest => $stateRequest)) == true) {
-                  break;
-                }
-                if ($retry > 1) {
-                  log::add('weback', 'warning', 'Echec d\'envoi de la commande au robot. Nouvel essai... ('.$retry.'x)');
-                }
-                $retry++;
-            }
-            if ($retry == 4) {
-                log::add('weback', 'error', 'Echec d\'envoi de la commande au robot. (4x)');
-            }
+            weback::SendAction($eqToSendAction, "action", array($actRequest => $stateRequest));
         }
      }
     /*     * **********************Getteur Setteur*************************** */
