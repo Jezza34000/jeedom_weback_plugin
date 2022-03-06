@@ -458,12 +458,6 @@ class weback extends eqLogic {
             }
         }
         $return['launchable'] = 'ok';
-
-        $eqLogics = eqLogic::byType('weback', true);
-        if (count($eqLogics) == 0) {
-          $return['launchable'] = 'nok';
-          $return['launchable_message'] = __('Pas de robot configuré', __FILE__);
-        }
         return $return;
     }
 
