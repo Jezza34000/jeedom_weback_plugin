@@ -17,16 +17,15 @@ echo 20 > ${PROGRESS_FILE}
 echo "*****************************"
 echo "Install modules using apt-get"
 echo "*****************************"
-apt-get install -y python3 python3-requests python3-pip
+apt-get install -y python3 python3-pip
 echo 60 > ${PROGRESS_FILE}
 
 echo "*************************************"
 echo "Install the required python libraries"
 echo "*************************************"
-python3 -m pip install "websocket" "asyncio"
-echo 80 > ${PROGRESS_FILE}
-
+python3 -m pip install "websocket-client"
 echo 100 > ${PROGRESS_FILE}
+
 echo $(date)
 echo "***************************"
 echo "*      Install ended      *"

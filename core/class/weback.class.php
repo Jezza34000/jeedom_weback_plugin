@@ -22,13 +22,6 @@
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class weback extends eqLogic {
-    /*     * *************************Attributs****************************** */
-    /**
-     * Recherche les équipements sur clique du bouton
-     *
-     * return Array of Device
-     */
-
      public static function discoverRobot()
      {
          log::add('weback', 'debug', 'Démarrage de la recherche des robots...', true);
@@ -51,22 +44,10 @@ class weback extends eqLogic {
        log::add('weback', 'debug', 'Connexion à grit-cloud...');
        if (config::byKey('password', 'weback') != '' && config::byKey('user', 'weback') != '' && config::byKey('country', 'weback') != '') {
          $ch = curl_init();
-         /*{"payload":{
-                "opt":"login",
-                "pwd":"pwdhash"
-            },
-            "header":{
-                "language":"fr",
-                "app_name":"WeBack",
-                "calling_code":"0033",
-                "api_version":"1.0",
-                "account":"email",
-                "client_id":"yugong_app"}
-            }*/
         $data = array("payload" => array("opt" => "login",
                                         "pwd" => md5(config::byKey('password', 'weback'))),
-                      "header" => array("language" => "fr",
-                                        "app_name" => "WeBack",
+                      "header" => array("language" => config::byKey('language', 'weback'),
+                                        "app_name" => config::byKey('app_name', 'weback'),
                                         "calling_code" => "00".config::byKey('country', 'weback'),
                                         "api_version" => "1.0",
                                         "account" => config::byKey('user', 'weback'),
@@ -94,15 +75,15 @@ class weback extends eqLogic {
            config::save("api_url", $json['data']['api_url'], 'weback');
            config::save("wss_url", $json['data']['wss_url'], 'weback');
            $date_utc = new DateTime("now", new DateTimeZone("UTC"));
-           $wbtsexpiration = $json['expired_time']+$date_utc->getTimestamp();
+           $wbtsexpiration = $json['data']['expired_time']+$date_utc->getTimestamp();
            config::save("token_expiration", $wbtsexpiration, 'weback');
 
            // Sending credentials to deamon
+           $params['action'] = "connect";
            $params['jwt_token'] = $json['data']['jwt_token'];
            $params['region_name'] = $json['data']['region_name'];
            $params['wss_url'] = $json['data']['wss_url'];
            weback::sendToDaemon($params);
-
            return true;
          } else {
            log::add('weback', 'debug', 'Erreur CURL = ' . curl_error($ch));
@@ -135,7 +116,7 @@ class weback extends eqLogic {
 
         $server_output = curl_exec($ch);
         $json = json_decode($server_output, true);
-        log::add('weback', 'debug', 'Réponse de Grit-cloud API = ' . print_r($json));
+        log::add('weback', 'debug', 'Réponse de Grit-cloud API = ' . print_r($json, true));
 
         if ($json['msg'] == 'success') {
           log::add('weback', 'info', 'Robot trouvé : ' .$json['data']['thing_list'][0]['thing_name']);
@@ -185,40 +166,23 @@ class weback extends eqLogic {
       log::add('weback', 'debug', 'Envoi d\'une action au robot: '.$calledLogicalID.' / Type : '.$actiontype.' / Payload : '.$actionwf);
       $params = array();
 
-      $robot=weback::byLogicalId($thingname, 'weback');
+      $robot=weback::byLogicalId($calledLogicalID, 'weback');
       $subtype = $robot->getConfiguration('sub_type');
       $thingname = $robot->getConfiguration('thing_name');
 
-      /*  ACTION payLoad
-          {
-            'topic_name': '$aws/things/'+ this.device.thing_name +'/shadow/update',
-            'opt': 'send_to_device',
-            'sub_type': this.device.sub_type,
-            'topic_payload': { 'state': { 'working_status': mode } },
-            'thing_name': this.device.thing_name,
-          }
-
-          UPDATE payload
-          {
-            'opt': 'thing_status_get',
-            'sub_type': device.sub_type,
-            'thing_name': device.thing_name,
-          }
-      */
-
       if ($actiontype == "action") {
           $payload = array(
-            'topic_name' => '$aws/things/'.$calledLogicalID.'/shadow/update',
-            'opt' => 'send_to_device',
-            'sub_type' => $subtype,
-            'topic_payload' => array('state' => $actionwf),
-            'thing_name' => $thingname,
+            "topic_name" => "\$aws/things/$calledLogicalID/shadow/update",
+            "opt" => "send_to_device",
+            "sub_type" => $subtype,
+            "topic_payload" => array('state' => $actionwf),
+            "thing_name" => $thingname,
           );
       } elseif ($actiontype == "update") {
           $payload = array(
-            'opt' => 'thing_status_get',
-            'sub_type' => $subtype,
-            'thing_name' => $thingname,
+            "opt" => "thing_status_get",
+            "sub_type" => $subtype,
+            "thing_name" => $thingname,
           );
       } else {
         log::add('weback', 'error', 'Action type : '.$actiontype.' non reconnu');
@@ -232,107 +196,104 @@ class weback extends eqLogic {
     }
 
 
-    public static function updateDeviceInfo($robotinfo){
-        log::add('weback', 'debug', 'Update device info : ' . $robotinfo);
-        $shadowJson = json_decode($robotinfo, false);
+    public static function updateDeviceInfo($calledRobot, $robotinfo){
+        log::add('weback', 'debug', 'Update device info : ' .$calledRobot);
+        $wback=weback::byLogicalId($calledRobot, 'weback');
 
-        $wstatus = $shadowJson->state->reported->working_status;
-        $errnfo = $shadowJson->state->reported->error_info;
+        if (is_object($wback)) {
+          $wstatus = $robotinfo['working_status'];
+          $errnfo = $robotinfo['error_info'];
 
-        if ($errnfo == "NoError" || $errnfo == NULL) {
-          $wback->checkAndUpdateCmd('haserror', 0);
-        } else {
-          $wback->checkAndUpdateCmd('haserror', 1);
-        }
-
-        if ($shadowJson->state->reported->connected == "true") {
-          $wback->checkAndUpdateCmd('connected', true);
-          $wback->checkAndUpdateCmd('working_status', $wstatus);
-          $wback->checkAndUpdateCmd('voice_switch', $shadowJson->state->reported->voice_switch);
-          $wback->checkAndUpdateCmd('voice_volume', $shadowJson->state->reported->volume);
-          $wback->checkAndUpdateCmd('undistrub_mode', $shadowJson->state->reported->undisturb_mode);
-          $wback->checkAndUpdateCmd('fan_status', $shadowJson->state->reported->fan_status);
-          $wback->checkAndUpdateCmd('water_level', $shadowJson->state->reported->water_level);
-          $wback->checkAndUpdateCmd('error_info', $errnfo);
-          $wback->checkAndUpdateCmd('battery_level', $shadowJson->state->reported->battery_level);
-          $wback->checkAndUpdateCmd('clean_area', round($shadowJson->state->reported->clean_area, 1));
-          $wback->checkAndUpdateCmd('clean_time', round(($shadowJson->state->reported->clean_time)/60,0));
-          $wback->checkAndUpdateCmd('planning_rect_x', implode(",",$shadowJson->state->reported->planning_rect_x));
-          $wback->checkAndUpdateCmd('planning_rect_y', implode(",",$shadowJson->state->reported->planning_rect_y));
-          $wback->checkAndUpdateCmd('goto_point', implode(",",$shadowJson->state->reported->goto_point));
-          $wback->checkAndUpdateCmd('optical_flow', $shadowJson->state->reported->optical_flow);
-          $wback->checkAndUpdateCmd('left_water', $shadowJson->state->reported->left_water);
-          $wback->checkAndUpdateCmd('cliff_detect', $shadowJson->state->reported->cliff_detect);
-          $wback->checkAndUpdateCmd('final_edge', $shadowJson->state->reported->final_edge);
-          $wback->checkAndUpdateCmd('uv_lamp', $shadowJson->state->reported->uv_lamp);
-          $wback->checkAndUpdateCmd('laser_wall_line_point_num', ($shadowJson->state->reported->laser_wall_line_point_num)/2);
-          //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$shadowJson->state->reported->laser_goto_path_x));
-          //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$shadowJson->state->reported->laser_goto_path_y));
-          // BOOLEAN
-          if ($shadowJson->state->reported->continue_clean) {
-            $wback->checkAndUpdateCmd('continue_clean', 1);
+          if ($errnfo == "NoError" || $errnfo == NULL) {
+            $wback->checkAndUpdateCmd('haserror', 0);
           } else {
+            $wback->checkAndUpdateCmd('haserror', 1);
+          }
+          if ($robotinfo['connected'] == "true") {
+            $wback->checkAndUpdateCmd('connected', true);
+            $wback->checkAndUpdateCmd('working_status', $wstatus);
+            $wback->checkAndUpdateCmd('voice_switch', $robotinfo['voice_switch']);
+            $wback->checkAndUpdateCmd('voice_volume', $robotinfo['volume']);
+            $wback->checkAndUpdateCmd('undistrub_mode', $robotinfo['undisturb_mode']);
+            $wback->checkAndUpdateCmd('fan_status', $robotinfo['fan_status']);
+            $wback->checkAndUpdateCmd('water_level', $robotinfo['water_level']);
+            $wback->checkAndUpdateCmd('error_info', $errnfo);
+            $wback->checkAndUpdateCmd('battery_level', $robotinfo['battery_level']);
+            $wback->checkAndUpdateCmd('clean_area', round($robotinfo['clean_area'], 1));
+            $wback->checkAndUpdateCmd('clean_time', round(($robotinfo['clean_time']) / 60, 0));
+            $wback->checkAndUpdateCmd('planning_rect_x', implode(",", $robotinfo['planning_rect_x']));
+            $wback->checkAndUpdateCmd('planning_rect_y', implode(",", $robotinfo['planning_rect_y']));
+            $wback->checkAndUpdateCmd('goto_point', implode(",", $robotinfo['goto_point']));
+            $wback->checkAndUpdateCmd('optical_flow', $robotinfo['optical_flow']);
+            $wback->checkAndUpdateCmd('left_water', $robotinfo['left_water']);
+            $wback->checkAndUpdateCmd('cliff_detect', $robotinfo['cliff_detect']);
+            $wback->checkAndUpdateCmd('final_edge', $robotinfo['final_edge']);
+            $wback->checkAndUpdateCmd('uv_lamp', $robotinfo['uv_lamp']);
+            $wback->checkAndUpdateCmd('laser_wall_line_point_num', ($robotinfo['laser_wall_line_point_num'])/2);
+            //$wback->checkAndUpdateCmd('laser_goto_path_x', implode(",",$robotinfo['laser_goto_path_x));
+            //$wback->checkAndUpdateCmd('laser_goto_path_y', implode(",",$robotinfo['laser_goto_path_y));
+            // BOOLEAN
+            if ($robotinfo['continue_clean']) {
+              $wback->checkAndUpdateCmd('continue_clean', 1);
+            } else {
+              $wback->checkAndUpdateCmd('continue_clean', 0);
+            }
+            if ($robotinfo['carpet_pressurization']) {
+              $wback->checkAndUpdateCmd('carpet_pressurization', 1);
+            } else {
+              $wback->checkAndUpdateCmd('carpet_pressurization', 0);
+            }
+          } else {
+            $wback->checkAndUpdateCmd('connected', false);
+            $wback->checkAndUpdateCmd('working_status', '');
+            $wback->checkAndUpdateCmd('voice_switch', '');
+            $wback->checkAndUpdateCmd('voice_volume', '');
+            $wback->checkAndUpdateCmd('undistrub_mode', '');
+            $wback->checkAndUpdateCmd('fan_status', '');
+            $wback->checkAndUpdateCmd('water_level', '');
+            $wback->checkAndUpdateCmd('error_info', '');
+            $wback->checkAndUpdateCmd('battery_level', 0);
+            $wback->checkAndUpdateCmd('clean_area', 0);
+            $wback->checkAndUpdateCmd('clean_time', 0);
+            $wback->checkAndUpdateCmd('planning_rect_x', '');
+            $wback->checkAndUpdateCmd('planning_rect_y', '');
+            $wback->checkAndUpdateCmd('goto_point', '');
+            $wback->checkAndUpdateCmd('optical_flow', '');
+            $wback->checkAndUpdateCmd('left_water', '');
+            $wback->checkAndUpdateCmd('cliff_detect', '');
+            $wback->checkAndUpdateCmd('final_edge', '');
+            $wback->checkAndUpdateCmd('uv_lamp', '');
+            $wback->checkAndUpdateCmd('laser_wall_line_point_num', '');
+            $wback->checkAndUpdateCmd('carpet_pressurization', 0);
             $wback->checkAndUpdateCmd('continue_clean', 0);
           }
-          if ($shadowJson->state->reported->carpet_pressurization) {
-            $wback->checkAndUpdateCmd('carpet_pressurization', 1);
-          } else {
-            $wback->checkAndUpdateCmd('carpet_pressurization', 0);
-          }
-        } else {
-          $wback->checkAndUpdateCmd('connected', false);
-          $wback->checkAndUpdateCmd('working_status', '');
-          $wback->checkAndUpdateCmd('voice_switch', '');
-          $wback->checkAndUpdateCmd('voice_volume', '');
-          $wback->checkAndUpdateCmd('undistrub_mode', '');
-          $wback->checkAndUpdateCmd('fan_status', '');
-          $wback->checkAndUpdateCmd('water_level', '');
-          $wback->checkAndUpdateCmd('error_info', '');
-          $wback->checkAndUpdateCmd('battery_level', 0);
-          $wback->checkAndUpdateCmd('clean_area', 0);
-          $wback->checkAndUpdateCmd('clean_time', 0);
-          $wback->checkAndUpdateCmd('planning_rect_x', '');
-          $wback->checkAndUpdateCmd('planning_rect_y', '');
-          $wback->checkAndUpdateCmd('goto_point', '');
-          $wback->checkAndUpdateCmd('optical_flow', '');
-          $wback->checkAndUpdateCmd('left_water', '');
-          $wback->checkAndUpdateCmd('cliff_detect', '');
-          $wback->checkAndUpdateCmd('final_edge', '');
-          $wback->checkAndUpdateCmd('uv_lamp', '');
-          $wback->checkAndUpdateCmd('laser_wall_line_point_num', '');
-          $wback->checkAndUpdateCmd('carpet_pressurization', 0);
-          $wback->checkAndUpdateCmd('continue_clean', 0);
-        }
 
-        $result = weback::DeterminateSimpleState($wstatus);
-          if ($result == "docked") {
-            $wback->checkAndUpdateCmd('isworking', 0);
-            $wback->checkAndUpdateCmd('isdocked', 1);
-          } elseif ($result == "working") {
-            $wback->checkAndUpdateCmd('isdocked', 0);
-            $wback->checkAndUpdateCmd('isworking', 1);
-          } elseif ($result == "hibernating") {
-            /*if ($wback->isworking->getValue() == 1) {
+          $result = weback::DeterminateSimpleState($wstatus);
+            if ($result == "docked") {
+              $wback->checkAndUpdateCmd('isworking', 0);
+              $wback->checkAndUpdateCmd('isdocked', 1);
+            } elseif ($result == "working") {
+              $wback->checkAndUpdateCmd('isdocked', 0);
+              $wback->checkAndUpdateCmd('isworking', 1);
+            } elseif ($result == "hibernating") {
+              /*if ($wback->isworking->getValue() == 1) {
+                $wback->checkAndUpdateCmd('isdocked', 0);
+                $wback->checkAndUpdateCmd('isworking', 0);
+              }
+              if ($wback->isdocked->getValue() == 1) {
+                $wback->checkAndUpdateCmd('isdocked', 1);
+                $wback->checkAndUpdateCmd('isworking', 0);
+              }*/
+            } else {
               $wback->checkAndUpdateCmd('isdocked', 0);
               $wback->checkAndUpdateCmd('isworking', 0);
+              log::add('weback', 'debug', 'Aucune équivalence Docked/Working trouvée pour l\'état : '.$wstatus);
             }
-            if ($wback->isdocked->getValue() == 1) {
-              $wback->checkAndUpdateCmd('isdocked', 1);
-              $wback->checkAndUpdateCmd('isworking', 0);
-            }*/
           } else {
-            $wback->checkAndUpdateCmd('isdocked', 0);
-            $wback->checkAndUpdateCmd('isworking', 0);
-            log::add('weback', 'debug', 'Aucune équivalence Docked/Working trouvée pour l\'état : '.$wstatus);
+            log::add('weback', 'debug', 'Echec de la mise à jour robot non trouvé dans les équipements ='.$robotinfo['thing_name']);
           }
-
-          // Check for unreported item
-          /*$awaitingOrder = count($shadowJson->state->delta);
-          $wback->checkAndUpdateCmd('awaiting_order', $awaitingOrder);
-          if ($awaitingOrder > 0 ) {
-            log::add('weback', 'warning', 'Attention présence d\'ordre transmis au serveur, mais en en attentes d\'execution par le robot x'.$awaitingOrder);
-          }*/
       }
+
 
     public static function webackTokenValidity(){
       $date_utc = new DateTime("now", new DateTimeZone("UTC"));
@@ -341,17 +302,26 @@ class weback extends eqLogic {
 
       if ($tsexpiration < $tsnow) {
         log::add('weback', 'warning', 'Token WeBack (ts '.$tsexpiration.') => Expiré !');
-        return true;
+        return false;
       } else {
         log::add('weback', 'debug', 'Token WeBack (ts '.$tsexpiration.') => OK Valide');
-        return false;
+        return true;
       }
+    }
+
+    public static function sendCredentialsToDaemon() {
+      log::add('weback', 'debug', 'Récupération des infos de connexion et envoi au daemon');
+      // Sending credentials to deamon
+      $params['action'] = "connect";
+      $params['jwt_token'] = config::byKey("jwt_token", 'weback');
+      $params['region_name'] = config::byKey("region_name", 'weback');
+      $params['wss_url'] = config::byKey("wss_url", 'weback');
+      weback::sendToDaemon($params);
     }
 
     public static function updateStatusDevices($calledLogicalID){
       log::add('weback', 'debug', 'UpdateStatus de '.$calledLogicalID.' demandé');
       // Vérification si le TOKEN AWS IOT est toujours valable
-
       if (weback::webackTokenValidity() == true) {
         if (weback::getWebackToken() == true) {
           log::add('weback', 'debug', 'CRON > Mise à jour WeBack token OK ');
@@ -400,14 +370,7 @@ class weback extends eqLogic {
       return null;
     }
 
-  /*
-   * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
-   * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
-	public static $_widgetPossibility = array();
-   */
-
     /*     * ***********************Methode static*************************** */
-
 
      //Fonction exécutée automatiquement toutes les minutes par Jeedom
       public static function cron($_eqlogic_id = null) {
@@ -423,11 +386,11 @@ class weback extends eqLogic {
         }
       }
 
-    /*
-     * Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
-      public static function cron5() {
+/*
+     // Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
+
       }
-     */
+*/
 
     /*
      * Fonction exécutée automatiquement toutes les 10 minutes par Jeedom
@@ -459,6 +422,29 @@ class weback extends eqLogic {
       }
      */
 
+     public static function dependancy_install() {
+          log::remove(__CLASS__ . '_update');
+          return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder(__CLASS__) . '/dependency', 'log' => log::getPathToLog(__CLASS__ . '_update'));
+      }
+
+    public static function dependancy_info() {
+        $return = array();
+        $return['log'] = log::getPathToLog(__CLASS__ . '_update');
+        $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependency';
+        if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependency')) {
+            $return['state'] = 'in_progress';
+        } else {
+            if (exec(system::getCmdSudo() . system::get('cmd_check') . '-Ec "python3\-requests"') < 1) {
+                $return['state'] = 'nok';
+            } elseif (exec(system::getCmdSudo() . 'pip3 list | grep -Ewc "websocket-client"') < 1) {
+                $return['state'] = 'nok';
+            } else {
+                $return['state'] = 'ok';
+            }
+        }
+        return $return;
+    }
+
      public static function deamon_info() {
         $return = array();
         $return['log'] = __CLASS__;
@@ -472,19 +458,12 @@ class weback extends eqLogic {
             }
         }
         $return['launchable'] = 'ok';
-        /*$user = config::byKey('user', __CLASS__); // exemple si votre démon à besoin de la config user,
-        $pswd = config::byKey('password', __CLASS__); // password,
-        $clientId = config::byKey('clientId', __CLASS__); // et clientId
-        if ($user == '') {
-            $return['launchable'] = 'nok';
-            $return['launchable_message'] = __('Le nom d\'utilisateur n\'est pas configuré', __FILE__);
-        } elseif ($pswd == '') {
-            $return['launchable'] = 'nok';
-            $return['launchable_message'] = __('Le mot de passe n\'est pas configuré', __FILE__);
-        } elseif ($clientId == '') {
-            $return['launchable'] = 'nok';
-            $return['launchable_message'] = __('La clé d\'application n\'est pas configurée', __FILE__);
-        }*/
+
+        $eqLogics = eqLogic::byType('weback', true);
+        if (count($eqLogics) == 0) {
+          $return['launchable'] = 'nok';
+          $return['launchable_message'] = __('Pas de robot configuré', __FILE__);
+        }
         return $return;
     }
 
@@ -499,7 +478,7 @@ class weback extends eqLogic {
         $cmd = 'python3 ' . $path . '/webackd.py';
         $cmd .= ' --loglevel ' . log::convertLogLevel(log::getLogLevel(__CLASS__));
         $cmd .= ' --socketport ' . config::byKey('socketport', __CLASS__, '33009');
-        $cmd .= ' --callback ' . network::getNetworkAccess('internal', 'proto:127.0.0.1:port:comp') . '/plugins/template/core/php/jeeWeback.php';
+        $cmd .= ' --callback ' . network::getNetworkAccess('internal', 'proto:127.0.0.1:port:comp') . '/plugins/weback/core/php/jeeWeback.php';
         $cmd .= ' --apikey ' . jeedom::getApiKey(__CLASS__);
         $cmd .= ' --pid ' . jeedom::getTmpFolder(__CLASS__) . '/deamon.pid';
         log::add(__CLASS__, 'info', 'Lancement démon');
@@ -544,19 +523,7 @@ class weback extends eqLogic {
         socket_connect($socket, '127.0.0.1', config::byKey('socketport', __CLASS__, '33009'));
         socket_write($socket, $payLoad, strlen($payLoad));
         socket_close($socket);
-        log::add('weback', 'debug', '> Envoyé');
-    }
-
-    /*     * *********************Méthodes d'instance************************* */
-
- // Fonction exécutée automatiquement avant la création de l'équipement
-    public function preInsert() {
-    }
-
- // Fonction exécutée automatiquement après la création de l'équipement
-    public function postInsert() {
-
-
+        log::add('weback', 'debug', '> Envoyé (attente de la réponse...)');
     }
 
     public function loadCmdFromConf($_type, $roboteqId) {
@@ -611,38 +578,8 @@ class weback extends eqLogic {
           log::add('weback', 'debug', 'Commande déjà présente : '.$command['name']);
         }
       }
-
     }
 
- // Fonction exécutée automatiquement avant la mise à jour de l'équipement
-    public function preUpdate() {
-
-    }
-
- // Fonction exécutée automatiquement après la mise à jour de l'équipement
-    public function postUpdate() {
-
-    }
-
- // Fonction exécutée automatiquement avant la sauvegarde (création ou mise à jour) de l'équipement
-    public function preSave() {
-
-    }
-
- // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement
-    public function postSave() {
-
-    }
-
- // Fonction exécutée automatiquement avant la suppression de l'équipement
-    public function preRemove() {
-
-    }
-
- // Fonction exécutée automatiquement après la suppression de l'équipement
-    public function postRemove() {
-
-    }
 }
 
 class webackCmd extends cmd {
