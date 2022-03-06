@@ -48,5 +48,21 @@ if (!isConnect()) {
             <input class="configKey form-control" data-l1key="country" value="33" />
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">{{Langage}}
+          <sup><i class="fas fa-question-circle tooltips" title="{{(code langage sur 2 lettres)}}"></i></sup>
+        </label>
+        <div class="col-md-4">
+            <input class="configKey form-control" data-l1key="language" value="fr" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">{{Application}}
+          <sup><i class="fas fa-question-circle tooltips" title="{{Application sur laquelle le robot à été enregistré}}"></i></sup>
+        </label>
+        <div class="col-md-4">
+            <input class="configKey form-control" data-l1key="app_name" value="WeBack" />
+        </div>
+    </div>
   </fieldset>
 </form>
