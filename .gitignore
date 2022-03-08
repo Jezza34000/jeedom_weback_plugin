@@ -11,3 +11,5 @@ docs/_site/
 docs/Gemfile.lock
 docs/.sass-cache/
 .remote-sync.json
+resources/demond/wsstest.py
+resources/demond/test.py
