@@ -268,6 +268,21 @@ class weback extends eqLogic {
             $wback->checkAndUpdateCmd('continue_clean', 0);
           }
 
+          $cronvalue = $wback->getConfiguration('autorefresh', '*/5 * * * *');
+          // Adapt CRON state
+          if ($wstatus == 'Chargedone' && $cronvalue != '*/5 * * * *') {
+            log::add('weback', 'debug', 'Robot chargé & docké : passage du refresh CRON à 5min');
+            $wback->SetConfiguration('autorefresh', '*/5 * * * *');
+            $wback->save();
+          }
+
+          if ($wstatus != 'Chargedone' && $cronvalue == '*/5 * * * *') {
+            log::add('weback', 'debug', 'Robot en action : passage du refresh CRON à 1min');
+            $wback->setConfiguration('autorefresh', '* * * * *');
+            $wback->save();
+          }
+
+
           $result = weback::DeterminateSimpleState($wstatus);
             if ($result == "docked") {
               $wback->checkAndUpdateCmd('isworking', 0);
@@ -290,7 +305,10 @@ class weback extends eqLogic {
               log::add('weback', 'debug', 'Aucune équivalence Docked/Working trouvée pour l\'état : '.$wstatus);
             }
           } else {
-            log::add('weback', 'debug', 'Echec de la mise à jour robot non trouvé dans les équipements ='.$robotinfo['thing_name']);
+            log::add('weback', 'error', 'Echec de la mise à jour robot non trouvé dans les équipements ='.$robotinfo['thing_name']);
+            log::add('weback', 'error', 'Erreur : passage du refresh CRON à 15min');
+            $wback->SetConfiguration('autorefresh', '*/15 * * * *');
+            $wback->save();
           }
       }
 
@@ -376,10 +394,20 @@ class weback extends eqLogic {
       public static function cron($_eqlogic_id = null) {
         $eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('weback', true);
         if (count($eqLogics) > 0) {
-          log::add('weback', 'debug', 'Refresh (CRON) démarré pour actualiser : '.count($eqLogics).' robot(s)');
+          log::add('weback', 'debug', 'Fonction CRON démarré pour actualiser : '.count($eqLogics).' robot(s)');
           foreach ($eqLogics as $webackrbt) {
-            log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName());
-            weback::updateStatusDevices($webackrbt->getLogicalId());
+            $autorefresh = $webackrbt->getConfiguration('autorefresh', '*/5 * * * *');
+            if ($autorefresh != '') {
+              try {
+                $c = new Cron\CronExpression(checkAndFixCron($autorefresh), new Cron\FieldFactory);
+                if ($c->isDue()) {
+                  log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName().' Autorefresh ='.$autorefresh);
+                  weback::updateStatusDevices($webackrbt->getLogicalId());
+                }
+              } catch (Exception $exc) {
+                log::add('weback', 'error', __('Expression cron non valide pour ', __FILE__) . $webackrbt->getHumanName() . ' : ' . $autorefresh);
+              }
+            }
           }
         } else {
           log::add('weback', 'debug', 'Refresh (CRON) n\'a pas de robot à actualiser.');
@@ -582,6 +610,9 @@ class webackCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $eqToSendAction = $eqLogic->getlogicalId();
       log::add('weback', 'debug', '-> Execute : '.$this->getLogicalId());
+
+      log::add('weback', 'debug', 'Action : passage du refresh CRON à 1min');
+      $this->SetConfiguration('autorefresh', '* * * * *');
 
        switch ($this->getLogicalId()) {
           case 'refresh':
