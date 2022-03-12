@@ -270,13 +270,13 @@ class weback extends eqLogic {
 
           $cronvalue = $wback->getConfiguration('autorefresh', '*/5 * * * *');
           // Adapt CRON state
-          if ($wstatus == 'Chargedone' && $cronvalue != '*/5 * * * *') {
+          if ($wstatus == 'ChargeDone' && $cronvalue != '*/5 * * * *') {
             log::add('weback', 'debug', 'Robot chargé & docké : passage du refresh CRON à 5min');
-            $wback->SetConfiguration('autorefresh', '*/5 * * * *');
+            $wback->setConfiguration('autorefresh', '*/5 * * * *');
             $wback->save();
           }
 
-          if ($wstatus != 'Chargedone' && $cronvalue == '*/5 * * * *') {
+          if ($wstatus != 'ChargeDone' && $cronvalue == '*/5 * * * *') {
             log::add('weback', 'debug', 'Robot en action : passage du refresh CRON à 1min');
             $wback->setConfiguration('autorefresh', '* * * * *');
             $wback->save();
@@ -340,7 +340,7 @@ class weback extends eqLogic {
     public static function updateStatusDevices($calledLogicalID){
       log::add('weback', 'debug', 'UpdateStatus de '.$calledLogicalID.' demandé');
       // Vérification si le TOKEN AWS IOT est toujours valable
-      if (weback::webackTokenValidity() == true) {
+      if (weback::webackTokenValidity() == false) {
         if (weback::getWebackToken() == true) {
           log::add('weback', 'debug', 'CRON > Mise à jour WeBack token OK ');
         } else {
@@ -406,6 +406,11 @@ class weback extends eqLogic {
                 }
               } catch (Exception $exc) {
                 log::add('weback', 'error', __('Expression cron non valide pour ', __FILE__) . $webackrbt->getHumanName() . ' : ' . $autorefresh);
+              }
+              # Daemon down reset displayed info
+              $deamon_info = self::deamon_info();
+              if ($deamon_info['state'] != 'ok') {
+                weback::updateDeviceInfo($webackrbt->getLogicalId(), array("connected" => false));
               }
             }
           }
