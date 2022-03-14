@@ -2,6 +2,7 @@ import websocket
 import logging
 import threading
 from queue import Queue
+import time
 
 class WssHandle:
     def __init__(self):
@@ -33,9 +34,18 @@ class WssHandle:
             self.__wst.start()
             if self.__wst.is_alive():
                 logging.debug(f"> WssHandle thread started OK")
-                return True
             else:
-                return False
+                logging.debug(f"> WssHandle thread NOK")
+
+            for i in range(10):
+                logging.debug(f"WSS awaiting connexion etablished... {i}")
+                if self.socket_state == "OPEN":
+                    logging.debug(f"WSS connexion etablished OK")
+                    return True
+                time.sleep(0.5)
+
+            logging.debug(f"WSS awaiting failed")
+            return False
 
         except Exception as e:
             self.socket_state = "ERROR"

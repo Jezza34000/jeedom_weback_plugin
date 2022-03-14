@@ -136,10 +136,8 @@ def check_wss_status():
         logging.debug("# Connection initiation needed...")
         if wss_url or jwt_token or region_name:
             if wss_cnx.connect_wss(wss_url, jwt_token, region_name, authorization):
-                logging.debug("# RET OK")
                 return True
             else:
-                logging.debug("# RET NOK")
                 return False
         else:
             message = '{"action":"getcredentials"}'
