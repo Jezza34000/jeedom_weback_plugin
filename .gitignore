@@ -13,3 +13,5 @@ docs/.sass-cache/
 .remote-sync.json
 resources/demond/wsstest.py
 resources/demond/test.py
+resources/demond/wsshandler_OLD.py
+resources/demond/wsshandler_OLD.py

@@ -1,68 +1,75 @@
 import websocket
 import logging
-from threading import Thread
+import threading
 from queue import Queue
 
-SOCKET_SEND = Queue()
-SOCKET_RECEIVE = Queue()
-socket_state = None
-
 class WssHandle:
-    def __init__(self, wss_url, jwt_token, region, authorization):
-        global SOCKET_RECEIVE
-        global SOCKET_SEND
-        global socket_state
-        logging.debug(f"> WssHandle init connexion ({wss_url})")
+    def __init__(self):
+        self.__wst = None
+        self.ws = None
+        self.socket_state = "CLOSE"
+        self.SOCKET_RECEIVE = Queue()
+        logging.debug(f"WSS handler LOADED")
+
+    def __del__(self):
+        # Class unload
+        logging.debug(f"WSS handler UNLOADED")
+        logging.debug(f"WSS handler thread_state={self.__wst.is_alive()}")
+
+    def connect_wss(self, wss_url, jwt_token, region, authorization):
+        logging.debug(f"> WssHandle start connexion ({wss_url})")
         # websocket.enableTrace(True)
         try:
-            self.ws = websocket.WebSocket()
-            self.ws.connect(wss_url, header={"Authorization": authorization,
+            self.ws = websocket.WebSocketApp(wss_url, header={"Authorization": authorization,
                                              "region": region,
                                              "token": jwt_token,
                                              "Connection": "keep-alive, Upgrade",
-                                             "handshakeTimeout": "10000"})
+                                             "handshakeTimeout": "10000"},
+                                             on_message=self.on_message,
+                                             on_close=self.on_close,
+                                             on_open=self.on_open,
+                                             on_error=self.on_error)
+            self.__wst = threading.Thread(target=self.ws.run_forever)
+            self.__wst.start()
+            if self.__wst.is_alive():
+                logging.debug(f"> WssHandle thread started OK")
+                return True
+            else:
+                return False
+
         except Exception as e:
-            socket_state = "ERROR"
-            logging.debug(f"> WSS Error : {e}")
+            self.socket_state = "ERROR"
+            logging.debug(f"WSS ERROR while opening details={e}")
+            return False
 
-        if self.ws.connected:
-            logging.debug(f"> WSS connected OK")
-            wss_inbound = Thread(target=self.recep_msg, args=[self.ws])
-            wss_outbound = Thread(target=self.send_msg, args=[self.ws])
+    def send_mess(self, mess):
+        if self.socket_state == "OPEN":
+            logging.debug(f">> WSS sending message={mess}")
+            self.ws.send(mess)
+            return True
+        else:
+            logging.debug(f"WSS FAILED sending message={mess} status={self.socket_state}")
+            return False
 
-            wss_inbound.start()
-            wss_outbound.start()
-
-            if wss_inbound.is_alive() and wss_outbound.is_alive():
-                socket_state = "OPEN"
-
-    def __del__(self):
-        # Close
+    def close_cnx(self):
         self.ws.close()
-        logging.debug(f"> WSS handler terminated")
+        logging.debug(f"WSS close request")
+        return True
 
-    def recep_msg(self, socket):
-        global socket_state
-        global SOCKET_RECEIVE
-        while self.ws.connected:
-            message = socket.recv()
-            logging.debug(f"<< WSS receiving message = {message}")
-            SOCKET_RECEIVE.put(message)
-        socket_state = "CLOSE"
-        logging.debug(f"> WSS closed")
+    def on_message(self, ws, message):
+        logging.debug(f"<< WSS receiving message= {message}")
+        self.SOCKET_RECEIVE.put(message)
 
-    def send_msg(self, socket):
-        global socket_state
-        global SOCKET_SEND
-        while self.ws.connected:
-            if not SOCKET_SEND.empty():
-                message = SOCKET_SEND.get()
-                if message == "STOP":
-                    logging.debug(f"> WSS closing connexion (stop signal)")
-                    self.ws.close()
-                else:
-                    logging.debug(f">> WSS sending message = {message}")
-                    socket.send(message)
-        socket_state = "CLOSE"
-        logging.debug(f"> WSS closed")
+    def on_error(self, ws, error):
+        self.ws.close()
+        self.socket_state = "ERROR"
+        logging.debug(f"WSS ERROR details={error}")
+
+    def on_close(self, ws, close_status_code, close_msg):
+        self.socket_state = "CLOSE"
+        logging.debug(f"WSS CLOSE status_code={close_status_code} close_msg={close_msg}")
+
+    def on_open(self, ws):
+        self.socket_state = "OPEN"
+        logging.debug(f"WSS OPEN is OK")
 

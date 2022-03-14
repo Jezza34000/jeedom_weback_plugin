@@ -27,9 +27,6 @@ from os.path import join
 import argparse
 import json
 import wsshandler
-from threading import Thread
-from time import sleep
-from wsshandler import *
 
 try:
     from jeedom.jeedom import *
@@ -42,20 +39,31 @@ wss_url = None
 jwt_token = None
 region_name = None
 authorization = None
+waiting_time = 0
+awaiting_answer = False
+pending_command = ""
 
 def read_socket():
     global JEEDOM_SOCKET_MESSAGE
-    global SOCKET_SEND
-    global SOCKET_RECEIVE
 
     global wss_url
     global jwt_token
     global region_name
     global authorization
 
+    global waiting_time
+    global awaiting_answer
+    global pending_command
+
+    # if pending_command != "" and not awaiting_answer and wsshandler.socket_state == "OPEN":
+    #     logging.debug("Unanswered request : Retry to send it again...")
+    #     SOCKET_SEND.put(pending_command)
+    #     pending_command = ""
+    #     awaiting_answer = True
+
     # Messages from Jeedom
     if not JEEDOM_SOCKET_MESSAGE.empty():
-        logging.debug("Message received in daemon JEEDOM_SOCKET_MESSAGE")
+        # logging.debug("Message received in daemon JEEDOM_SOCKET_MESSAGE")
         message = JEEDOM_SOCKET_MESSAGE.get().decode('utf-8')
         message = json.loads(message)
         if message['apikey'] != _apikey:
@@ -74,36 +82,74 @@ def read_socket():
                 # Check if re-connection is need
                 check_wss_status()
             elif message['action'] == "update" or message['action'] == "action":
-                logging.debug("WSS handler send command requested")
-                check_wss_status()
+                logging.debug("Daemon receive ACTION for WSS")
                 message = str(message['payload'])
-                SOCKET_SEND.put(message.replace("'", '"'))
+                jsonmess = message.replace("'", '"')
+                if check_wss_status():
+                    logging.debug("# state OK (send mess)")
+                    wss_cnx.send_mess(jsonmess)
+                awaiting_answer = True
+                waiting_time = 0
+                pending_command = jsonmess
             else:
-                logging.error("Daemon receive an unknown action type request")
+                logging.error("# Daemon receive an unknown action type request")
         except Exception as e:
             logging.error('Received command to demon has encountered error : ' + str(e))
 
-    # Messages from WSS Socket
-    if not SOCKET_RECEIVE.empty():
-        logging.debug("<< Message to send to Jeedom PHP")
-        message = SOCKET_RECEIVE.get()
+    if not wss_cnx.SOCKET_RECEIVE.empty():
+        awaiting_answer = False
+        pending_command = ""
+        message = wss_cnx.SOCKET_RECEIVE.get()
         s = jeedom_com(_apikey, _callback)
         s.send_change_immediate(json.loads(message))
         logging.debug("<< Message was sended OK")
 
+    # if is_timed_out():
+    #     logging.error("Request never receive answer, restarting connexion...")
+    #     awaiting_answer = False
+    #     SOCKET_SEND.put("STOP")
+    #     time.sleep(0.5)
+    #     check_wss_status()
+
+
+def is_timed_out() -> bool:
+    global awaiting_answer
+    global waiting_time
+    if awaiting_answer:
+        if waiting_time <= 12:
+            waiting_time += 1
+            return False
+        else:
+            return True
+    else:
+        waiting_time = 0
+        return False
+
 
 def check_wss_status():
-    if wsshandler.socket_state != "OPEN":
-        logging.debug("> Connection initiation needed...")
+    global wss_url
+    global jwt_token
+    global region_name
+    global authorization
+
+    if wss_cnx.socket_state != "OPEN":
+        logging.debug("# Connection initiation needed...")
         if wss_url or jwt_token or region_name:
-            wsshandler.WssHandle(wss_url, jwt_token, region_name, authorization)
+            if wss_cnx.connect_wss(wss_url, jwt_token, region_name, authorization):
+                logging.debug("# RET OK")
+                return True
+            else:
+                logging.debug("# RET NOK")
+                return False
         else:
             message = '{"action":"getcredentials"}'
             s = jeedom_com(_apikey, _callback)
             s.send_change_immediate(json.loads(message))
     else:
-        logging.debug("> Connection is OK")
         # Connection is OK
+        logging.debug("# Connection OK (still alive)")
+        return True
+
 
 def listen():
     jeedom_socket.open()
@@ -179,8 +225,9 @@ if args.socketport:
     _socketport = args.socketport
 
 _socket_port = int(_socket_port)
-
 jeedom_utils.set_log_level(_log_level)
+
+wss_cnx = wsshandler.WssHandle()
 
 logging.info('Start demond')
 logging.info('Log level : ' + str(_log_level))
