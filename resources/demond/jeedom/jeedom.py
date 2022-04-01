@@ -20,7 +20,6 @@ import threading
 import requests
 import datetime
 import collections
-import serial
 import os
 from os.path import join
 import socket
@@ -230,88 +229,6 @@ class jeedom_utils():
     @staticmethod
     def printHex(hex):
         return ' '.join([hex[i:i + 2] for i in range(0, len(hex), 2)])
-
-
-# ------------------------------------------------------------------------------
-
-class jeedom_serial():
-
-    def __init__(self, device='', rate='', timeout=9, rtscts=True, xonxoff=False):
-        self.device = device
-        self.rate = rate
-        self.timeout = timeout
-        self.port = None
-        self.rtscts = rtscts
-        self.xonxoff = xonxoff
-        logging.debug('Init serial module v%s' % (str(serial.VERSION),))
-
-    def open(self):
-        if self.device:
-            logging.debug(
-                "Open serial port on device: " + str(self.device) + ', rate ' + str(self.rate) + ', timeout : ' + str(
-                    self.timeout))
-        else:
-            logging.error("Device name missing.")
-            return False
-        logging.debug("Open Serialport")
-        try:
-            self.port = serial.Serial(
-                self.device,
-                self.rate,
-                timeout=self.timeout,
-                rtscts=self.rtscts,
-                xonxoff=self.xonxoff,
-                parity=serial.PARITY_NONE,
-                stopbits=serial.STOPBITS_ONE
-            )
-        except serial.SerialException as e:
-            logging.error("Error: Failed to connect on device " + self.device + " Details : " + str(e))
-            return False
-        if not self.port.isOpen():
-            self.port.open()
-        self.flushOutput()
-        self.flushInput()
-        return True
-
-    def close(self):
-        logging.debug("Close serial port")
-        try:
-            self.port.close()
-            logging.debug("Serial port closed")
-            return True
-        except:
-            logging.error("Failed to close the serial port (" + self.device + ")")
-            return False
-
-    def write(self, data):
-        logging.debug("Write data to serial port : " + str(jeedom_utils.ByteToHex(data)))
-        self.port.write(data)
-
-    def flushOutput(self, ):
-        logging.debug("flushOutput serial port ")
-        self.port.flushOutput()
-
-    def flushInput(self):
-        logging.debug("flushInput serial port ")
-        self.port.flushInput()
-
-    def read(self):
-        if self.port.inWaiting() != 0:
-            return self.port.read()
-        return None
-
-    def readbytes(self, number):
-        buf = b''
-        for i in range(number):
-            try:
-                byte = self.port.read()
-            except IOError as e:
-                logging.error("Error: " + str(e))
-            except OSError as e:
-                logging.error("Error: " + str(e))
-            buf += byte
-        return buf
-
 
 # ------------------------------------------------------------------------------
 
