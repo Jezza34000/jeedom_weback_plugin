@@ -398,15 +398,11 @@ class weback extends eqLogic {
           foreach ($eqLogics as $webackrbt) {
             $autorefresh = $webackrbt->getConfiguration('autorefresh', '*/5 * * * *');
             if ($autorefresh != '') {
-              try {
                 $c = new Cron\CronExpression(checkAndFixCron($autorefresh), new Cron\FieldFactory);
                 if ($c->isDue()) {
                   log::add('weback', 'debug', 'Process d\'actualisation démarré pour : '.$webackrbt->getHumanName().' Autorefresh ='.$autorefresh);
                   weback::updateStatusDevices($webackrbt->getLogicalId());
                 }
-              } catch (Exception $exc) {
-                log::add('weback', 'error', __('Expression cron non valide pour ', __FILE__) . $webackrbt->getHumanName() . ' : ' . $autorefresh);
-              }
               # Daemon down reset displayed info
               $deamon_info = self::deamon_info();
               if ($deamon_info['state'] != 'ok') {
