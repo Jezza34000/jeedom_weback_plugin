@@ -221,9 +221,15 @@ class weback extends eqLogic {
             $wback->checkAndUpdateCmd('battery_level', $robotinfo['battery_level']);
             $wback->checkAndUpdateCmd('clean_area', round($robotinfo['clean_area'], 1));
             $wback->checkAndUpdateCmd('clean_time', round(($robotinfo['clean_time']) / 60, 0));
-            $wback->checkAndUpdateCmd('planning_rect_x', implode(",", $robotinfo['planning_rect_x']));
-            $wback->checkAndUpdateCmd('planning_rect_y', implode(",", $robotinfo['planning_rect_y']));
-            $wback->checkAndUpdateCmd('goto_point', implode(",", $robotinfo['goto_point']));
+            if (isset($robotinfo['planning_rect_x'])) {
+              $wback->checkAndUpdateCmd('planning_rect_x', implode(",", $robotinfo['planning_rect_x']));
+            }
+            if (isset($robotinfo['planning_rect_y'])) {
+              $wback->checkAndUpdateCmd('planning_rect_y', implode(",", $robotinfo['planning_rect_y']));
+            }
+            if (isset($robotinfo['goto_point'])) {
+              $wback->checkAndUpdateCmd('goto_point', implode(",", $robotinfo['goto_point']));
+            }
             $wback->checkAndUpdateCmd('optical_flow', $robotinfo['optical_flow']);
             $wback->checkAndUpdateCmd('left_water', $robotinfo['left_water']);
             $wback->checkAndUpdateCmd('cliff_detect', $robotinfo['cliff_detect']);

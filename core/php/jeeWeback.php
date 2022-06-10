@@ -30,7 +30,7 @@ try {
           weback::getWebackToken();
         }
     } else {
-        log::add('weback', 'error', 'Message du daemon inconnu');
+        log::add('weback', 'error', 'Message du daemon inconnu : ' .print_r($result, true));
     }
 } catch (Exception $e) {
     log::add('weback', 'error', displayException($e));
