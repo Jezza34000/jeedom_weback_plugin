@@ -620,6 +620,7 @@ class webackCmd extends cmd {
 
       log::add('weback', 'debug', 'Action : passage du refresh CRON à 1min');
       $this->SetConfiguration('autorefresh', '* * * * *');
+      $this->save();
 
        switch ($this->getLogicalId()) {
           case 'refresh':
