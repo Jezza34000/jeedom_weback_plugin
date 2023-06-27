@@ -5,6 +5,21 @@
 * Via les applications : WeBack/Tesvor
 (L'API utilisée est non officielle, et basée sur le reverse engineering trouvé sur ce dépôt Python : https://github.com/opravdin/weback-unofficial)
 
+> Important : Interruption du service WeBack et impact sur ce plugin Jeedom
+
+_Chère communauté de Jeedom,_
+
+_Je souhaite attirer votre attention sur une information importante concernant le service WeBack et son impact sur le plugin Jeedom que vous utilisez pour contrôler les aspirateurs robots via leur API non officielle._
+
+_En raison de la décision de WeBack de cesser ses activités, il n'est plus possible d'enregistrer de nouveaux robots sur leur plateforme cloud. Cependant, je tiens à préciser que, pour une durée indéterminée, les robots précédemment enregistrés peuvent encore fonctionner en utilisant l'infrastructure cloud de WeBack. Il est donc crucial de ne pas modifier votre compte WeBack si vous souhaitez continuer à utiliser l'application WeBack avec vos robots existants._
+
+_Compte tenu de ce changement, le plugin Jeedm spécialement conçu pour l'utilisation de WeBack n'a plus d'utilité pratique puisque l'enregistrement de nouveaux robots n'est plus possible. Par conséquent, la maintenance et le développement ultérieur de ce composant seront interrompus._
+
+_De plus, selon les fabricants de robots et leur SAV, il existe des solutions alternatives pour modifier le firmware et migrer vers d'autres plateformes. Il est conseillé de contacter directement le SAV du fabricant pour explorer les options potentielles en fonction de leur orientation choisie. Par exemple, dans le cas du robot Neatsvor X600, une mise à jour est proposée pour passer de WeBack à Tuya._
+
+_Merci de votre compréhension._
+
+
 **ATTENTION** : 2 version HARDWARE sont présentent sur le marché. Ce plugin n'est pas compatible avec les robots de la marque qui utilisent les plateformes : Tuya/SmartLife
 
 (Ne connaissant pas toutes les fonctionnalités/options disponible pour chaque modèle, il est possible que les options ne soient pas remontés dans Jeedom, n'hésitez pas à ouvrir une issue pour que fasse je les modifications nécéssaire)
